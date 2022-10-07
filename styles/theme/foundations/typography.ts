@@ -45,9 +45,9 @@ const typography = {
     // body: "Poppins, sans-serif",
     // mono: "Courier Prime",
     heading:
-      "rubrik-edge-new, MuseoModerno, Poppins, -apple-system, BlinkMacSystemFont, sans-serif",
+      "Poppins, -apple-system-body, -apple-system, BlinkMacSystemFont, sans-serif",
     body: "Poppins, -apple-system-body, -apple-system, BlinkMacSystemFont, sans-serif",
-    mono: 'SFMono-Regular, Monaco, Menlo, "Courier New", monospace',
+    mono: "Poppins, -apple-system-body, -apple-system, BlinkMacSystemFont, sans-serif",
   },
 
   fontSizes: {

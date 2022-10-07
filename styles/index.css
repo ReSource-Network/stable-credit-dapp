@@ -1,1 +1,9 @@
 @import "./react-js-pagination.css";
+
+.member-manage-button {
+  opacity: 0;
+}
+
+.member-row:hover .member-manage-button {
+  opacity: 1;
+}

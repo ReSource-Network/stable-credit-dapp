@@ -1,25 +1,36 @@
 import {
   Container,
   Flex,
+  Input,
+  IconButton,
   Text,
-  Box,
-  Button,
-  Center,
   useColorModeValue,
   useBreakpointValue,
+  Fade,
+  Slide,
+  SlideFade,
 } from "@chakra-ui/react"
 import type { NextPage } from "next"
 import Head from "next/head"
-import { HStack, Divider, Stack } from "@chakra-ui/react"
+import { Divider, Stack, HStack, VStack } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faGear, faGears, faUser } from "@fortawesome/free-solid-svg-icons"
+import { faGears, faSearch, faUser } from "@fortawesome/free-solid-svg-icons"
 import { useRouter } from "next/router"
+import React, { useState } from "react"
 
-export const HomePage: NextPage = () => {
+export const NetworkHomePage: NextPage = () => {
   const boxColor = useColorModeValue("#18202b", "white")
   const textColor = useColorModeValue("white", "#18202b")
   const router = useRouter()
   const isMobile = useBreakpointValue({ base: true, md: false })
+  const [value, setValue] = useState("")
+  const handleChange = (event) => setValue(event.target.value)
+
+  const searchNetwork = () => {
+    if (!value) return
+
+    router.push(`/${value}`)
+  }
 
   return (
     <>
@@ -33,73 +44,43 @@ export const HomePage: NextPage = () => {
             w="100%"
             h="100%"
             justifyContent="center"
+            alignItems="center"
           >
-            <Button
-              onClick={() => router.push("/member")}
-              h="14em"
-              variant="ghost"
-            >
-              <Box
-                h="12em"
-                w="12em"
-                backgroundColor={boxColor}
-                borderRadius="lg"
-                p="2em"
-              >
-                <Center h="100%">
-                  <FontAwesomeIcon icon={faUser} color={textColor} />
+            <HStack w="22em">
+              <VStack w="22em">
+                <SlideFade in={true} delay={0.25}>
                   <Text
-                    fontSize="24px"
-                    ml="5px"
-                    variant="title"
-                    color={textColor}
+                    alignSelf="flex-start"
+                    fontSize="20px"
+                    fontWeight="bold"
                   >
-                    Members
+                    Stable Credit Address
                   </Text>
-                </Center>
-              </Box>
-            </Button>
-            {!isMobile ? (
-              <Divider
-                alignSelf="center"
-                borderColor={boxColor}
-                orientation="vertical"
-                h="12em"
-                mx="3em !important"
-              />
-            ) : (
-              <Divider
-                alignSelf="center"
-                borderColor={boxColor}
-                orientation="horizontal"
-                w="90%"
-              />
-            )}
-            <Button
-              h="14em"
-              variant="ghost"
-              onClick={() => router.push("/operator")}
-            >
-              <Box
-                h="12em"
-                w="12em"
-                backgroundColor={boxColor}
-                borderRadius="lg"
-                p="2em"
-              >
-                <Center h="100%">
-                  <FontAwesomeIcon icon={faGears} color={textColor} />
-                  <Text
-                    fontSize="24px"
-                    ml="5px"
-                    variant="title"
-                    color={textColor}
-                  >
-                    Operators
-                  </Text>
-                </Center>
-              </Box>
-            </Button>
+                  <HStack w="22em">
+                    <Input
+                      value={value}
+                      onChange={handleChange}
+                      placeholder="0x000...000"
+                      borderColor={boxColor}
+                      onKeyPress={(event) => {
+                        if (event.key === "Enter") {
+                          searchNetwork()
+                        }
+                      }}
+                    />
+                    <IconButton
+                      ml="0 !important"
+                      mr="-1em !important"
+                      size="lg"
+                      aria-label="menu"
+                      variant="unstyled"
+                      icon={<FontAwesomeIcon icon={faSearch} />}
+                      onClick={searchNetwork}
+                    />
+                  </HStack>
+                </SlideFade>
+              </VStack>
+            </HStack>
           </Stack>
         </Container>
       </Flex>
@@ -107,4 +88,4 @@ export const HomePage: NextPage = () => {
   )
 }
 
-export default HomePage
+export default NetworkHomePage

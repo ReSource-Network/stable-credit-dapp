@@ -1,5 +1,4 @@
 export const config = {
   NETWORK_NAME: process.env.NEXT_PUBLIC_NETWORK_NAME!,
-  CELO_ADDRESS: process.env.NEXT_PUBLIC_CELO_ADDRESS!,
   NETWORK_EXPLORER_URL: process.env.NEXT_PUBLIC_NETWORK_EXPLORER_URL!,
 }

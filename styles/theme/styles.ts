@@ -8,7 +8,7 @@ export const styles: Styles = {
     "html, body": {
       width: "100vw",
       height: "100vh",
-      bg: mode("gray.100", "#141214")(props),
+      bg: mode("white", "#141214")(props),
     },
     _focusVisible: {
       boxShadow: "0 0 0 3px #d8b2ff !important",

@@ -1,6 +1,10 @@
 import { BigNumber } from "@ethersproject/bignumber"
 import { config } from "./config"
 import { ERC20__factory } from "../types/factories/ERC20__factory"
+import { FeeManager__factory } from "../types/factories/FeeManager__factory"
+import { StableCredit__factory } from "../types/factories/StableCredit__factory"
+import { ReservePool__factory } from "../types/factories/ReservePool__factory"
+import { AccessManager__factory } from "../types/factories/AccessManager__factory"
 enum Chains {
   MAINNET = "MAINNET",
   ALFAJORES = "ALFAJORES",
@@ -82,16 +86,31 @@ export const CHAIN_INFO = {
   [ChainId.LOCALHOST]: Localhost,
 }
 
-export type Contract = { [key: string]: { address: string; abi: any } }
+export type Contract = { [key: string]: { abi: any } }
 
 export enum Contracts {
-  CELO = "CELO",
+  FEE_TOKEN = "FEE_TOKEN",
+  STABLE_CREDIT = "STABLE_CREDIT",
+  RESERVE_POOL = "RESERVE_POOL",
+  FEE_MANAGER = "FEE_MANAGER",
+  ACCESS_MANAGER = "ACCESS_MANAGER",
 }
 
 export const CONTRACTS: Contract = {
-  [Contracts.CELO]: {
-    address: config.CELO_ADDRESS,
+  [Contracts.FEE_MANAGER]: {
+    abi: FeeManager__factory.abi,
+  },
+  [Contracts.STABLE_CREDIT]: {
+    abi: StableCredit__factory.abi,
+  },
+  [Contracts.RESERVE_POOL]: {
+    abi: ReservePool__factory.abi,
+  },
+  [Contracts.FEE_TOKEN]: {
     abi: ERC20__factory.abi,
+  },
+  [Contracts.ACCESS_MANAGER]: {
+    abi: AccessManager__factory.abi,
   },
 }
 
