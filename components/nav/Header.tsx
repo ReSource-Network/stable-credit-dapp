@@ -53,21 +53,27 @@ export const Header = () => {
                   <HStack>
                     <Text
                       fontWeight="bold"
-                      fontSize="3xl"
+                      fontSize={{ base: "xl", md: "3xl" }}
                       variant="title"
                       textDecoration="none !important"
+                      textOverflow={{ base: "ellipsis", md: "initial" }}
+                      overflow={{ base: "hidden", md: "initial" }}
+                      whiteSpace={{ base: "nowrap", md: "initial" }}
+                      maxW={{ sm: "initial", md: "initial", base: "4em" }}
                     >
                       {networkName}
                     </Text>
-                    <Text pt="5px" fontSize="24px" ml="5px" variant="title">
-                      {trimmedAddress}
-                    </Text>
+                    {!isMobile && (
+                      <Text pt="5px" fontSize="24px" ml="5px" variant="title">
+                        {trimmedAddress}
+                      </Text>
+                    )}
                   </HStack>
                 </ChakraLink>
               </Link>
             </HStack>
             <HStack>
-              <ConnectKitButton showBalance={true} />
+              <ConnectKitButton showBalance={isMobile ? false : true} />
               {!isMobile && connector?.id == "metaMask" && (
                 <Image
                   src="/images/metamask.png"
