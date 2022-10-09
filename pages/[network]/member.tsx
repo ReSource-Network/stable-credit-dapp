@@ -1,4 +1,4 @@
-import { Flex, Box, Center, SlideFade } from "@chakra-ui/react"
+import { Flex, Box, LightMode, Center, SlideFade } from "@chakra-ui/react"
 import type { NextPage } from "next"
 import Head from "next/head"
 import { VStack, Button } from "@chakra-ui/react"
@@ -27,88 +27,90 @@ export const Member: NextPage = () => {
           m="1em"
         >
           <Center>
-            <VStack w="100%">
-              <MemberStats />
-              {showOption == 1 && (
-                <VStack w="100%">
-                  <SlideFade
-                    style={{ width: "100%" }}
-                    in={showOption == 1}
-                    offsetY="20px"
-                  >
-                    <VStack justifyContent="center">
-                      <Transfer />
-                      <Button
-                        variant="ghost"
-                        w="100%"
-                        onClick={() => setShowOption(0)}
-                      >
-                        Cancel
-                      </Button>
-                    </VStack>
-                  </SlideFade>
-                </VStack>
-              )}
-              {showOption == 2 && (
-                <VStack w="100%">
-                  <SlideFade
-                    style={{ width: "100%" }}
-                    in={showOption == 2}
-                    offsetY="20px"
-                  >
-                    <VStack justifyContent="center">
-                      <Payment />
-                      <Button
-                        variant="ghost"
-                        w="100%"
-                        onClick={() => setShowOption(0)}
-                      >
-                        Cancel
-                      </Button>
-                    </VStack>
-                  </SlideFade>
-                </VStack>
-              )}
-              {showOption == 3 && (
-                <VStack w="100%">
-                  <SlideFade
-                    style={{ width: "100%" }}
-                    in={showOption == 3}
-                    offsetY="20px"
-                  >
-                    <VStack justifyContent="center">
-                      <CashOut />
-                      <Button
-                        variant="ghost"
-                        w="100%"
-                        onClick={() => setShowOption(0)}
-                      >
-                        Cancel
-                      </Button>
-                    </VStack>
-                  </SlideFade>
-                </VStack>
-              )}
-              {showOption == 0 && (
-                <SlideFade
-                  in={showOption == 0}
-                  offsetY="20px"
-                  style={{ width: "100%" }}
-                >
-                  <VStack mt="1em" w="100%">
-                    <Button w="100%" onClick={() => setShowOption(1)}>
-                      Send
-                    </Button>
-                    <Button w="100%" onClick={() => setShowOption(2)}>
-                      Make a Payment
-                    </Button>
-                    <Button w="100%" onClick={() => setShowOption(3)}>
-                      Cash out
-                    </Button>
+            <LightMode>
+              <VStack w="100%">
+                <MemberStats />
+                {showOption == 1 && (
+                  <VStack w="100%">
+                    <SlideFade
+                      style={{ width: "100%" }}
+                      in={showOption == 1}
+                      offsetY="20px"
+                    >
+                      <VStack justifyContent="center">
+                        <Transfer />
+                        <Button
+                          variant="ghost"
+                          w="100%"
+                          onClick={() => setShowOption(0)}
+                        >
+                          Cancel
+                        </Button>
+                      </VStack>
+                    </SlideFade>
                   </VStack>
-                </SlideFade>
-              )}
-            </VStack>
+                )}
+                {showOption == 2 && (
+                  <VStack w="100%">
+                    <SlideFade
+                      style={{ width: "100%" }}
+                      in={showOption == 2}
+                      offsetY="20px"
+                    >
+                      <VStack justifyContent="center">
+                        <Payment />
+                        <Button
+                          variant="ghost"
+                          w="100%"
+                          onClick={() => setShowOption(0)}
+                        >
+                          Cancel
+                        </Button>
+                      </VStack>
+                    </SlideFade>
+                  </VStack>
+                )}
+                {showOption == 3 && (
+                  <VStack w="100%">
+                    <SlideFade
+                      style={{ width: "100%" }}
+                      in={showOption == 3}
+                      offsetY="20px"
+                    >
+                      <VStack justifyContent="center">
+                        <CashOut />
+                        <Button
+                          variant="ghost"
+                          w="100%"
+                          onClick={() => setShowOption(0)}
+                        >
+                          Cancel
+                        </Button>
+                      </VStack>
+                    </SlideFade>
+                  </VStack>
+                )}
+                {showOption == 0 && (
+                  <SlideFade
+                    in={showOption == 0}
+                    offsetY="20px"
+                    style={{ width: "100%" }}
+                  >
+                    <VStack mt="1em" w="100%">
+                      <Button w="100%" onClick={() => setShowOption(1)}>
+                        Send
+                      </Button>
+                      <Button w="100%" onClick={() => setShowOption(2)}>
+                        Make a Payment
+                      </Button>
+                      <Button w="100%" onClick={() => setShowOption(3)}>
+                        Cash out
+                      </Button>
+                    </VStack>
+                  </SlideFade>
+                )}
+              </VStack>
+            </LightMode>
           </Center>
         </Box>
       </Flex>

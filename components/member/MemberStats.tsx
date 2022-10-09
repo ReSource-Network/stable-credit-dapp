@@ -6,6 +6,7 @@ import {
   useDisclosure,
   VStack,
   Fade,
+  LightMode,
 } from "@chakra-ui/react"
 import { Stack, Text } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -26,7 +27,7 @@ export const MemberStats = () => {
 
   return (
     <Stack w="100%">
-      <Fade in={true} delay={0.5}>
+      <Fade in={true} delay={0.1}>
         <Stack alignItems="center" w="100%">
           <Text fontWeight="bold" fontSize="4xl" variant="title">
             {balance.toLocaleString("en", {
@@ -50,19 +51,21 @@ export const MemberStats = () => {
           </HStack>
         </Stack>
         <Stack>
-          <Button
-            aria-label="info"
-            onClick={onInfoToggle}
-            justifyContent="center"
-            variant="ghost"
-            backgroundColor="transparent !important"
-            size="sm"
-            rightIcon={
-              <FontAwesomeIcon icon={isInfoOpen ? faCaretUp : faCaretDown} />
-            }
-          >
-            {isInfoOpen ? "Less" : "More"}
-          </Button>
+          <LightMode>
+            <Button
+              aria-label="info"
+              onClick={onInfoToggle}
+              justifyContent="center"
+              variant="ghost"
+              backgroundColor="transparent !important"
+              size="sm"
+              rightIcon={
+                <FontAwesomeIcon icon={isInfoOpen ? faCaretUp : faCaretDown} />
+              }
+            >
+              {isInfoOpen ? "Less" : "More"}
+            </Button>
+          </LightMode>
         </Stack>
         <Collapse in={isInfoOpen} animateOpacity>
           <VStack opacity=".5">
