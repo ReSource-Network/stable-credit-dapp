@@ -21,58 +21,62 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ReservePoolInterface extends ethers.utils.Interface {
   functions: {
-    "LTV(address)": FunctionFragment;
-    "collateral(address)": FunctionFragment;
-    "depositCollateral(address,uint256)": FunctionFragment;
-    "depositFees(address,uint256)": FunctionFragment;
-    "getNeededCollateral(address)": FunctionFragment;
-    "initialize(address,address)": FunctionFragment;
-    "minLTV(address)": FunctionFragment;
-    "operatorBalance(address)": FunctionFragment;
-    "operatorPercent(address)": FunctionFragment;
+    "LTV()": FunctionFragment;
+    "collateral()": FunctionFragment;
+    "depositCollateral(uint256)": FunctionFragment;
+    "depositFees(uint256)": FunctionFragment;
+    "getNeededCollateral()": FunctionFragment;
+    "initialize(address,address,address)": FunctionFragment;
+    "minLTV()": FunctionFragment;
+    "operatorBalance()": FunctionFragment;
+    "operatorPercent()": FunctionFragment;
     "owner()": FunctionFragment;
     "paused()": FunctionFragment;
     "poolFee()": FunctionFragment;
     "recoverERC20(address,uint256)": FunctionFragment;
-    "reimburseMember(address,address,uint256)": FunctionFragment;
+    "reimburseMember(address,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "setMinLTV(address,uint256)": FunctionFragment;
-    "setOperatorPercent(address,uint256)": FunctionFragment;
+    "setMinLTV(uint256)": FunctionFragment;
+    "setOperatorPercent(uint256)": FunctionFragment;
     "setPoolFee(uint24)": FunctionFragment;
     "setSource(address)": FunctionFragment;
+    "stableCredit()": FunctionFragment;
     "swapRouter()": FunctionFragment;
-    "swapSink(address)": FunctionFragment;
-    "swapSinkPercent(address)": FunctionFragment;
+    "swapSink()": FunctionFragment;
+    "swapSinkPercent()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "withdrawOperator(address,uint256)": FunctionFragment;
+    "withdrawOperator(uint256)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "LTV", values: [string]): string;
-  encodeFunctionData(functionFragment: "collateral", values: [string]): string;
+  encodeFunctionData(functionFragment: "LTV", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "collateral",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "depositCollateral",
-    values: [string, BigNumberish]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "depositFees",
-    values: [string, BigNumberish]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getNeededCollateral",
-    values: [string]
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string, string]
+    values: [string, string, string]
   ): string;
-  encodeFunctionData(functionFragment: "minLTV", values: [string]): string;
+  encodeFunctionData(functionFragment: "minLTV", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "operatorBalance",
-    values: [string]
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "operatorPercent",
-    values: [string]
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
@@ -83,7 +87,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "reimburseMember",
-    values: [string, string, BigNumberish]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -91,11 +95,11 @@ interface ReservePoolInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setMinLTV",
-    values: [string, BigNumberish]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setOperatorPercent",
-    values: [string, BigNumberish]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setPoolFee",
@@ -103,13 +107,17 @@ interface ReservePoolInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "setSource", values: [string]): string;
   encodeFunctionData(
+    functionFragment: "stableCredit",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "swapRouter",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "swapSink", values: [string]): string;
+  encodeFunctionData(functionFragment: "swapSink", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "swapSinkPercent",
-    values: [string]
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
@@ -117,7 +125,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawOperator",
-    values: [string, BigNumberish]
+    values: [BigNumberish]
   ): string;
 
   decodeFunctionResult(functionFragment: "LTV", data: BytesLike): Result;
@@ -166,6 +174,10 @@ interface ReservePoolInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "setPoolFee", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setSource", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "stableCredit",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "swapRouter", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "swapSink", data: BytesLike): Result;
   decodeFunctionResult(
@@ -262,44 +274,34 @@ export class ReservePool extends BaseContract {
   interface: ReservePoolInterface;
 
   functions: {
-    LTV(network: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    LTV(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    collateral(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    collateral(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     depositCollateral(
-      network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     depositFees(
-      network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    getNeededCollateral(
-      network: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    getNeededCollateral(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     initialize(
+      _stableCredit: string,
       _sourceAddress: string,
       _swapRouter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    minLTV(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    minLTV(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    operatorBalance(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    operatorBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    operatorPercent(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    operatorPercent(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -314,7 +316,6 @@ export class ReservePool extends BaseContract {
     ): Promise<ContractTransaction>;
 
     reimburseMember(
-      network: string,
       member: string,
       credits: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -325,13 +326,11 @@ export class ReservePool extends BaseContract {
     ): Promise<ContractTransaction>;
 
     setMinLTV(
-      network: string,
       _minLTV: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     setOperatorPercent(
-      network: string,
       _operatorPercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -346,14 +345,13 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    stableCredit(overrides?: CallOverrides): Promise<[string]>;
+
     swapRouter(overrides?: CallOverrides): Promise<[string]>;
 
-    swapSink(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    swapSink(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    swapSinkPercent(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    swapSinkPercent(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transferOwnership(
       newOwner: string,
@@ -361,44 +359,39 @@ export class ReservePool extends BaseContract {
     ): Promise<ContractTransaction>;
 
     withdrawOperator(
-      network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  LTV(network: string, overrides?: CallOverrides): Promise<BigNumber>;
+  LTV(overrides?: CallOverrides): Promise<BigNumber>;
 
-  collateral(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+  collateral(overrides?: CallOverrides): Promise<BigNumber>;
 
   depositCollateral(
-    network: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   depositFees(
-    network: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  getNeededCollateral(
-    network: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getNeededCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
   initialize(
+    _stableCredit: string,
     _sourceAddress: string,
     _swapRouter: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  minLTV(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+  minLTV(overrides?: CallOverrides): Promise<BigNumber>;
 
-  operatorBalance(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+  operatorBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
-  operatorPercent(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+  operatorPercent(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -413,7 +406,6 @@ export class ReservePool extends BaseContract {
   ): Promise<ContractTransaction>;
 
   reimburseMember(
-    network: string,
     member: string,
     credits: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -424,13 +416,11 @@ export class ReservePool extends BaseContract {
   ): Promise<ContractTransaction>;
 
   setMinLTV(
-    network: string,
     _minLTV: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   setOperatorPercent(
-    network: string,
     _operatorPercent: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -445,11 +435,13 @@ export class ReservePool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  stableCredit(overrides?: CallOverrides): Promise<string>;
+
   swapRouter(overrides?: CallOverrides): Promise<string>;
 
-  swapSink(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+  swapSink(overrides?: CallOverrides): Promise<BigNumber>;
 
-  swapSinkPercent(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+  swapSinkPercent(overrides?: CallOverrides): Promise<BigNumber>;
 
   transferOwnership(
     newOwner: string,
@@ -457,50 +449,36 @@ export class ReservePool extends BaseContract {
   ): Promise<ContractTransaction>;
 
   withdrawOperator(
-    network: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    LTV(network: string, overrides?: CallOverrides): Promise<BigNumber>;
+    LTV(overrides?: CallOverrides): Promise<BigNumber>;
 
-    collateral(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+    collateral(overrides?: CallOverrides): Promise<BigNumber>;
 
     depositCollateral(
-      network: string,
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    depositFees(
-      network: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    depositFees(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    getNeededCollateral(
-      network: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getNeededCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
     initialize(
+      _stableCredit: string,
       _sourceAddress: string,
       _swapRouter: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    minLTV(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+    minLTV(overrides?: CallOverrides): Promise<BigNumber>;
 
-    operatorBalance(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    operatorBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
-    operatorPercent(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    operatorPercent(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -515,7 +493,6 @@ export class ReservePool extends BaseContract {
     ): Promise<void>;
 
     reimburseMember(
-      network: string,
       member: string,
       credits: BigNumberish,
       overrides?: CallOverrides
@@ -523,14 +500,9 @@ export class ReservePool extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
-    setMinLTV(
-      network: string,
-      _minLTV: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setMinLTV(_minLTV: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     setOperatorPercent(
-      network: string,
       _operatorPercent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -542,14 +514,13 @@ export class ReservePool extends BaseContract {
 
     setSource(_sourceAddress: string, overrides?: CallOverrides): Promise<void>;
 
+    stableCredit(overrides?: CallOverrides): Promise<string>;
+
     swapRouter(overrides?: CallOverrides): Promise<string>;
 
-    swapSink(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+    swapSink(overrides?: CallOverrides): Promise<BigNumber>;
 
-    swapSinkPercent(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    swapSinkPercent(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -557,7 +528,6 @@ export class ReservePool extends BaseContract {
     ): Promise<void>;
 
     withdrawOperator(
-      network: string,
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -642,44 +612,34 @@ export class ReservePool extends BaseContract {
   };
 
   estimateGas: {
-    LTV(network: string, overrides?: CallOverrides): Promise<BigNumber>;
+    LTV(overrides?: CallOverrides): Promise<BigNumber>;
 
-    collateral(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+    collateral(overrides?: CallOverrides): Promise<BigNumber>;
 
     depositCollateral(
-      network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     depositFees(
-      network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getNeededCollateral(
-      network: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getNeededCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
     initialize(
+      _stableCredit: string,
       _sourceAddress: string,
       _swapRouter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    minLTV(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+    minLTV(overrides?: CallOverrides): Promise<BigNumber>;
 
-    operatorBalance(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    operatorBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
-    operatorPercent(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    operatorPercent(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -694,7 +654,6 @@ export class ReservePool extends BaseContract {
     ): Promise<BigNumber>;
 
     reimburseMember(
-      network: string,
       member: string,
       credits: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -705,13 +664,11 @@ export class ReservePool extends BaseContract {
     ): Promise<BigNumber>;
 
     setMinLTV(
-      network: string,
       _minLTV: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     setOperatorPercent(
-      network: string,
       _operatorPercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -726,14 +683,13 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    stableCredit(overrides?: CallOverrides): Promise<BigNumber>;
+
     swapRouter(overrides?: CallOverrides): Promise<BigNumber>;
 
-    swapSink(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+    swapSink(overrides?: CallOverrides): Promise<BigNumber>;
 
-    swapSinkPercent(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    swapSinkPercent(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -741,60 +697,42 @@ export class ReservePool extends BaseContract {
     ): Promise<BigNumber>;
 
     withdrawOperator(
-      network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    LTV(
-      network: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    LTV(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    collateral(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    collateral(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     depositCollateral(
-      network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     depositFees(
-      network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     getNeededCollateral(
-      network: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     initialize(
+      _stableCredit: string,
       _sourceAddress: string,
       _swapRouter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    minLTV(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    minLTV(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    operatorBalance(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    operatorBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    operatorPercent(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    operatorPercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -809,7 +747,6 @@ export class ReservePool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     reimburseMember(
-      network: string,
       member: string,
       credits: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -820,13 +757,11 @@ export class ReservePool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setMinLTV(
-      network: string,
       _minLTV: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     setOperatorPercent(
-      network: string,
       _operatorPercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -841,17 +776,13 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    stableCredit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     swapRouter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    swapSink(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    swapSink(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    swapSinkPercent(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    swapSinkPercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,
@@ -859,7 +790,6 @@ export class ReservePool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     withdrawOperator(
-      network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

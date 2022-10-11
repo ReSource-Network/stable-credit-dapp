@@ -10,10 +10,16 @@ import {
 } from "@chakra-ui/react"
 import { ethers } from "ethers"
 import { Formik, Field } from "formik"
-import { useState } from "react"
 import { Stack, Text, LightMode } from "@chakra-ui/react"
-export const Transfer = () => {
-  const [loading, setLoading] = useState(false)
+import { useStableCreditContract } from "../../hooks/useStableCreditContract"
+import { parseStableCredits } from "../../functions/bignumber"
+import { ManageMember } from "../../hooks/useGetMember"
+import { useAccount } from "wagmi"
+import { useTransferCredits } from "../../hooks/useTransferCredits"
+
+export const Transfer = ({ getMember, reset }: ManageMember) => {
+  const { transfer, loading } = useTransferCredits()
+  const { address } = useAccount()
 
   return (
     <Stack w="100%">
@@ -25,8 +31,10 @@ export const Transfer = () => {
           address: "",
           amount: 0,
         }}
-        onSubmit={(values) => {
-          console.log(values)
+        onSubmit={async ({ address, amount }, { resetForm }) => {
+          await transfer(address, amount)
+          await getMember(address)
+          resetForm()
         }}
       >
         {({ handleSubmit, errors, touched }) => (
@@ -51,9 +59,6 @@ export const Transfer = () => {
                       if (!ethers.utils.isAddress(value)) {
                         error = "Invalid address"
                       }
-
-                      console.log(value)
-                      console.log(ethers.utils.isAddress(value))
                       return error
                     }}
                   />
@@ -75,9 +80,10 @@ export const Transfer = () => {
                   />
                 </InputGroup>
               </FormControl>
+              {/* TODO: fee breakdown */}
             </Stack>
             <HStack w="100%" mt="1em">
-              <Button w="100%" type="submit">
+              <Button isLoading={loading} w="100%" type="submit">
                 Send
               </Button>
             </HStack>

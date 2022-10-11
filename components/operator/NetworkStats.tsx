@@ -10,13 +10,36 @@ import {
 } from "@chakra-ui/react"
 import { faGear } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { useEffect, useState } from "react"
+import { useStableCreditContract } from "../../hooks/useStableCreditContract"
 import { NetworkConfigModal } from "./NetworkConfigModal"
+import { formatStableCredits } from "../../functions/bignumber"
+import { ManageMember } from "../../hooks/useGetMember"
+
 export const NetworkStats = () => {
   const {
     isOpen: isConfigOpen,
     onOpen: onConfigOpen,
     onClose: onConfigClose,
   } = useDisclosure()
+
+  const stableCredit = useStableCreditContract()
+  const [totalSupply, setTotalSupply] = useState(0)
+  const [networkDebt, setNetworkDebt] = useState(0)
+
+  useEffect(() => {
+    const handler = async () => {
+      setTotalSupply(
+        Number(formatStableCredits(await stableCredit.totalSupply())),
+      )
+      setNetworkDebt(
+        Number(formatStableCredits(await stableCredit.networkDebt())),
+      )
+    }
+    if (stableCredit) handler()
+  }, [stableCredit])
+
+  const memberCount = 1000
 
   return (
     <>
@@ -35,30 +58,30 @@ export const NetworkStats = () => {
           </HStack>
         </Box>
         <Stack>
-          <Stack direction={{ md: "row", base: "column" }}>
+          <Stack direction={{ md: "row", base: "column" }} alignSelf="center">
             <Stack p="1em" alignItems="center">
               <Text fontSize="24px" fontWeight="bold">
-                1,000
+                {memberCount.toLocaleString("en")}
               </Text>
               <Text mt="0 !important">Members</Text>
             </Stack>
             <Stack p="1em" alignItems="center">
               <Text fontSize="24px" fontWeight="bold">
-                $3,000.00
+                {totalSupply.toLocaleString("en", {
+                  style: "currency",
+                  currency: "USD",
+                })}
               </Text>
               <Text mt="0 !important">Total Supply</Text>
             </Stack>
           </Stack>
-          <Stack direction={{ md: "row", base: "column" }}>
+          <Stack alignSelf="center" direction={{ md: "row", base: "column" }}>
             <Stack p="1em" alignItems="center">
               <Text fontSize="24px" fontWeight="bold">
-                12
-              </Text>
-              <Text mt="0 !important">Defaults</Text>
-            </Stack>
-            <Stack p="1em" alignItems="center">
-              <Text fontSize="24px" fontWeight="bold">
-                $0.00
+                {networkDebt.toLocaleString("en", {
+                  style: "currency",
+                  currency: "USD",
+                })}
               </Text>
               <Text mt="0 !important">Network Debt</Text>
             </Stack>

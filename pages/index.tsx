@@ -17,6 +17,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGears, faSearch, faUser } from "@fortawesome/free-solid-svg-icons"
 import { useRouter } from "next/router"
 import React, { useState } from "react"
+import { useEffectOnce } from "react-use"
+import { useFetchNetworkAddresses } from "../state/networkAddresses"
 
 export const NetworkHomePage: NextPage = () => {
   const boxColor = useColorModeValue("#18202b", "white")

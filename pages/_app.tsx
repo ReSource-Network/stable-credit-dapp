@@ -18,6 +18,13 @@ import { ConnectKitProvider } from "connectkit"
 import { publicProvider } from "wagmi/providers/public"
 import { MetaMaskConnector } from "wagmi/connectors/metaMask"
 import { useColorMode } from "@chakra-ui/react"
+import { useRouter } from "next/router"
+import {
+  useFetchNetworkAddresses,
+  useGetNetworkAddresses,
+} from "../state/networkAddresses"
+import { useEffect } from "react"
+import { useSigner } from "wagmi"
 
 const { chains, provider, webSocketProvider } = configureChains(
   [CHAIN_INFO[42220], chain.hardhat, chain.mainnet, ...defaultL2Chains],
@@ -44,6 +51,18 @@ const Main = ({ Component, pageProps }: AppProps) => {
 
 const ConnectKitWrapper = ({ Component, pageProps }: AppProps) => {
   const { colorMode } = useColorMode()
+  const { data: signer } = useSigner()
+  const router = useRouter()
+  const network = router.query.network as string
+  const fetch = useFetchNetworkAddresses()
+  const networkAddresses = useGetNetworkAddresses()
+
+  useEffect(() => {
+    const handler = async () => {
+      await fetch()
+    }
+    if (network) handler()
+  }, [network, signer])
 
   return (
     <ConnectKitProvider mode={colorMode}>

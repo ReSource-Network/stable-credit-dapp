@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useGetNetworkAddresses } from "../state/networkAddresses"
 import { useStableCreditContract } from "./useStableCreditContract"
 
 export const useNetworkName = () => {
@@ -7,7 +8,7 @@ export const useNetworkName = () => {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (!stableCredit) return
+    if (!stableCredit) return setData("")
     const handler = async () => {
       setLoading(true)
       setData(await stableCredit.name())

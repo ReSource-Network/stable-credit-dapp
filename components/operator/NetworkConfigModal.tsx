@@ -8,17 +8,22 @@ import {
   ModalProps,
   FormLabel,
   FormControl,
-  FormErrorMessage,
   InputGroup,
   InputLeftAddon,
 } from "@chakra-ui/react"
 import { Button, Input, HStack, Divider } from "@chakra-ui/react"
-import { ethers } from "ethers"
 import { Formik, Field } from "formik"
-import { useState } from "react"
+import { useUpdateCreditExpiration } from "../../hooks/useUpdateCreditExpiration"
 
 export const NetworkConfigModal = ({ isOpen, onClose }: ModalProps) => {
-  const [loading, setLoading] = useState(false)
+  const {
+    updatePastDue,
+    updateExpiration,
+    refetch,
+    pastDue,
+    expiration,
+    loading,
+  } = useUpdateCreditExpiration()
 
   const handleClose = () => {
     onClose()
@@ -35,22 +40,31 @@ export const NetworkConfigModal = ({ isOpen, onClose }: ModalProps) => {
         <ModalCloseButton isDisabled={loading} />
         <ModalBody>
           <Formik
+            enableReinitialize
             initialValues={{
-              creditExpiration: 0,
-              pastDueExpiration: 0,
+              pastDueExpiration: pastDue.toNumber(),
+              creditExpiration: expiration.toNumber(),
             }}
-            onSubmit={(values) => {
-              console.log(values)
+            onSubmit={async ({ pastDueExpiration, creditExpiration }) => {
+              if (pastDueExpiration != pastDue.toNumber())
+                await updatePastDue(pastDueExpiration)
+              if (creditExpiration != expiration.toNumber())
+                await updateExpiration(creditExpiration)
+              refetch()
             }}
           >
             {({ handleSubmit, errors, touched }) => (
               <form onSubmit={handleSubmit}>
-                <FormControl>
+                <FormControl
+                  isInvalid={
+                    !!errors.pastDueExpiration && touched.pastDueExpiration
+                  }
+                >
                   <FormLabel htmlFor="pastDueExpiration">
                     Credit past due
                   </FormLabel>
                   <InputGroup>
-                    <InputLeftAddon>days</InputLeftAddon>
+                    <InputLeftAddon>seconds</InputLeftAddon>
                     <Field
                       as={Input}
                       id="pastDueExpiration"
@@ -60,7 +74,12 @@ export const NetworkConfigModal = ({ isOpen, onClose }: ModalProps) => {
                     />
                   </InputGroup>
                 </FormControl>
-                <FormControl mt="1em">
+                <FormControl
+                  mt="1em"
+                  isInvalid={
+                    !!errors.creditExpiration && touched.creditExpiration
+                  }
+                >
                   <FormLabel htmlFor="creditExpiration">
                     Credit expiration
                   </FormLabel>

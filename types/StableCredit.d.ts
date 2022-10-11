@@ -51,7 +51,7 @@ interface StableCreditInterface extends ethers.utils.Interface {
     "getReservePool()": FunctionFragment;
     "inDefault(address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "initialize(address,address,address,address,string,string)": FunctionFragment;
+    "initialize(address,address,string,string)": FunctionFragment;
     "isAuthorized(address)": FunctionFragment;
     "isPastDue(address)": FunctionFragment;
     "name()": FunctionFragment;
@@ -63,7 +63,9 @@ interface StableCreditInterface extends ethers.utils.Interface {
     "reservePool()": FunctionFragment;
     "setCreditExpiration(uint256)": FunctionFragment;
     "setCreditLimit(address,uint256)": FunctionFragment;
+    "setFeeManager(address)": FunctionFragment;
     "setPastDueExpiration(uint256)": FunctionFragment;
+    "setReservePool(address)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
@@ -176,7 +178,7 @@ interface StableCreditInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string, string, string, string, string, string]
+    values: [string, string, string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "isAuthorized",
@@ -214,8 +216,16 @@ interface StableCreditInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "setFeeManager",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setPastDueExpiration",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setReservePool",
+    values: [string]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
@@ -363,7 +373,15 @@ interface StableCreditInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setFeeManager",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setPastDueExpiration",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setReservePool",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
@@ -638,8 +656,6 @@ export class StableCredit extends BaseContract {
     initialize(
       _feeToken: string,
       _accessManager: string,
-      _feeManager: string,
-      _reservePool: string,
       name_: string,
       symbol_: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -682,8 +698,18 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setFeeManager(
+      _feeManager: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     setPastDueExpiration(
       _seconds: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setReservePool(
+      _reservePool: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -835,8 +861,6 @@ export class StableCredit extends BaseContract {
   initialize(
     _feeToken: string,
     _accessManager: string,
-    _feeManager: string,
-    _reservePool: string,
     name_: string,
     symbol_: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -876,8 +900,18 @@ export class StableCredit extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setFeeManager(
+    _feeManager: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   setPastDueExpiration(
     _seconds: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setReservePool(
+    _reservePool: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1026,8 +1060,6 @@ export class StableCredit extends BaseContract {
     initialize(
       _feeToken: string,
       _accessManager: string,
-      _feeManager: string,
-      _reservePool: string,
       name_: string,
       symbol_: string,
       overrides?: CallOverrides
@@ -1065,8 +1097,18 @@ export class StableCredit extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setFeeManager(
+      _feeManager: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setPastDueExpiration(
       _seconds: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setReservePool(
+      _reservePool: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1382,8 +1424,6 @@ export class StableCredit extends BaseContract {
     initialize(
       _feeToken: string,
       _accessManager: string,
-      _feeManager: string,
-      _reservePool: string,
       name_: string,
       symbol_: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1426,8 +1466,18 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    setFeeManager(
+      _feeManager: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     setPastDueExpiration(
       _seconds: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setReservePool(
+      _reservePool: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1592,8 +1642,6 @@ export class StableCredit extends BaseContract {
     initialize(
       _feeToken: string,
       _accessManager: string,
-      _feeManager: string,
-      _reservePool: string,
       name_: string,
       symbol_: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1639,8 +1687,18 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    setFeeManager(
+      _feeManager: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     setPastDueExpiration(
       _seconds: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setReservePool(
+      _reservePool: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

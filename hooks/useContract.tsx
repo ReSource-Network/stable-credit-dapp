@@ -12,10 +12,12 @@ import {
   getReservePoolContract,
   getStableCreditContract,
 } from "../functions/contracts"
-import { NetworkContracts, useNetworkAddresses } from "./useNetworkAddresses"
+import { NetworkContractAddresses } from "../state/networkAddresses/store"
+import { useGetNetworkAddresses } from "../state/networkAddresses/index"
+import { useRouter } from "next/router"
 
 export function getContract(
-  networkAddresses: NetworkContracts,
+  networkAddresses: NetworkContractAddresses,
   signer?: Signer | Provider,
   key?: Contracts,
 ): Contract | null {
@@ -63,8 +65,12 @@ export function getContract(
 export function useContract(key: Contracts): Contract | null {
   const { data: signer } = useSigner()
   const provider = useProvider()
-  const { networkAddresses } = useNetworkAddresses()
+  const networkAddresses = useGetNetworkAddresses()
+  const valid = !!networkAddresses.accessManager
+  const router = useRouter()
+  const network = router.query.network as string
   return useMemo(() => {
+    if (!valid) return null
     if (!signer) return getContract(networkAddresses, provider, key)
 
     try {
@@ -73,5 +79,5 @@ export function useContract(key: Contracts): Contract | null {
       console.error("Failed to get contract", error)
       return null
     }
-  }, [key, signer, networkAddresses])
+  }, [key, signer, network, networkAddresses])
 }

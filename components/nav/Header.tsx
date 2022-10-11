@@ -13,20 +13,32 @@ import { useAccount, useSigner } from "wagmi"
 import { ConnectKitButton } from "connectkit"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons"
-import { useNetworkAddresses } from "../../hooks/useNetworkAddresses"
 import { useNetworkName } from "../../hooks/useNetworkName"
 import { trimAddress } from "../../functions/address"
 import { useRouter } from "next/router"
 import Link from "next/link"
+import {
+  useGetNetworkAddresses,
+  useFetchNetworkAddresses,
+} from "../../state/networkAddresses/index"
+import { useEffect } from "react"
 
 export const Header = () => {
   const { connector } = useAccount()
   const { colorMode, toggleColorMode } = useColorMode()
   const isMobile = useBreakpointValue({ base: true, md: false })
-  const { networkAddresses, valid } = useNetworkAddresses()
+  const networkAddresses = useGetNetworkAddresses()
+  const fetch = useFetchNetworkAddresses()
   const { name: networkName, loading } = useNetworkName()
   const trimmedAddress = trimAddress(networkAddresses.stableCredit || "", 4)
   const router = useRouter()
+
+  useEffect(() => {
+    const handler = async () => {
+      await fetch()
+    }
+    handler()
+  }, [router])
 
   return (
     <Center position="fixed" w="100vw" bgColor="#0000001d" zIndex="100">

@@ -10,11 +10,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "network",
-        type: "address",
-      },
-      {
         internalType: "uint256",
         name: "credits",
         type: "uint256",
@@ -27,11 +22,6 @@ const _abi = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "network",
-        type: "address",
-      },
       {
         internalType: "address",
         name: "member",

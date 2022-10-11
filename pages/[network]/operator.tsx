@@ -1,14 +1,11 @@
 import { Container, Flex, Stack } from "@chakra-ui/react"
 import type { NextPage } from "next"
 import Head from "next/head"
-import { useNetworkAddresses } from "../../hooks/useNetworkAddresses"
 import { Members } from "../../components/operator/Members"
 import { NetworkStats } from "../../components/operator/NetworkStats"
 import { ReserveStats } from "../../components/operator/ReserveStats"
 
 export const Operator: NextPage = () => {
-  const { networkAddresses, valid } = useNetworkAddresses()
-
   return (
     <>
       <Head>

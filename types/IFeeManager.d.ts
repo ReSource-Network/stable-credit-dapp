@@ -35,8 +35,8 @@ interface IFeeManagerInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
-    "FeesCollected(address,address,uint256)": EventFragment;
-    "FeesDistributed(address,uint256)": EventFragment;
+    "FeesCollected(address,uint256)": EventFragment;
+    "FeesDistributed(uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "FeesCollected"): EventFragment;
@@ -44,15 +44,11 @@ interface IFeeManagerInterface extends ethers.utils.Interface {
 }
 
 export type FeesCollectedEvent = TypedEvent<
-  [string, string, BigNumber] & {
-    network: string;
-    member: string;
-    totalFee: BigNumber;
-  }
+  [string, BigNumber] & { member: string; totalFee: BigNumber }
 >;
 
 export type FeesDistributedEvent = TypedEvent<
-  [string, BigNumber] & { network: string; totalFee: BigNumber }
+  [BigNumber] & { totalFee: BigNumber }
 >;
 
 export class IFeeManager extends BaseContract {
@@ -124,39 +120,29 @@ export class IFeeManager extends BaseContract {
   };
 
   filters: {
-    "FeesCollected(address,address,uint256)"(
-      network?: null,
+    "FeesCollected(address,uint256)"(
       member?: null,
       totalFee?: null
     ): TypedEventFilter<
-      [string, string, BigNumber],
-      { network: string; member: string; totalFee: BigNumber }
+      [string, BigNumber],
+      { member: string; totalFee: BigNumber }
     >;
 
     FeesCollected(
-      network?: null,
       member?: null,
       totalFee?: null
     ): TypedEventFilter<
-      [string, string, BigNumber],
-      { network: string; member: string; totalFee: BigNumber }
+      [string, BigNumber],
+      { member: string; totalFee: BigNumber }
     >;
 
-    "FeesDistributed(address,uint256)"(
-      network?: null,
+    "FeesDistributed(uint256)"(
       totalFee?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { network: string; totalFee: BigNumber }
-    >;
+    ): TypedEventFilter<[BigNumber], { totalFee: BigNumber }>;
 
     FeesDistributed(
-      network?: null,
       totalFee?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { network: string; totalFee: BigNumber }
-    >;
+    ): TypedEventFilter<[BigNumber], { totalFee: BigNumber }>;
   };
 
   estimateGas: {

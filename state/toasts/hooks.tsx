@@ -21,9 +21,9 @@ export const useActiveToast = (id: string) => {
       (store) => ({
         toast: get(store.toasts, id) ?? {},
       }),
-      [id]
+      [id],
     ),
-    shallow
+    shallow,
   )
 
   return toast

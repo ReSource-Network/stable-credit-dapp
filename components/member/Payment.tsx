@@ -8,12 +8,43 @@ import {
   FormControl,
 } from "@chakra-ui/react"
 import { Formik, Field } from "formik"
-import { useState } from "react"
 import { Stack, Text, LightMode } from "@chakra-ui/react"
-export const Payment = () => {
-  const [loading, setLoading] = useState(false)
-  const feeTokenName = "USDC"
-  const feeTokenBalance = 123
+import { FeeTokenBalance } from "./FeeTokenBalance"
+import { ManageMember } from "../../hooks/useGetMember"
+import { useAccount } from "wagmi"
+import { useRepayCredits } from "../../hooks/useRepayCredits"
+import {
+  ApprovalState,
+  useApproveFeeToken,
+} from "../../hooks/useApproveFeeToken"
+import { constants } from "ethers/lib/ethers"
+import { useStableCreditContract } from "../../hooks/useStableCreditContract"
+import { useIsMounted } from "../../hooks/useIsMounted"
+
+export const Payment = ({ getMember }: ManageMember) => {
+  const { repay, loading } = useRepayCredits()
+  const stableCredit = useStableCreditContract()
+  const { approve, approving, approvalState } = useApproveFeeToken(
+    constants.MaxUint256,
+    stableCredit?.address,
+  )
+  const isMounted = useIsMounted()
+  const { address } = useAccount()
+
+  console.log(approvalState)
+
+  if (address && isMounted && approvalState !== ApprovalState.APPROVED)
+    return (
+      <Button
+        w="100%"
+        variant="solid"
+        onClick={approve}
+        isLoading={approving}
+        loadingText="Approving"
+      >
+        Approve FeeToken
+      </Button>
+    )
 
   return (
     <Stack w="100%">
@@ -30,19 +61,17 @@ export const Payment = () => {
           initialValues={{
             amount: 0,
           }}
-          onSubmit={(values) => {
-            console.log(values)
+          onSubmit={async ({ amount }, { resetForm }) => {
+            if (!address) return
+            await repay(amount)
+            await getMember(address)
+            resetForm()
           }}
         >
           {({ handleSubmit, errors, touched }) => (
             <form onSubmit={handleSubmit}>
               <Stack w="100%" bgColor="white" p="1em" borderRadius="lg">
-                <HStack justifyContent="space-between" my="1em">
-                  <Text>{feeTokenName} balance:</Text>
-                  <Text fontSize="lg" fontWeight="bold">
-                    ${feeTokenBalance}
-                  </Text>
-                </HStack>
+                <FeeTokenBalance />
                 <FormControl>
                   <FormLabel htmlFor="address">Amount</FormLabel>
                   <InputGroup>

@@ -203,18 +203,10 @@ export function scale(input: Wei, decimalPlaces: number): Wei {
   return input.mul(wei(10).pow(decimalPlaces))
 }
 
-export const stringToWei = (value: string): ethers.BigNumber => {
-  return ethers.utils.parseUnits(value, "wei")
+export const formatStableCredits = (value: ethers.BigNumber) => {
+  return ethers.utils.formatUnits(value, "mwei")
 }
 
-export const stringToEth = (value: string): ethers.BigNumber => {
-  return ethers.utils.parseEther(value)
-}
-
-export const weiToString = (value: ethers.BigNumber): string => {
-  return ethers.utils.formatUnits(value, "wei")
-}
-
-export const ethToString = (value: ethers.BigNumber): string => {
-  return ethers.utils.formatEther(value)
+export const parseStableCredits = (value: string) => {
+  return ethers.utils.parseUnits(value, "mwei")
 }

@@ -4,21 +4,36 @@ import {
   Stack,
   HStack,
   Button,
-  Divider,
   IconButton,
   useDisclosure,
 } from "@chakra-ui/react"
 import { faArrowUpFromBracket, faGear } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { SourceGlyphSolid } from "../Glyph"
-import { VStack } from "@chakra-ui/react"
+import { VStack, LightMode } from "@chakra-ui/react"
 import { ReserveConfigModal } from "./ReserveConfigModal"
+import { useReservePoolContract } from "../../hooks/useReservePoolContract"
+import { useEffect, useState } from "react"
 export const ReserveStats = () => {
   const {
     isOpen: isConfigOpen,
     onOpen: onConfigOpen,
     onClose: onConfigClose,
   } = useDisclosure()
+
+  const reservePool = useReservePoolContract()
+  const [operatorBalance, setOperatorBalance] = useState(0)
+  const [collateral, setCollateral] = useState(0)
+  const [swapSink, setSwapSink] = useState(0)
+
+  useEffect(() => {
+    const handler = async () => {
+      setOperatorBalance((await reservePool.operatorBalance()).toNumber())
+      setCollateral((await reservePool.collateral()).toNumber())
+      setSwapSink((await reservePool.swapSink()).toNumber())
+    }
+    if (reservePool) handler()
+  }, [reservePool])
 
   return (
     <>
@@ -45,31 +60,39 @@ export const ReserveStats = () => {
           <Stack direction={{ md: "row", base: "column" }}>
             <Stack p="1em" alignItems="center" textAlign="center">
               <Text fontSize="24px" fontWeight="bold">
-                $99.20
+                {operatorBalance.toLocaleString("en", {
+                  style: "currency",
+                  currency: "USD",
+                })}
               </Text>
-              <Text mt="0 !important">Operator Balance</Text>
+              <Text mt="0 !important">Operator</Text>
             </Stack>
             <Stack p="1em" alignItems="center" alignSelf="center">
-              <Button
-                size="sm"
-                leftIcon={<FontAwesomeIcon icon={faArrowUpFromBracket} />}
-              >
-                Withdraw
-              </Button>
+              <LightMode>
+                <Button
+                  size="sm"
+                  leftIcon={<FontAwesomeIcon icon={faArrowUpFromBracket} />}
+                >
+                  Withdraw
+                </Button>
+              </LightMode>
             </Stack>
           </Stack>
           <Stack direction={{ md: "row", base: "column" }}>
             <Stack p="1em" alignItems="center" textAlign="center">
               <Text fontSize="24px" fontWeight="bold">
-                $120.20
+                {collateral.toLocaleString("en", {
+                  style: "currency",
+                  currency: "USD",
+                })}
               </Text>
-              <Text mt="0 !important">Collateral Reserve:</Text>
+              <Text mt="0 !important">Collateral</Text>
             </Stack>
             <Stack p="1em" alignItems="center" textAlign="center">
               <HStack textAlign="center">
                 <SourceGlyphSolid />
                 <Text fontSize="24px" fontWeight="bold">
-                  29
+                  {swapSink.toLocaleString("en")}
                 </Text>
               </HStack>
               <Text mt="0 !important">Swap Sink</Text>

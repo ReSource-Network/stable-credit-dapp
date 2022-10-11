@@ -3,14 +3,13 @@ import { BigNumber } from "@ethersproject/bignumber"
 import { useCallback, useMemo } from "react"
 import { config } from "../config"
 import { nanoid } from "../functions"
+import { formatBN } from "../functions/bignumber"
 import { useToastControls } from "../state"
 import { useAddTransaction } from "../state/transactions"
-import { useFeeTokenAllowance } from "./useFeeTokenAllowance"
+import { useAllowanceFeetoken } from "./useAllowanceFeeToken"
 
 import { useMountedState } from "./useMountedState"
-import { ERC20__factory } from "../types/factories/ERC20__factory"
-import { ERC20 } from "../types/ERC20"
-import { useAccount, useSigner } from "wagmi"
+import { useAccount } from "wagmi"
 import { useFeeTokenContract } from "./useFeeTokenContract"
 
 export type UseApproveResponse = {
@@ -34,8 +33,9 @@ export const useApproveFeeToken = (
   amount: BigNumber,
   spender: string,
 ): UseApproveResponse => {
-  const feeToken = useFeeTokenContract()
   const { address } = useAccount()
+  const feeToken = useFeeTokenContract()
+
   const [approving, setApproving] = useMountedState(false)
   const {
     allowance,
@@ -43,8 +43,8 @@ export const useApproveFeeToken = (
     error,
     initialLoading,
     update: updateAllowance,
-  } = useFeeTokenAllowance(spender, address)
-  // const addTransaction = useAddTransaction()
+  } = useAllowanceFeetoken(spender, address)
+  const addTransaction = useAddTransaction()
   const { addToast } = useToastControls()
   const toast = useToast()
 
@@ -66,10 +66,12 @@ export const useApproveFeeToken = (
     try {
       const resp = await (feeToken && feeToken.approve(spender, amount))
 
-      // addTransaction(resp, {
-      //   summary: `Approved ${await feeToken.symbol()}`,
-      //   approval: { tokenAddress: feeToken.address, spender },
-      // })
+      const symbol = await feeToken.symbol()
+
+      addTransaction(resp, {
+        summary: `Approved ${formatBN(amount)} ${symbol}`,
+        approval: { tokenAddress: feeToken.address, spender },
+      })
 
       await resp.wait()
       await updateAllowance()
@@ -111,7 +113,7 @@ export const useApproveFeeToken = (
     amount,
     setApproving,
     addToast,
-    // addTransaction,
+    addTransaction,
     updateAllowance,
     feeToken,
   ])

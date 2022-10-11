@@ -23,13 +23,15 @@ interface IAccessManagerInterface extends ethers.utils.Interface {
   functions: {
     "grantMember(address)": FunctionFragment;
     "isMember(address)": FunctionFragment;
-    "isNetworkOperator(address)": FunctionFragment;
+    "isOperator(address)": FunctionFragment;
+    "isUnderwriter(address)": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "grantMember", values: [string]): string;
   encodeFunctionData(functionFragment: "isMember", values: [string]): string;
+  encodeFunctionData(functionFragment: "isOperator", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "isNetworkOperator",
+    functionFragment: "isUnderwriter",
     values: [string]
   ): string;
 
@@ -38,8 +40,9 @@ interface IAccessManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "isMember", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "isOperator", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "isNetworkOperator",
+    functionFragment: "isUnderwriter",
     data: BytesLike
   ): Result;
 
@@ -48,12 +51,16 @@ interface IAccessManagerInterface extends ethers.utils.Interface {
     "MemberRemoved(address)": EventFragment;
     "OperatorAdded(address)": EventFragment;
     "OperatorRemoved(address)": EventFragment;
+    "UnderwriterAdded(address)": EventFragment;
+    "UnderwriterRemoved(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "MemberAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MemberRemoved"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OperatorAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OperatorRemoved"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UnderwriterAdded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UnderwriterRemoved"): EventFragment;
 }
 
 export type MemberAddedEvent = TypedEvent<[string] & { _member: string }>;
@@ -63,6 +70,14 @@ export type MemberRemovedEvent = TypedEvent<[string] & { _member: string }>;
 export type OperatorAddedEvent = TypedEvent<[string] & { _operator: string }>;
 
 export type OperatorRemovedEvent = TypedEvent<[string] & { _operator: string }>;
+
+export type UnderwriterAddedEvent = TypedEvent<
+  [string] & { _underwriter: string }
+>;
+
+export type UnderwriterRemovedEvent = TypedEvent<
+  [string] & { _underwriter: string }
+>;
 
 export class IAccessManager extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -115,8 +130,13 @@ export class IAccessManager extends BaseContract {
 
     isMember(_member: string, overrides?: CallOverrides): Promise<[boolean]>;
 
-    isNetworkOperator(
+    isOperator(
       _operator: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    isUnderwriter(
+      _underwriter: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
   };
@@ -128,8 +148,10 @@ export class IAccessManager extends BaseContract {
 
   isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
-  isNetworkOperator(
-    _operator: string,
+  isOperator(_operator: string, overrides?: CallOverrides): Promise<boolean>;
+
+  isUnderwriter(
+    _underwriter: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
@@ -138,8 +160,10 @@ export class IAccessManager extends BaseContract {
 
     isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
-    isNetworkOperator(
-      _operator: string,
+    isOperator(_operator: string, overrides?: CallOverrides): Promise<boolean>;
+
+    isUnderwriter(
+      _underwriter: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
   };
@@ -176,6 +200,22 @@ export class IAccessManager extends BaseContract {
     OperatorRemoved(
       _operator?: null
     ): TypedEventFilter<[string], { _operator: string }>;
+
+    "UnderwriterAdded(address)"(
+      _underwriter?: null
+    ): TypedEventFilter<[string], { _underwriter: string }>;
+
+    UnderwriterAdded(
+      _underwriter?: null
+    ): TypedEventFilter<[string], { _underwriter: string }>;
+
+    "UnderwriterRemoved(address)"(
+      _underwriter?: null
+    ): TypedEventFilter<[string], { _underwriter: string }>;
+
+    UnderwriterRemoved(
+      _underwriter?: null
+    ): TypedEventFilter<[string], { _underwriter: string }>;
   };
 
   estimateGas: {
@@ -186,8 +226,13 @@ export class IAccessManager extends BaseContract {
 
     isMember(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    isNetworkOperator(
+    isOperator(
       _operator: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isUnderwriter(
+      _underwriter: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
@@ -203,8 +248,13 @@ export class IAccessManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    isNetworkOperator(
+    isOperator(
       _operator: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isUnderwriter(
+      _underwriter: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

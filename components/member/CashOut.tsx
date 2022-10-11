@@ -9,10 +9,25 @@ import {
   FormHelperText,
 } from "@chakra-ui/react"
 import { Formik, Field } from "formik"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Stack, Text, LightMode } from "@chakra-ui/react"
+import { useStableCreditContract } from "../../hooks/useStableCreditContract"
+import { useAccount } from "wagmi"
+import { formatStableCredits } from "../../functions/bignumber"
 export const CashOut = () => {
-  const networkDebt = 1042
+  const stableCredit = useStableCreditContract()
+  const [networkDebt, setNetworkDebt] = useState(0)
+  const { address } = useAccount()
+
+  useEffect(() => {
+    const handler = async () => {
+      if (!address) return
+      setNetworkDebt(
+        Number(formatStableCredits(await stableCredit.networkDebt())),
+      )
+    }
+    if (address && stableCredit) handler()
+  }, [stableCredit, address])
 
   return (
     <Stack w="100%">

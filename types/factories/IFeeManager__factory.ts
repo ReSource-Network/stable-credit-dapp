@@ -13,12 +13,6 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "network",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "address",
         name: "member",
         type: "address",
       },
@@ -35,12 +29,6 @@ const _abi = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "network",
-        type: "address",
-      },
       {
         indexed: false,
         internalType: "uint256",

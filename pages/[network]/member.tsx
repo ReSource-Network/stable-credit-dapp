@@ -7,9 +7,12 @@ import { Transfer } from "../../components/member/Transfer"
 import { Payment } from "../../components/member/Payment"
 import { CashOut } from "../../components/member/CashOut"
 import { MemberStats } from "../../components/member/MemberStats"
+import { useGetMember } from "../../hooks/useGetMember"
 
 export const Member: NextPage = () => {
   const [showOption, setShowOption] = useState(0)
+
+  const memberManage = useGetMember()
 
   return (
     <>
@@ -29,7 +32,7 @@ export const Member: NextPage = () => {
           <Center>
             <LightMode>
               <VStack w="100%">
-                <MemberStats />
+                <MemberStats {...memberManage} />
                 {showOption == 1 && (
                   <VStack w="100%">
                     <SlideFade
@@ -38,7 +41,7 @@ export const Member: NextPage = () => {
                       offsetY="20px"
                     >
                       <VStack justifyContent="center">
-                        <Transfer />
+                        <Transfer {...memberManage} />
                         <Button
                           variant="ghost"
                           w="100%"
@@ -58,7 +61,7 @@ export const Member: NextPage = () => {
                       offsetY="20px"
                     >
                       <VStack justifyContent="center">
-                        <Payment />
+                        <Payment {...memberManage} />
                         <Button
                           variant="ghost"
                           w="100%"

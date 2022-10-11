@@ -15,10 +15,10 @@ import {
 import { Button, Input, HStack, Divider } from "@chakra-ui/react"
 import { ethers } from "ethers"
 import { Formik, Field } from "formik"
-import { useState } from "react"
+import { useCreateCreditLine } from "../../hooks/useCreateCreditLine"
 
 export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
-  const [loading, setLoading] = useState(false)
+  const { loading, createCreditLine } = useCreateCreditLine()
 
   const handleClose = () => {
     onClose()
@@ -39,8 +39,8 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
               address: "",
               creditLimit: 0,
             }}
-            onSubmit={(values) => {
-              console.log(values)
+            onSubmit={({ address, creditLimit }) => {
+              createCreditLine(address, creditLimit)
             }}
           >
             {({ handleSubmit, errors, touched }) => (
@@ -61,16 +61,13 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
                       if (!ethers.utils.isAddress(value)) {
                         error = "Invalid address"
                       }
-
-                      console.log(value)
-                      console.log(ethers.utils.isAddress(value))
                       return error
                     }}
                   />
                   <FormErrorMessage>{errors.address}</FormErrorMessage>
                 </FormControl>
                 <FormControl>
-                  <FormLabel htmlFor="address">Credit Limit</FormLabel>
+                  <FormLabel htmlFor="creditLimit">Credit Limit</FormLabel>
                   <InputGroup>
                     <InputLeftAddon>$</InputLeftAddon>
                     <Field
@@ -86,7 +83,7 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
                   <Button isLoading={loading} onClick={handleClose}>
                     Cancel
                   </Button>
-                  <Button variant="ghost" type="submit">
+                  <Button isLoading={loading} variant="ghost" type="submit">
                     Create
                   </Button>
                 </HStack>
