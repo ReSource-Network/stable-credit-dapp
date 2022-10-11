@@ -60,15 +60,7 @@ export const useGetMember = (): ManageMember => {
 
         const creditBalance = await stableCredit.creditBalanceOf(address)
 
-        const issuance = (await stableCredit.creditIssuance(address)).toNumber()
-
-        const pastDue = (await stableCredit.pastDueExpiration())
-          .add(issuance)
-          .toNumber()
-
-        const expiration = (await stableCredit.creditExpiration())
-          .add(pastDue)
-          .toNumber()
+        const terms = await stableCredit.creditTerms(address)
 
         let balance = 0
 
@@ -81,8 +73,8 @@ export const useGetMember = (): ManageMember => {
           address: address,
           creditLimit,
           balance,
-          default: new Date(pastDue * 1000),
-          pastDue: new Date(expiration * 1000),
+          default: new Date(terms.defaultDate.toNumber() * 1000),
+          pastDue: new Date(terms.pastDueDate.toNumber() * 1000),
         })
       } catch (e) {
         if (e && (e as any).code === 4001) {

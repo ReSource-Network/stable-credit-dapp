@@ -21,7 +21,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface StableCreditInterface extends ethers.utils.Interface {
   functions: {
-    "__CIP36_init(string,string)": FunctionFragment;
+    "__MutualCredit_init(string,string)": FunctionFragment;
     "access()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
@@ -32,12 +32,11 @@ interface StableCreditInterface extends ethers.utils.Interface {
     "burnNetworkDebt(uint256)": FunctionFragment;
     "conversionRate()": FunctionFragment;
     "convertCreditToFeeToken(uint256)": FunctionFragment;
-    "createCreditLine(address,uint256,uint256)": FunctionFragment;
+    "createCreditLine(address,uint256,uint256,uint256,uint256)": FunctionFragment;
     "creditBalanceOf(address)": FunctionFragment;
-    "creditExpiration()": FunctionFragment;
-    "creditIssuance(address)": FunctionFragment;
     "creditLimitLeftOf(address)": FunctionFragment;
     "creditLimitOf(address)": FunctionFragment;
+    "creditTerms(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "demurrageIndex()": FunctionFragment;
@@ -57,14 +56,11 @@ interface StableCreditInterface extends ethers.utils.Interface {
     "name()": FunctionFragment;
     "networkDebt()": FunctionFragment;
     "owner()": FunctionFragment;
-    "pastDueExpiration()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "repayCreditBalance(uint128)": FunctionFragment;
     "reservePool()": FunctionFragment;
-    "setCreditExpiration(uint256)": FunctionFragment;
     "setCreditLimit(address,uint256)": FunctionFragment;
     "setFeeManager(address)": FunctionFragment;
-    "setPastDueExpiration(uint256)": FunctionFragment;
     "setReservePool(address)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
@@ -75,7 +71,7 @@ interface StableCreditInterface extends ethers.utils.Interface {
   };
 
   encodeFunctionData(
-    functionFragment: "__CIP36_init",
+    functionFragment: "__MutualCredit_init",
     values: [string, string]
   ): string;
   encodeFunctionData(functionFragment: "access", values?: undefined): string;
@@ -111,18 +107,10 @@ interface StableCreditInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "createCreditLine",
-    values: [string, BigNumberish, BigNumberish]
+    values: [string, BigNumberish, BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "creditBalanceOf",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "creditExpiration",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "creditIssuance",
     values: [string]
   ): string;
   encodeFunctionData(
@@ -133,6 +121,7 @@ interface StableCreditInterface extends ethers.utils.Interface {
     functionFragment: "creditLimitOf",
     values: [string]
   ): string;
+  encodeFunctionData(functionFragment: "creditTerms", values: [string]): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "decreaseAllowance",
@@ -192,10 +181,6 @@ interface StableCreditInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "pastDueExpiration",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
@@ -208,20 +193,12 @@ interface StableCreditInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setCreditExpiration",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "setCreditLimit",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setFeeManager",
     values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setPastDueExpiration",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setReservePool",
@@ -250,7 +227,7 @@ interface StableCreditInterface extends ethers.utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "__CIP36_init",
+    functionFragment: "__MutualCredit_init",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "access", data: BytesLike): Result;
@@ -284,19 +261,15 @@ interface StableCreditInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "creditExpiration",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "creditIssuance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "creditLimitLeftOf",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "creditLimitOf",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "creditTerms",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
@@ -349,10 +322,6 @@ interface StableCreditInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "pastDueExpiration",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
@@ -365,19 +334,11 @@ interface StableCreditInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setCreditExpiration",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "setCreditLimit",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "setFeeManager",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setPastDueExpiration",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -530,7 +491,7 @@ export class StableCredit extends BaseContract {
   interface: StableCreditInterface;
 
   functions: {
-    __CIP36_init(
+    __MutualCredit_init(
       name_: string,
       symbol_: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -583,19 +544,14 @@ export class StableCredit extends BaseContract {
     createCreditLine(
       _member: string,
       _creditLimit: BigNumberish,
+      _pastDue: BigNumberish,
+      _default: BigNumberish,
       _balance: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     creditBalanceOf(
       _member: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    creditExpiration(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    creditIssuance(
-      arg0: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -608,6 +564,17 @@ export class StableCredit extends BaseContract {
       _member: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    creditTerms(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        issueDate: BigNumber;
+        defaultDate: BigNumber;
+        pastDueDate: BigNumber;
+      }
+    >;
 
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
@@ -674,8 +641,6 @@ export class StableCredit extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    pastDueExpiration(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -687,11 +652,6 @@ export class StableCredit extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<[string]>;
 
-    setCreditExpiration(
-      _seconds: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     setCreditLimit(
       _member: string,
       _limit: BigNumberish,
@@ -700,11 +660,6 @@ export class StableCredit extends BaseContract {
 
     setFeeManager(
       _feeManager: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    setPastDueExpiration(
-      _seconds: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -741,7 +696,7 @@ export class StableCredit extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  __CIP36_init(
+  __MutualCredit_init(
     name_: string,
     symbol_: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -794,6 +749,8 @@ export class StableCredit extends BaseContract {
   createCreditLine(
     _member: string,
     _creditLimit: BigNumberish,
+    _pastDue: BigNumberish,
+    _default: BigNumberish,
     _balance: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -803,16 +760,23 @@ export class StableCredit extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  creditExpiration(overrides?: CallOverrides): Promise<BigNumber>;
-
-  creditIssuance(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
   creditLimitLeftOf(
     _member: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   creditLimitOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  creditTerms(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber] & {
+      issueDate: BigNumber;
+      defaultDate: BigNumber;
+      pastDueDate: BigNumber;
+    }
+  >;
 
   decimals(overrides?: CallOverrides): Promise<number>;
 
@@ -876,8 +840,6 @@ export class StableCredit extends BaseContract {
 
   owner(overrides?: CallOverrides): Promise<string>;
 
-  pastDueExpiration(overrides?: CallOverrides): Promise<BigNumber>;
-
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -889,11 +851,6 @@ export class StableCredit extends BaseContract {
 
   reservePool(overrides?: CallOverrides): Promise<string>;
 
-  setCreditExpiration(
-    _seconds: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   setCreditLimit(
     _member: string,
     _limit: BigNumberish,
@@ -902,11 +859,6 @@ export class StableCredit extends BaseContract {
 
   setFeeManager(
     _feeManager: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  setPastDueExpiration(
-    _seconds: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -943,7 +895,7 @@ export class StableCredit extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    __CIP36_init(
+    __MutualCredit_init(
       name_: string,
       symbol_: string,
       overrides?: CallOverrides
@@ -990,6 +942,8 @@ export class StableCredit extends BaseContract {
     createCreditLine(
       _member: string,
       _creditLimit: BigNumberish,
+      _pastDue: BigNumberish,
+      _default: BigNumberish,
       _balance: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -998,10 +952,6 @@ export class StableCredit extends BaseContract {
       _member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    creditExpiration(overrides?: CallOverrides): Promise<BigNumber>;
-
-    creditIssuance(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     creditLimitLeftOf(
       _member: string,
@@ -1012,6 +962,17 @@ export class StableCredit extends BaseContract {
       _member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    creditTerms(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        issueDate: BigNumber;
+        defaultDate: BigNumber;
+        pastDueDate: BigNumber;
+      }
+    >;
 
     decimals(overrides?: CallOverrides): Promise<number>;
 
@@ -1075,8 +1036,6 @@ export class StableCredit extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<string>;
 
-    pastDueExpiration(overrides?: CallOverrides): Promise<BigNumber>;
-
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     repayCreditBalance(
@@ -1086,11 +1045,6 @@ export class StableCredit extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<string>;
 
-    setCreditExpiration(
-      _seconds: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     setCreditLimit(
       _member: string,
       _limit: BigNumberish,
@@ -1099,11 +1053,6 @@ export class StableCredit extends BaseContract {
 
     setFeeManager(
       _feeManager: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setPastDueExpiration(
-      _seconds: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1301,7 +1250,7 @@ export class StableCredit extends BaseContract {
   };
 
   estimateGas: {
-    __CIP36_init(
+    __MutualCredit_init(
       name_: string,
       symbol_: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1354,6 +1303,8 @@ export class StableCredit extends BaseContract {
     createCreditLine(
       _member: string,
       _creditLimit: BigNumberish,
+      _pastDue: BigNumberish,
+      _default: BigNumberish,
       _balance: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1362,10 +1313,6 @@ export class StableCredit extends BaseContract {
       _member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    creditExpiration(overrides?: CallOverrides): Promise<BigNumber>;
-
-    creditIssuance(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     creditLimitLeftOf(
       _member: string,
@@ -1376,6 +1323,8 @@ export class StableCredit extends BaseContract {
       _member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    creditTerms(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1442,8 +1391,6 @@ export class StableCredit extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    pastDueExpiration(overrides?: CallOverrides): Promise<BigNumber>;
-
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1455,11 +1402,6 @@ export class StableCredit extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setCreditExpiration(
-      _seconds: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     setCreditLimit(
       _member: string,
       _limit: BigNumberish,
@@ -1468,11 +1410,6 @@ export class StableCredit extends BaseContract {
 
     setFeeManager(
       _feeManager: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    setPastDueExpiration(
-      _seconds: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1510,7 +1447,7 @@ export class StableCredit extends BaseContract {
   };
 
   populateTransaction: {
-    __CIP36_init(
+    __MutualCredit_init(
       name_: string,
       symbol_: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1566,19 +1503,14 @@ export class StableCredit extends BaseContract {
     createCreditLine(
       _member: string,
       _creditLimit: BigNumberish,
+      _pastDue: BigNumberish,
+      _default: BigNumberish,
       _balance: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     creditBalanceOf(
       _member: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    creditExpiration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    creditIssuance(
-      arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1589,6 +1521,11 @@ export class StableCredit extends BaseContract {
 
     creditLimitOf(
       _member: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    creditTerms(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1663,8 +1600,6 @@ export class StableCredit extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    pastDueExpiration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -1676,11 +1611,6 @@ export class StableCredit extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    setCreditExpiration(
-      _seconds: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     setCreditLimit(
       _member: string,
       _limit: BigNumberish,
@@ -1689,11 +1619,6 @@ export class StableCredit extends BaseContract {
 
     setFeeManager(
       _feeManager: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setPastDueExpiration(
-      _seconds: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

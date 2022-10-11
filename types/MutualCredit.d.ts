@@ -19,9 +19,9 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface CIP36UpgradeableInterface extends ethers.utils.Interface {
+interface MutualCreditInterface extends ethers.utils.Interface {
   functions: {
-    "__CIP36_init(string,string)": FunctionFragment;
+    "__MutualCredit_init(string,string)": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
@@ -45,7 +45,7 @@ interface CIP36UpgradeableInterface extends ethers.utils.Interface {
   };
 
   encodeFunctionData(
-    functionFragment: "__CIP36_init",
+    functionFragment: "__MutualCredit_init",
     values: [string, string]
   ): string;
   encodeFunctionData(
@@ -112,7 +112,7 @@ interface CIP36UpgradeableInterface extends ethers.utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "__CIP36_init",
+    functionFragment: "__MutualCredit_init",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
@@ -199,7 +199,7 @@ export type TransferEvent = TypedEvent<
   [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
 >;
 
-export class CIP36Upgradeable extends BaseContract {
+export class MutualCredit extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -240,10 +240,10 @@ export class CIP36Upgradeable extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: CIP36UpgradeableInterface;
+  interface: MutualCreditInterface;
 
   functions: {
-    __CIP36_init(
+    __MutualCredit_init(
       name_: string,
       symbol_: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -340,7 +340,7 @@ export class CIP36Upgradeable extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  __CIP36_init(
+  __MutualCredit_init(
     name_: string,
     symbol_: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -434,7 +434,7 @@ export class CIP36Upgradeable extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    __CIP36_init(
+    __MutualCredit_init(
       name_: string,
       symbol_: string,
       overrides?: CallOverrides
@@ -597,7 +597,7 @@ export class CIP36Upgradeable extends BaseContract {
   };
 
   estimateGas: {
-    __CIP36_init(
+    __MutualCredit_init(
       name_: string,
       symbol_: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -695,7 +695,7 @@ export class CIP36Upgradeable extends BaseContract {
   };
 
   populateTransaction: {
-    __CIP36_init(
+    __MutualCredit_init(
       name_: string,
       symbol_: string,
       overrides?: Overrides & { from?: string | Promise<string> }

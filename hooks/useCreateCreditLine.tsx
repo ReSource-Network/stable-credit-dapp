@@ -9,7 +9,12 @@ import { nanoid } from "../functions/nanoid"
 import { parseStableCredits } from "../functions/bignumber"
 
 export type UseCreateResponse = {
-  createCreditLine: (address: string, creditLimit: number) => Promise<void>
+  createCreditLine: (
+    address: string,
+    creditLimit: number,
+    pastDueTime: number,
+    defaultTime: number,
+  ) => Promise<void>
   loading: boolean
 }
 
@@ -21,13 +26,24 @@ export const useCreateCreditLine = (): UseCreateResponse => {
   const { addToast } = useToastControls()
 
   const createCreditLine = useCallback(
-    async (address: string, creditLimit: number) => {
+    async (
+      address: string,
+      creditLimit: number,
+      pastDueTime: number,
+      defaultTime: number,
+    ) => {
       setCreating(true)
 
       try {
         const limit = parseStableCredits(creditLimit.toString())
         const resp = await (stableCredit &&
-          stableCredit.createCreditLine(address, limit, 0))
+          stableCredit.createCreditLine(
+            address,
+            limit,
+            pastDueTime,
+            defaultTime,
+            0,
+          ))
 
         if (resp)
           addTransaction(resp, {

@@ -37,13 +37,26 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
           <Formik
             initialValues={{
               address: "",
-              creditLimit: 0,
+              creditLimit: null,
+              pastDueSeconds: null,
+              defaultSeconds: null,
             }}
-            onSubmit={({ address, creditLimit }) => {
-              createCreditLine(address, creditLimit)
+            onSubmit={({
+              address,
+              creditLimit,
+              pastDueSeconds,
+              defaultSeconds,
+            }) => {
+              if (!creditLimit || !pastDueSeconds || !defaultSeconds) return
+              createCreditLine(
+                address,
+                creditLimit,
+                pastDueSeconds,
+                defaultSeconds,
+              )
             }}
           >
-            {({ handleSubmit, errors, touched }) => (
+            {({ handleSubmit, values, errors, touched }) => (
               <form onSubmit={handleSubmit}>
                 <FormControl
                   mb="1em"
@@ -78,6 +91,58 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
                       placeholder="0"
                     />
                   </InputGroup>
+                </FormControl>
+                <FormControl
+                  mt="1em"
+                  isInvalid={!!errors.pastDueSeconds && touched.pastDueSeconds}
+                >
+                  <FormLabel htmlFor="pastDueSeconds">
+                    Credit past due
+                  </FormLabel>
+                  <InputGroup>
+                    <InputLeftAddon>seconds</InputLeftAddon>
+                    <Field
+                      as={Input}
+                      id="pastDueSeconds"
+                      name="pastDueSeconds"
+                      type="number"
+                      placeholder="0"
+                      validate={(value) => {
+                        let error
+                        if (value <= 0) {
+                          error = "past due time must be greater than 0"
+                          return error
+                        }
+                      }}
+                    />
+                  </InputGroup>
+                  <FormErrorMessage>{errors.pastDueSeconds}</FormErrorMessage>
+                </FormControl>
+                <FormControl
+                  mt="1em"
+                  isInvalid={!!errors.defaultSeconds && touched.defaultSeconds}
+                >
+                  <FormLabel htmlFor="defaultSeconds">Credit default</FormLabel>
+                  <InputGroup>
+                    <InputLeftAddon>seconds</InputLeftAddon>
+                    <Field
+                      as={Input}
+                      id="defaultSeconds"
+                      name="defaultSeconds"
+                      type="number"
+                      placeholder="0"
+                      validate={(value) => {
+                        let error
+                        if (!values.pastDueSeconds) return
+                        if (value <= values.pastDueSeconds) {
+                          error =
+                            "default time must be greater than past due time"
+                          return error
+                        }
+                      }}
+                    />
+                  </InputGroup>
+                  <FormErrorMessage>{errors.defaultSeconds}</FormErrorMessage>
                 </FormControl>
                 <HStack mt="1em" justifyContent="flex-end" py="1em">
                   <Button isLoading={loading} onClick={handleClose}>

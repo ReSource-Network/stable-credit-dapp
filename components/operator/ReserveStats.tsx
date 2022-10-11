@@ -14,6 +14,7 @@ import { VStack, LightMode } from "@chakra-ui/react"
 import { ReserveConfigModal } from "./ReserveConfigModal"
 import { useReservePoolContract } from "../../hooks/useReservePoolContract"
 import { useEffect, useState } from "react"
+import { formatEther } from "@ethersproject/units"
 export const ReserveStats = () => {
   const {
     isOpen: isConfigOpen,
@@ -23,14 +24,16 @@ export const ReserveStats = () => {
 
   const reservePool = useReservePoolContract()
   const [operatorBalance, setOperatorBalance] = useState(0)
-  const [collateral, setCollateral] = useState(0)
+  const [ltv, setLTV] = useState(0)
   const [swapSink, setSwapSink] = useState(0)
 
   useEffect(() => {
     const handler = async () => {
-      setOperatorBalance((await reservePool.operatorBalance()).toNumber())
-      setCollateral((await reservePool.collateral()).toNumber())
-      setSwapSink((await reservePool.swapSink()).toNumber())
+      setOperatorBalance(
+        Number(formatEther(await reservePool.operatorBalance())),
+      )
+      setLTV((await reservePool.LTV()).toNumber() / 10000)
+      setSwapSink(Number(formatEther(await reservePool.swapSink())))
     }
     if (reservePool) handler()
   }, [reservePool])
@@ -81,12 +84,9 @@ export const ReserveStats = () => {
           <Stack direction={{ md: "row", base: "column" }}>
             <Stack p="1em" alignItems="center" textAlign="center">
               <Text fontSize="24px" fontWeight="bold">
-                {collateral.toLocaleString("en", {
-                  style: "currency",
-                  currency: "USD",
-                })}
+                {ltv.toString()}%
               </Text>
-              <Text mt="0 !important">Collateral</Text>
+              <Text mt="0 !important">LTV</Text>
             </Stack>
             <Stack p="1em" alignItems="center" textAlign="center">
               <HStack textAlign="center">

@@ -12,17 +12,9 @@ import { faGear } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
 import { useStableCreditContract } from "../../hooks/useStableCreditContract"
-import { NetworkConfigModal } from "./NetworkConfigModal"
 import { formatStableCredits } from "../../functions/bignumber"
-import { ManageMember } from "../../hooks/useGetMember"
 
 export const NetworkStats = () => {
-  const {
-    isOpen: isConfigOpen,
-    onOpen: onConfigOpen,
-    onClose: onConfigClose,
-  } = useDisclosure()
-
   const stableCredit = useStableCreditContract()
   const [totalSupply, setTotalSupply] = useState(0)
   const [networkDebt, setNetworkDebt] = useState(0)
@@ -49,12 +41,6 @@ export const NetworkStats = () => {
             <Text fontWeight="bold" variant="title" fontSize="2xl">
               NETWORK
             </Text>
-            <IconButton
-              aria-label="configure"
-              size="sm"
-              onClick={onConfigOpen}
-              icon={<FontAwesomeIcon icon={faGear} />}
-            />
           </HStack>
         </Box>
         <Stack>
@@ -88,9 +74,6 @@ export const NetworkStats = () => {
           </Stack>
         </Stack>
       </Box>
-      <NetworkConfigModal onClose={onConfigClose} isOpen={isConfigOpen}>
-        <></>
-      </NetworkConfigModal>
     </>
   )
 }
