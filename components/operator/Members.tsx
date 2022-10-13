@@ -13,10 +13,11 @@ import {
   useDisclosure,
   useBreakpointValue,
   Text,
+  Stack,
 } from "@chakra-ui/react"
 import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Button } from "@chakra-ui/react"
+import { Button, useColorMode } from "@chakra-ui/react"
 import { AddMemberModal } from "./AddMemberModal"
 import { UpdateMemberModal } from "./UpdateMemberModal"
 import { useState } from "react"
@@ -32,6 +33,7 @@ export interface Member {
 
 export const Members = () => {
   const isMobile = useBreakpointValue({ base: true, md: false })
+  const { colorMode } = useColorMode()
 
   const {
     isOpen: isAddOpen,
@@ -65,14 +67,16 @@ export const Members = () => {
 
   const members = []
   return (
-    <>
+    <Stack w="100%" h="full">
       <Box
         p="2em"
         w="100%"
         borderWidth="1px"
         borderRadius="lg"
-        h="65vh"
+        h="full"
+        maxH="80vh"
         overflow="scroll"
+        bg={colorMode === "light" ? "#ffffff" : "#262626"}
       >
         <HStack justifyContent="space-between" mb="1em">
           <HStack maxW="40em" w="100%">
@@ -172,6 +176,6 @@ export const Members = () => {
       >
         <></>
       </UpdateMemberModal>
-    </>
+    </Stack>
   )
 }

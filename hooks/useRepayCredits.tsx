@@ -1,12 +1,10 @@
 import { useStableCreditContract } from "./useStableCreditContract"
-import { useSigner } from "wagmi"
 import { useMountedState } from "./useMountedState"
 import { useAddTransaction } from "../state/transactions"
-import { useToastControls } from "../state"
 import { useCallback } from "react"
-import { ethers } from "ethers"
 import { nanoid } from "../functions/nanoid"
 import { parseStableCredits } from "../functions/bignumber"
+import { useToast } from "@chakra-ui/react"
 
 export type UseRepayCreditsResponse = {
   repay: (amount: number) => Promise<void>
@@ -18,7 +16,7 @@ export const useRepayCredits = (): UseRepayCreditsResponse => {
   const [repaying, setRepaying] = useMountedState(false)
 
   const addTransaction = useAddTransaction()
-  const { addToast } = useToastControls()
+  const toast = useToast()
 
   const repay = useCallback(
     async (amount: number) => {
@@ -41,36 +39,30 @@ export const useRepayCredits = (): UseRepayCreditsResponse => {
         if (e && (e as any).code === 4001) {
           console.log("Transaction rejected.")
 
-          addToast({
-            toastId: nanoid(),
-            content: {
-              txn: {
-                hash: undefined,
-                success: false,
-                summary: "Transaction rejected.",
-              },
-            },
+          toast({
+            position: "top-right",
+            title: "Transaction rejected",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
           })
         } else {
-          console.error(`Transaction failed`, e, "transferCredits")
+          console.error(`Transaction failed`, e, "memberCreate")
           console.log(`Transaction failed: ${(e as any).message}`)
 
-          addToast({
-            toastId: nanoid(),
-            content: {
-              txn: {
-                hash: undefined,
-                success: false,
-                summary: "Oops. Something went wrong.",
-              },
-            },
+          toast({
+            position: "top-right",
+            title: "Oops. Something went wrong.",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
           })
         }
       } finally {
         setRepaying(false)
       }
     },
-    [setRepaying, addToast, addTransaction, stableCredit],
+    [setRepaying, addTransaction, stableCredit],
   )
 
   return {

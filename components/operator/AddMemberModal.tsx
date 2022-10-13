@@ -37,9 +37,9 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
           <Formik
             initialValues={{
               address: "",
-              creditLimit: null,
-              pastDueSeconds: null,
-              defaultSeconds: null,
+              creditLimit: undefined,
+              pastDueSeconds: undefined,
+              defaultSeconds: undefined,
             }}
             onSubmit={({
               address,

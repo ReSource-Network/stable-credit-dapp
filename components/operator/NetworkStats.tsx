@@ -7,6 +7,7 @@ import {
   Divider,
   IconButton,
   useDisclosure,
+  useColorMode,
 } from "@chakra-ui/react"
 import { faGear } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -15,6 +16,7 @@ import { useStableCreditContract } from "../../hooks/useStableCreditContract"
 import { formatStableCredits } from "../../functions/bignumber"
 
 export const NetworkStats = () => {
+  const { colorMode } = useColorMode()
   const stableCredit = useStableCreditContract()
   const [totalSupply, setTotalSupply] = useState(0)
   const [networkDebt, setNetworkDebt] = useState(0)
@@ -35,8 +37,15 @@ export const NetworkStats = () => {
 
   return (
     <>
-      <Box borderRadius="xl" bg={"#e2e2e2"} color="#1a202c" w="full">
-        <Box bg={"white"} borderTopRadius="lg" border="1px solid #e2e2e2">
+      <Box
+        borderRadius="xl"
+        bg={colorMode === "light" ? "#e2e2e2" : "#262626"}
+        w="full"
+      >
+        <Box
+          borderTopRadius="lg"
+          bg={colorMode === "light" ? "#ffffff" : "#3b3b3b"}
+        >
           <HStack justifyContent="space-between" p="1em">
             <Text fontWeight="bold" variant="title" fontSize="2xl">
               NETWORK

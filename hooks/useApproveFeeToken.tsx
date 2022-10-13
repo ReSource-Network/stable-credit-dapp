@@ -4,7 +4,6 @@ import { useCallback, useMemo } from "react"
 import { config } from "../config"
 import { nanoid } from "../functions"
 import { formatBN } from "../functions/bignumber"
-import { useToastControls } from "../state"
 import { useAddTransaction } from "../state/transactions"
 import { useAllowanceFeetoken } from "./useAllowanceFeeToken"
 
@@ -45,7 +44,6 @@ export const useApproveFeeToken = (
     update: updateAllowance,
   } = useAllowanceFeetoken(spender, address)
   const addTransaction = useAddTransaction()
-  const { addToast } = useToastControls()
   const toast = useToast()
 
   const approvalState: ApprovalState = useMemo(() => {
@@ -80,43 +78,29 @@ export const useApproveFeeToken = (
       if (e && (e as any).code === 4001) {
         console.log("Transaction rejected.")
 
-        addToast({
-          toastId: nanoid(),
-          content: {
-            txn: {
-              hash: undefined,
-              success: false,
-              summary: "Transaction rejected.",
-            },
-          },
+        toast({
+          position: "top-right",
+          title: "Transaction rejected",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
         })
       } else {
         console.error(`Transaction failed`, e, "approve")
         console.log(`Transaction failed: ${(e as any).message}`)
 
-        addToast({
-          toastId: nanoid(),
-          content: {
-            txn: {
-              hash: undefined,
-              success: false,
-              summary: "Oops. Something went wrong.",
-            },
-          },
+        toast({
+          position: "top-right",
+          title: "Oops. Something went wrong.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
         })
       }
     } finally {
       setApproving(false)
     }
-  }, [
-    spender,
-    amount,
-    setApproving,
-    addToast,
-    addTransaction,
-    updateAllowance,
-    feeToken,
-  ])
+  }, [spender, amount, setApproving, addTransaction, updateAllowance, feeToken])
 
   return {
     approve,

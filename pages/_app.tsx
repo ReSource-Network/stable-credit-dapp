@@ -1,12 +1,11 @@
 import "@fontsource/museomoderno/400.css"
 import type { AppProps } from "next/app"
 import { QueryClient, QueryClientProvider } from "react-query"
-import { Popups } from "../components"
 import { Updater } from "../components/Updater"
 import { Layout } from "../layouts"
 import "../styles/index.css"
 import { ThemeProvider } from "../styles/theme"
-import { CHAIN_INFO, config } from "../config"
+import { CHAIN_INFO } from "../config"
 import {
   chain,
   createClient,
@@ -19,10 +18,7 @@ import { publicProvider } from "wagmi/providers/public"
 import { MetaMaskConnector } from "wagmi/connectors/metaMask"
 import { useColorMode } from "@chakra-ui/react"
 import { useRouter } from "next/router"
-import {
-  useFetchNetworkAddresses,
-  useGetNetworkAddresses,
-} from "../state/networkAddresses"
+import { useFetchNetworkAddresses } from "../state/networkAddresses"
 import { useEffect } from "react"
 import { useSigner } from "wagmi"
 
@@ -55,7 +51,6 @@ const ConnectKitWrapper = ({ Component, pageProps }: AppProps) => {
   const router = useRouter()
   const network = router.query.network as string
   const fetch = useFetchNetworkAddresses()
-  const networkAddresses = useGetNetworkAddresses()
 
   useEffect(() => {
     const handler = async () => {
@@ -68,7 +63,6 @@ const ConnectKitWrapper = ({ Component, pageProps }: AppProps) => {
     <ConnectKitProvider mode={colorMode}>
       <QueryClientProvider client={client}>
         <Updater />
-        <Popups />
         <Layout>
           <Component {...pageProps} />
         </Layout>

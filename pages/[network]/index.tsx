@@ -24,7 +24,7 @@ import { useEffect } from "react"
 
 export const NetworkHomePage: NextPage = () => {
   const isMobile = useBreakpointValue({ base: true, md: false })
-  const boxColor = useColorModeValue("#18202b", "white")
+  const boxColor = useColorModeValue("#262626", "white")
   const textColor = useColorModeValue("white", "#18202b")
   const router = useRouter()
   const networkAddresses = useGetNetworkAddresses()

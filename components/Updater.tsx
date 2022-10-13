@@ -1,8 +1,7 @@
 import { useNetwork, useProvider } from "wagmi"
 import { get, has } from "lodash"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useInterval } from "react-use"
-import { useToastControls } from "../state"
 
 import {
   useCheckTransaction,
@@ -10,6 +9,7 @@ import {
   useGetTransactions,
 } from "../state/transactions"
 import { TransactionState } from "../state/transactions/store"
+import { useToast } from "@chakra-ui/react"
 
 export function shouldCheck(
   lastBlockNumber: number,
@@ -42,7 +42,7 @@ export function Updater(): null {
 
   const finalize = useFinalizeTransaction()
   const check = useCheckTransaction()
-  const { addToast } = useToastControls()
+  const toast = useToast()
   const [blockNumber, setBlockNumber] = useState(0)
 
   useInterval(() => {
@@ -85,15 +85,23 @@ export function Updater(): null {
                 },
               })
 
-              addToast({
-                toastId: hash,
-                content: {
-                  txn: {
-                    hash,
-                    success: receipt.status === 1,
-                    summary: transactions[hash]?.summary,
-                  },
-                },
+              // addToast({
+              //   toastId: hash,
+              //   content: {
+              //     txn: {
+              //       hash,
+              //       success: receipt.status === 1,
+              //       summary: transactions[hash]?.summary,
+              //     },
+              //   },
+              // })
+              toast({
+                position: "top-right",
+                title: "Success",
+                description: transactions[hash]?.summary,
+                status: receipt.status === 1 ? "success" : "error",
+                duration: 5000,
+                isClosable: true,
               })
             } else {
               check({
@@ -107,7 +115,7 @@ export function Updater(): null {
             console.error(`failed to check transaction hash: ${hash}`, error)
           })
       })
-  }, [chainId, provider, transactions, addToast, blockNumber, check, finalize])
+  }, [chainId, provider, transactions, blockNumber, check, finalize])
 
   return null
 }

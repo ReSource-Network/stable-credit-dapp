@@ -22,6 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface FeeManagerInterface extends ethers.utils.Interface {
   functions: {
     "access()": FunctionFragment;
+    "calculateMemberFee(address,uint256)": FunctionFragment;
     "collectFees(address,address,uint256)": FunctionFragment;
     "collectedFees()": FunctionFragment;
     "defaultFeePercent()": FunctionFragment;
@@ -42,6 +43,10 @@ interface FeeManagerInterface extends ethers.utils.Interface {
   };
 
   encodeFunctionData(functionFragment: "access", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "calculateMemberFee",
+    values: [string, BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "collectFees",
     values: [string, string, BigNumberish]
@@ -103,6 +108,10 @@ interface FeeManagerInterface extends ethers.utils.Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "access", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "calculateMemberFee",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "collectFees",
     data: BytesLike
@@ -237,6 +246,12 @@ export class FeeManager extends BaseContract {
   functions: {
     access(overrides?: CallOverrides): Promise<[string]>;
 
+    calculateMemberFee(
+      _member: string,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     collectFees(
       sender: string,
       receiver: string,
@@ -309,6 +324,12 @@ export class FeeManager extends BaseContract {
 
   access(overrides?: CallOverrides): Promise<string>;
 
+  calculateMemberFee(
+    _member: string,
+    _amount: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   collectFees(
     sender: string,
     receiver: string,
@@ -377,6 +398,12 @@ export class FeeManager extends BaseContract {
 
   callStatic: {
     access(overrides?: CallOverrides): Promise<string>;
+
+    calculateMemberFee(
+      _member: string,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     collectFees(
       sender: string,
@@ -497,6 +524,12 @@ export class FeeManager extends BaseContract {
   estimateGas: {
     access(overrides?: CallOverrides): Promise<BigNumber>;
 
+    calculateMemberFee(
+      _member: string,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     collectFees(
       sender: string,
       receiver: string,
@@ -569,6 +602,12 @@ export class FeeManager extends BaseContract {
 
   populateTransaction: {
     access(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    calculateMemberFee(
+      _member: string,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     collectFees(
       sender: string,

@@ -7,19 +7,19 @@ import {
   FormLabel,
   Button,
   FormControl,
+  Divider,
 } from "@chakra-ui/react"
 import { ethers } from "ethers"
 import { Formik, Field } from "formik"
 import { Stack, Text, LightMode } from "@chakra-ui/react"
-import { useStableCreditContract } from "../../hooks/useStableCreditContract"
-import { parseStableCredits } from "../../functions/bignumber"
 import { ManageMember } from "../../hooks/useGetMember"
 import { useAccount } from "wagmi"
 import { useTransferCredits } from "../../hooks/useTransferCredits"
+import { TransactionFee } from "./TransactionFee"
 
-export const Transfer = ({ getMember, reset }: ManageMember) => {
+export const Transfer = ({ getMember }: ManageMember) => {
   const { transfer, loading } = useTransferCredits()
-  const { address } = useAccount()
+  const { address: signerAddress } = useAccount()
 
   return (
     <Stack w="100%">
@@ -29,27 +29,27 @@ export const Transfer = ({ getMember, reset }: ManageMember) => {
       <Formik
         initialValues={{
           address: "",
-          amount: 0,
+          amount: undefined,
         }}
         onSubmit={async ({ address, amount }, { resetForm }) => {
+          console.log(amount)
+          if (!amount || !signerAddress) return
           await transfer(address, amount)
-          await getMember(address)
-          resetForm()
+          await getMember(signerAddress)
+          // await resetForm({ values: { address: "", amount: 0 } })
         }}
       >
-        {({ handleSubmit, errors, touched }) => (
+        {({ handleSubmit, values, errors, touched }) => (
           <form onSubmit={handleSubmit}>
-            <Stack w="100%" bgColor="white" p="1em" borderRadius="lg">
+            <Stack w="100%" p="1em" borderRadius="lg">
               <FormControl
                 mb="1em"
-                isInvalid={!!errors.address && touched.amount}
+                isInvalid={!!errors.address && touched.address}
               >
                 <FormLabel htmlFor="address">Recipient Address</FormLabel>
                 <LightMode>
                   <Field
                     as={Input}
-                    borderColor="#dcdcdc !important"
-                    _placeholder={{ color: "gray.300" }}
                     id="address"
                     name="address"
                     type="address"
@@ -66,13 +66,11 @@ export const Transfer = ({ getMember, reset }: ManageMember) => {
                 <FormErrorMessage>{errors.address}</FormErrorMessage>
               </FormControl>
               <FormControl>
-                <FormLabel htmlFor="address">Amount</FormLabel>
+                <FormLabel htmlFor="amount">Amount</FormLabel>
                 <InputGroup>
                   <InputLeftAddon>$</InputLeftAddon>
                   <Field
                     as={Input}
-                    borderColor="#dcdcdc !important"
-                    _placeholder={{ color: "gray.300" }}
                     id="amount"
                     name="amount"
                     type="number"
@@ -80,7 +78,9 @@ export const Transfer = ({ getMember, reset }: ManageMember) => {
                   />
                 </InputGroup>
               </FormControl>
-              {/* TODO: fee breakdown */}
+              <Divider mt={"1em !important"} />
+              <TransactionFee creditAmount={values.amount} />
+              <Divider my={".5em !important"} />
             </Stack>
             <HStack w="100%" mt="1em">
               <Button isLoading={loading} w="100%" type="submit">

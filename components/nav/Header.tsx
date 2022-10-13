@@ -65,7 +65,7 @@ export const Header = () => {
                   <HStack>
                     <Text
                       fontWeight="bold"
-                      fontSize={{ base: "xl", md: "3xl" }}
+                      fontSize={{ base: "xl", md: "2xl" }}
                       variant="title"
                       textDecoration="none !important"
                       textOverflow={{ base: "ellipsis", md: "initial" }}
@@ -76,7 +76,7 @@ export const Header = () => {
                       {networkName}
                     </Text>
                     {!isMobile && (
-                      <Text pt="5px" fontSize="24px" ml="5px" variant="title">
+                      <Text pt="6px" fontSize="lg" ml="5px" variant="title">
                         {trimmedAddress}
                       </Text>
                     )}

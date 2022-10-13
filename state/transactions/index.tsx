@@ -9,6 +9,7 @@ import {
 import { Emitter } from "../../functions/notifier/types"
 import { useTransactionStore } from "./store"
 import { useAccount, useNetwork, useSigner, useProvider } from "wagmi"
+import { useToast } from "@chakra-ui/react"
 
 export const useGetTransactions = () => {
   const { transactions } = useTransactionStore(
@@ -39,6 +40,8 @@ export const useAddTransaction = () => {
   const { data: signer } = useSigner()
   const provider = useProvider()
   const notifier = useMemo(() => new TransactionNotifier(provider!), [provider])
+
+  const toast = useToast()
 
   const { add } = useTransactionStore(
     (store) => ({

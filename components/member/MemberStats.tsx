@@ -7,6 +7,7 @@ import {
   VStack,
   Fade,
   LightMode,
+  Divider,
 } from "@chakra-ui/react"
 import { Stack, Text } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -31,8 +32,22 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
       if (!address) return
       await getMember(address)
     }
-    if (address && !member) handler()
+    if (address) handler()
   }, [getMember, address])
+
+  const now = new Date()
+
+  const daysToPastDue =
+    Math.ceil(
+      ((member?.pastDue.getTime() || now.getTime()) - now.getTime()) /
+        (1000 * 3600 * 24),
+    ) || 0
+
+  const daysToDefault =
+    Math.ceil(
+      ((member?.default.getTime() || now.getTime()) - now.getTime()) /
+        (1000 * 3600 * 24),
+    ) || 0
 
   return (
     <Stack w="100%">
@@ -84,17 +99,14 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
             </Stack>
             <Collapse in={isInfoOpen} animateOpacity>
               <VStack opacity=".5">
+                <Divider borderColor={"gray"} />
                 <FeeTokenBalance />
                 <HStack>
-                  <Text>Past Due Date:</Text>
+                  <Text>past due:</Text>
                   <Text>
-                    {member?.pastDue.toLocaleString("en", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}{" "}
+                    {daysToPastDue.toLocaleString("en")} days{" "}
                     <Tooltip
-                      label="Zero out your account by this date to avoid freezing your credit line."
+                      label="Zero out your account within this time to avoid freezing your credit line."
                       aria-label="Past Due Date"
                     >
                       <span>
@@ -104,13 +116,9 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
                   </Text>
                 </HStack>
                 <HStack>
-                  <Text>Default Date:</Text>
+                  <Text>default:</Text>
                   <Text>
-                    {member?.default.toLocaleString("en", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}{" "}
+                    {daysToDefault.toLocaleString("en")} days{" "}
                     <Tooltip
                       label="A default results in a credit reset and a negative impact on your credit reputation"
                       aria-label="Expiration Date"
@@ -121,6 +129,7 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
                     </Tooltip>
                   </Text>
                 </HStack>
+                <Divider borderColor={"gray"} />
               </VStack>
             </Collapse>
           </>
