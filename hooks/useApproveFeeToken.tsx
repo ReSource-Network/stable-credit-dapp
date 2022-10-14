@@ -66,12 +66,13 @@ export const useApproveFeeToken = (
 
       const symbol = await feeToken.symbol()
 
+      await resp.wait()
+
       addTransaction(resp, {
-        summary: `Approved ${formatBN(amount)} ${symbol}`,
+        summary: `Approved ${symbol}`,
         approval: { tokenAddress: feeToken.address, spender },
       })
 
-      await resp.wait()
       await updateAllowance()
       setApproving(false)
     } catch (e) {

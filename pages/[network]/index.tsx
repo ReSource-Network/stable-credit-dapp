@@ -18,7 +18,7 @@ import { useRouter } from "next/router"
 import Link from "next/link"
 import {
   useFetchNetworkAddresses,
-  useGetNetworkAddresses,
+  useNetworkAddresses,
 } from "../../state/networkAddresses/index"
 import { useEffect } from "react"
 
@@ -27,7 +27,7 @@ export const NetworkHomePage: NextPage = () => {
   const boxColor = useColorModeValue("#262626", "white")
   const textColor = useColorModeValue("white", "#18202b")
   const router = useRouter()
-  const networkAddresses = useGetNetworkAddresses()
+  const networkAddresses = useNetworkAddresses()
   const valid = !!networkAddresses.accessManager
 
   if (!valid)

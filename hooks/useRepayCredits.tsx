@@ -28,12 +28,13 @@ export const useRepayCredits = (): UseRepayCreditsResponse => {
             parseStableCredits(amount.toString()),
           ))
 
+        await resp.wait()
+
         if (resp)
           addTransaction(resp, {
             summary: `Credit Repayed`,
           })
 
-        await resp.wait()
         setRepaying(false)
       } catch (e) {
         if (e && (e as any).code === 4001) {

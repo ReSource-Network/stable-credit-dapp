@@ -6,6 +6,7 @@ import {
   FormLabel,
   Button,
   FormControl,
+  FormErrorMessage,
 } from "@chakra-ui/react"
 import { Formik, Field } from "formik"
 import { Stack, Text } from "@chakra-ui/react"
@@ -19,75 +20,110 @@ import {
 } from "../../hooks/useApproveFeeToken"
 import { constants } from "ethers/lib/ethers"
 import { useStableCreditContract } from "../../hooks/useStableCreditContract"
-import { useIsMounted } from "../../hooks/useIsMounted"
+import { useFeeTokenContract } from "../../hooks/useFeeTokenContract"
+import { useEffect, useState } from "react"
+import { formatEther } from "ethers/lib/utils"
 
-export const Payment = ({ getMember }: ManageMember) => {
+export const Payment = ({ getMember, member }: ManageMember) => {
   const { repay, loading } = useRepayCredits()
   const stableCredit = useStableCreditContract()
   const { approve, approving, approvalState } = useApproveFeeToken(
     constants.MaxUint256,
     stableCredit?.address,
   )
-  const isMounted = useIsMounted()
   const { address } = useAccount()
+  const feeToken = useFeeTokenContract()
+  const [feeTokenSymbol, setFeeSymbol] = useState("")
+  const [feeTokenBalance, setFeeTokenBalance] = useState(0)
 
-  console.log(approvalState)
-
-  if (address && isMounted && approvalState !== ApprovalState.APPROVED)
-    return (
-      <Button
-        w="100%"
-        variant="solid"
-        onClick={approve}
-        isLoading={approving}
-        loadingText="Approving"
-      >
-        Approve FeeToken
-      </Button>
-    )
+  useEffect(() => {
+    const handler = async () => {
+      if (!address) return
+      setFeeSymbol(await feeToken.symbol())
+      const _feeTokenBalance = Number(
+        formatEther(await feeToken.balanceOf(address)),
+      )
+      setFeeTokenBalance(_feeTokenBalance)
+    }
+    if (address && feeToken) handler()
+  }, [feeToken, address])
 
   return (
     <Stack w="100%">
       <Text alignSelf="center" fontWeight="bold" fontSize="2xl" variant="title">
         Make a Payment
       </Text>
-      <Formik
-        initialValues={{
-          amount: 0,
-        }}
-        onSubmit={async ({ amount }, { resetForm }) => {
-          if (!address) return
-          await repay(amount)
-          await getMember(address)
-          resetForm({ values: { amount: 0 } })
-        }}
-      >
-        {({ handleSubmit, errors, touched }) => (
-          <form onSubmit={handleSubmit}>
-            <Stack w="100%" p="1em" borderRadius="lg">
-              <FeeTokenBalance />
-              <FormControl>
-                <FormLabel htmlFor="address">Amount</FormLabel>
-                <InputGroup>
-                  <InputLeftAddon>$</InputLeftAddon>
-                  <Field
-                    as={Input}
-                    id="amount"
-                    name="amount"
-                    type="number"
-                    placeholder="0"
-                  />
-                </InputGroup>
-              </FormControl>
-            </Stack>
-            <HStack w="100%" mt="1em">
-              <Button w="100%" type="submit">
-                Pay
-              </Button>
-            </HStack>
-          </form>
-        )}
-      </Formik>
+      {address && approvalState !== ApprovalState.APPROVED ? (
+        <Button
+          w="100%"
+          variant="solid"
+          onClick={approve}
+          isLoading={approving}
+          loadingText="Approving"
+        >
+          Approve {feeTokenSymbol}
+        </Button>
+      ) : (
+        <Formik
+          initialValues={{
+            amount: undefined,
+          }}
+          validateOnChange={true}
+          onSubmit={async ({ amount }) => {
+            if (!address || !amount) return
+            await repay(amount)
+            await getMember(address)
+          }}
+        >
+          {({ handleSubmit, setValues, values, errors, touched }) => (
+            <form onSubmit={handleSubmit}>
+              <Stack w="100%" py="1em" borderRadius="lg">
+                <FeeTokenBalance />
+                <HStack>
+                  <FormControl isInvalid={!!errors.amount && touched.amount}>
+                    <FormLabel htmlFor="address">Amount</FormLabel>
+                    <InputGroup>
+                      <InputLeftAddon>$</InputLeftAddon>
+                      <Field
+                        as={Input}
+                        id="amount"
+                        name="amount"
+                        type="number"
+                        placeholder="0"
+                        validate={(value) => {
+                          let error
+                          if (value > feeTokenBalance) {
+                            error = "Insufficient Funds"
+                          }
+                          return error
+                        }}
+                      />
+                    </InputGroup>
+                    <FormErrorMessage>{errors.amount}</FormErrorMessage>
+                  </FormControl>
+                  <Button
+                    onClick={() => {
+                      if (!member) return
+                      if (member.balance >= 0) return
+                      if (Math.abs(member.balance) <= feeTokenBalance)
+                        setValues({ amount: Math.abs(member.balance) })
+                      else setValues({ amount: feeTokenBalance })
+                    }}
+                    alignSelf={"flex-end"}
+                  >
+                    Max
+                  </Button>
+                </HStack>
+              </Stack>
+              <HStack w="100%" mt="1em">
+                <Button isLoading={loading} w="100%" type="submit">
+                  Pay
+                </Button>
+              </HStack>
+            </form>
+          )}
+        </Formik>
+      )}
     </Stack>
   )
 }

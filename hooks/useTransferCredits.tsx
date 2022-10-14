@@ -26,12 +26,13 @@ export const useTransferCredits = (): UseTransferCreditsResponse => {
         const resp = await (stableCredit &&
           stableCredit.transfer(address, parseStableCredits(amount.toString())))
 
+        await resp.wait()
+
         if (resp)
           addTransaction(resp, {
             summary: `Credits transfered`,
           })
 
-        await resp.wait()
         setTransfering(false)
       } catch (e) {
         if (e && (e as any).code === 4001) {

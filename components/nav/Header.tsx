@@ -18,7 +18,7 @@ import { trimAddress } from "../../functions/address"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import {
-  useGetNetworkAddresses,
+  useNetworkAddresses,
   useFetchNetworkAddresses,
 } from "../../state/networkAddresses/index"
 import { useEffect } from "react"
@@ -27,7 +27,7 @@ export const Header = () => {
   const { connector } = useAccount()
   const { colorMode, toggleColorMode } = useColorMode()
   const isMobile = useBreakpointValue({ base: true, md: false })
-  const networkAddresses = useGetNetworkAddresses()
+  const networkAddresses = useNetworkAddresses()
   const fetch = useFetchNetworkAddresses()
   const { name: networkName, loading } = useNetworkName()
   const trimmedAddress = trimAddress(networkAddresses.stableCredit || "", 4)

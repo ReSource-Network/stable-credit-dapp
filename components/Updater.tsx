@@ -85,16 +85,6 @@ export function Updater(): null {
                 },
               })
 
-              // addToast({
-              //   toastId: hash,
-              //   content: {
-              //     txn: {
-              //       hash,
-              //       success: receipt.status === 1,
-              //       summary: transactions[hash]?.summary,
-              //     },
-              //   },
-              // })
               toast({
                 position: "top-right",
                 title: "Success",

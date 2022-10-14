@@ -9,7 +9,7 @@ import { useAccount, useNetwork, useSigner, useProvider } from "wagmi"
 import { useRouter } from "next/router"
 import { StableCredit, StableCredit__factory } from "../../types"
 
-export const useGetNetworkAddresses = () => {
+export const useNetworkAddresses = () => {
   const { addresses } = useNetworkAddressesStore(
     (store) => ({
       addresses: store.addresses,

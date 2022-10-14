@@ -19,8 +19,6 @@ export const useGetMember = (): ManageMember => {
   const accessManager = useAccessManagerContract()
   const [searching, setSearching] = useMountedState(false)
   const [member, setMember] = useState<Member>()
-
-  const addTransaction = useAddTransaction()
   const toast = useToast()
 
   const getMember = useCallback(
@@ -100,7 +98,7 @@ export const useGetMember = (): ManageMember => {
         setSearching(false)
       }
     },
-    [setSearching, addTransaction, stableCredit, accessManager],
+    [setSearching, stableCredit, accessManager],
   )
 
   return {

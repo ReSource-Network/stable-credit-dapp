@@ -11,11 +11,12 @@ import {
 import { faArrowUpFromBracket, faGear } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { SourceGlyphSolid } from "../Glyph"
-import { VStack, LightMode } from "@chakra-ui/react"
+import { VStack } from "@chakra-ui/react"
 import { ReserveConfigModal } from "./ReserveConfigModal"
 import { useReservePoolContract } from "../../hooks/useReservePoolContract"
 import { useEffect, useState } from "react"
 import { formatEther } from "@ethersproject/units"
+import { useWithdrawOperator } from "../../hooks/useWithdrawOperator"
 export const ReserveStats = () => {
   const { colorMode } = useColorMode()
 
@@ -26,6 +27,7 @@ export const ReserveStats = () => {
   } = useDisclosure()
 
   const reservePool = useReservePoolContract()
+  const { withdraw, loading } = useWithdrawOperator()
   const [operatorBalance, setOperatorBalance] = useState(0)
   const [ltv, setLTV] = useState(0)
   const [swapSink, setSwapSink] = useState(0)
@@ -39,7 +41,7 @@ export const ReserveStats = () => {
       setSwapSink(Number(formatEther(await reservePool.swapSink())))
     }
     if (reservePool) handler()
-  }, [reservePool])
+  }, [reservePool, loading])
 
   return (
     <>
@@ -76,14 +78,14 @@ export const ReserveStats = () => {
               <Text mt="0 !important">Operator</Text>
             </Stack>
             <Stack p="1em" alignItems="center" alignSelf="center">
-              <LightMode>
-                <Button
-                  size="sm"
-                  leftIcon={<FontAwesomeIcon icon={faArrowUpFromBracket} />}
-                >
-                  Withdraw
-                </Button>
-              </LightMode>
+              <Button
+                size="sm"
+                onClick={withdraw}
+                isLoading={loading}
+                leftIcon={<FontAwesomeIcon icon={faArrowUpFromBracket} />}
+              >
+                Withdraw
+              </Button>
             </Stack>
           </Stack>
           <Stack direction={{ md: "row", base: "column" }}>

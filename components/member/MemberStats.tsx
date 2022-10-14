@@ -6,8 +6,8 @@ import {
   useDisclosure,
   VStack,
   Fade,
-  LightMode,
   Divider,
+  useColorMode,
 } from "@chakra-ui/react"
 import { Stack, Text } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -15,17 +15,17 @@ import {
   faCaretDown,
   faCaretUp,
   faInfoCircle,
+  faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import { useStableCreditContract } from "../../hooks/useStableCreditContract"
-import { ManageMember, useGetMember } from "../../hooks/useGetMember"
+import { useEffect } from "react"
+import { ManageMember } from "../../hooks/useGetMember"
 import { useAccount } from "wagmi"
 import { FeeTokenBalance } from "./FeeTokenBalance"
 
 export const MemberStats = ({ getMember, member }: ManageMember) => {
   const { isOpen: isInfoOpen, onToggle: onInfoToggle } = useDisclosure()
   const { address } = useAccount()
+  const { colorMode } = useColorMode()
 
   useEffect(() => {
     const handler = async () => {
@@ -48,6 +48,9 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
       ((member?.default.getTime() || now.getTime()) - now.getTime()) /
         (1000 * 3600 * 24),
     ) || 0
+
+  const nearPastDue = daysToPastDue <= 1
+  const nearDefault = daysToDefault <= 1
 
   return (
     <Stack w="100%">
@@ -79,29 +82,37 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
         {member && member.creditLimit > 0 && (
           <>
             <Stack>
-              <LightMode>
-                <Button
-                  aria-label="info"
-                  onClick={onInfoToggle}
-                  justifyContent="center"
-                  variant="ghost"
-                  backgroundColor="transparent !important"
-                  size="sm"
-                  rightIcon={
-                    <FontAwesomeIcon
-                      icon={isInfoOpen ? faCaretUp : faCaretDown}
-                    />
-                  }
-                >
-                  {isInfoOpen ? "Less" : "More"}
-                </Button>
-              </LightMode>
+              <Button
+                aria-label="info"
+                onClick={onInfoToggle}
+                justifyContent="center"
+                variant="ghost"
+                backgroundColor="transparent !important"
+                size="sm"
+                rightIcon={
+                  <FontAwesomeIcon
+                    icon={isInfoOpen ? faCaretUp : faCaretDown}
+                  />
+                }
+              >
+                {isInfoOpen ? "Less" : "More"}
+              </Button>
             </Stack>
             <Collapse in={isInfoOpen} animateOpacity>
-              <VStack opacity=".5">
-                <Divider borderColor={"gray"} />
+              <VStack
+                bg={colorMode === "light" ? "#e2e2e2" : "#373737"}
+                borderRadius="xl"
+                py=".5em"
+              >
                 <FeeTokenBalance />
                 <HStack>
+                  {nearPastDue && (
+                    <FontAwesomeIcon
+                      color="yellow"
+                      size="sm"
+                      icon={faTriangleExclamation}
+                    />
+                  )}{" "}
                   <Text>past due:</Text>
                   <Text>
                     {daysToPastDue.toLocaleString("en")} days{" "}
@@ -116,6 +127,13 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
                   </Text>
                 </HStack>
                 <HStack>
+                  {nearDefault && (
+                    <FontAwesomeIcon
+                      color="yellow"
+                      size="sm"
+                      icon={faTriangleExclamation}
+                    />
+                  )}{" "}
                   <Text>default:</Text>
                   <Text>
                     {daysToDefault.toLocaleString("en")} days{" "}
@@ -129,7 +147,6 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
                     </Tooltip>
                   </Text>
                 </HStack>
-                <Divider borderColor={"gray"} />
               </VStack>
             </Collapse>
           </>

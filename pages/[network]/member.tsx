@@ -1,7 +1,6 @@
 import {
   Flex,
   Box,
-  LightMode,
   Center,
   SlideFade,
   useColorMode,
@@ -99,7 +98,7 @@ export const Member: NextPage = () => {
                     offsetY="20px"
                   >
                     <VStack justifyContent="center">
-                      <CashOut />
+                      <CashOut {...memberManage} />
                       <Button
                         variant="ghost"
                         w="100%"

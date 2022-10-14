@@ -13,7 +13,7 @@ import {
   getStableCreditContract,
 } from "../functions/contracts"
 import { NetworkContractAddresses } from "../state/networkAddresses/store"
-import { useGetNetworkAddresses } from "../state/networkAddresses/index"
+import { useNetworkAddresses } from "../state/networkAddresses/index"
 import { useRouter } from "next/router"
 
 export function getContract(
@@ -65,7 +65,7 @@ export function getContract(
 export function useContract(key: Contracts): Contract | null {
   const { data: signer } = useSigner()
   const provider = useProvider()
-  const networkAddresses = useGetNetworkAddresses()
+  const networkAddresses = useNetworkAddresses()
   const valid = !!networkAddresses.accessManager
   const router = useRouter()
   const network = router.query.network as string

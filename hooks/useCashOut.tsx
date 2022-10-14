@@ -2,39 +2,37 @@ import { useStableCreditContract } from "./useStableCreditContract"
 import { useMountedState } from "./useMountedState"
 import { useAddTransaction } from "../state/transactions"
 import { useCallback } from "react"
-import { nanoid } from "../functions/nanoid"
 import { parseStableCredits } from "../functions/bignumber"
 import { useToast } from "@chakra-ui/react"
 
-export type UseCreateResponse = {
-  updateCreditLine: (address: string, creditLimit: number) => Promise<void>
+export type useCashOutResponse = {
+  cashOut: (amount: number) => Promise<void>
   loading: boolean
 }
 
-export const useUpdateCreditLine = (): UseCreateResponse => {
+export const useCashOut = (): useCashOutResponse => {
   const stableCredit = useStableCreditContract()
-  const [updating, setUpdating] = useMountedState(false)
+  const [repaying, setRepaying] = useMountedState(false)
 
   const addTransaction = useAddTransaction()
   const toast = useToast()
 
-  const updateCreditLine = useCallback(
-    async (address: string, creditLimit: number) => {
-      setUpdating(true)
+  const cashOut = useCallback(
+    async (amount: number) => {
+      setRepaying(true)
 
       try {
-        const limit = parseStableCredits(creditLimit.toString())
         const resp = await (stableCredit &&
-          stableCredit.extendCreditLine(address, limit))
+          stableCredit.burnNetworkDebt(parseStableCredits(amount.toString())))
 
         await resp.wait()
 
         if (resp)
           addTransaction(resp, {
-            summary: `Credit Line updated`,
+            summary: `Cashed Out ${amount}`,
           })
 
-        setUpdating(false)
+        setRepaying(false)
       } catch (e) {
         if (e && (e as any).code === 4001) {
           console.log("Transaction rejected.")
@@ -59,16 +57,16 @@ export const useUpdateCreditLine = (): UseCreateResponse => {
           })
         }
       } finally {
-        setUpdating(false)
+        setRepaying(false)
       }
     },
-    [setUpdating, addTransaction, stableCredit],
+    [setRepaying, addTransaction, stableCredit],
   )
 
   return {
-    updateCreditLine,
+    cashOut,
     get loading() {
-      return updating
+      return repaying
     },
   }
 }

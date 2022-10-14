@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { useGetNetworkAddresses } from "../state/networkAddresses"
 import { useStableCreditContract } from "./useStableCreditContract"
 
 export const useNetworkName = () => {

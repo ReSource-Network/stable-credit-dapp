@@ -37,7 +37,6 @@ export const useAddTransaction = () => {
   const { chain } = useNetwork()
   const id = chain?.id
   const { address: from } = useAccount()
-  const { data: signer } = useSigner()
   const provider = useProvider()
   const notifier = useMemo(() => new TransactionNotifier(provider!), [provider])
 

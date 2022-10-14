@@ -42,12 +42,13 @@ export const useCreateCreditLine = (): UseCreateResponse => {
             0,
           ))
 
+        await resp.wait()
+
         if (resp)
           addTransaction(resp, {
             summary: `Member Created`,
           })
 
-        await resp.wait()
         setCreating(false)
       } catch (e) {
         if (e && (e as any).code === 4001) {

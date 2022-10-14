@@ -10,7 +10,7 @@ import {
   FormControl,
   FormErrorMessage,
   InputGroup,
-  InputLeftAddon,
+  InputRightAddon,
 } from "@chakra-ui/react"
 import { Button, Input, HStack, Divider } from "@chakra-ui/react"
 import { ethers } from "ethers"
@@ -36,7 +36,8 @@ export const ReserveConfigModal = ({ isOpen, onClose }: ModalProps) => {
         <ModalBody>
           <Formik
             initialValues={{
-              feePercent: 0,
+              estDefaultRate: undefined,
+              operatorMargin: undefined,
             }}
             onSubmit={(values) => {
               console.log(values)
@@ -45,16 +46,33 @@ export const ReserveConfigModal = ({ isOpen, onClose }: ModalProps) => {
             {({ handleSubmit, errors, touched }) => (
               <form onSubmit={handleSubmit}>
                 <FormControl>
-                  <FormLabel htmlFor="feePercent">Total fee rate</FormLabel>
+                  <FormLabel htmlFor="estDefaultRate">
+                    Estimated Default Rate
+                  </FormLabel>
                   <InputGroup>
-                    <InputLeftAddon>%</InputLeftAddon>
                     <Field
                       as={Input}
-                      id="feePercent"
-                      name="feePercent"
+                      id="estDefaultRate"
+                      name="estDefaultRate"
                       type="number"
                       placeholder="0"
                     />
+                    <InputRightAddon>%</InputRightAddon>
+                  </InputGroup>
+                </FormControl>
+                <FormControl mt="1em">
+                  <FormLabel htmlFor="operatorMargin">
+                    Operator Margin
+                  </FormLabel>
+                  <InputGroup>
+                    <Field
+                      as={Input}
+                      id="operatorMargin"
+                      name="operatorMargin"
+                      type="number"
+                      placeholder="0"
+                    />
+                    <InputRightAddon>%</InputRightAddon>
                   </InputGroup>
                 </FormControl>
                 <HStack mt="1em" justifyContent="flex-end" py="1em">
