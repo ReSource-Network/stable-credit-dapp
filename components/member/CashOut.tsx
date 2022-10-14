@@ -21,6 +21,7 @@ import { ManageMember } from "../../hooks/useGetMember"
 import { useReservePoolContract } from "../../hooks/useReservePoolContract"
 import { formatEther } from "ethers/lib/utils"
 import { useFeeTokenContract } from "../../hooks/useFeeTokenContract"
+import { useGetTransactions } from "../../state"
 
 export const CashOut = ({ getMember, member }: ManageMember) => {
   const stableCredit = useStableCreditContract()
@@ -31,6 +32,7 @@ export const CashOut = ({ getMember, member }: ManageMember) => {
   const { cashOut, loading } = useCashOut()
   const reservePool = useReservePoolContract()
   const feeToken = useFeeTokenContract()
+  const transactions = useGetTransactions()
 
   useEffect(() => {
     const handler = async () => {
@@ -42,7 +44,7 @@ export const CashOut = ({ getMember, member }: ManageMember) => {
       setFeeTokenSymbol(await feeToken.symbol())
     }
     if (address && stableCredit && reservePool) handler()
-  }, [stableCredit, address, reservePool, feeToken])
+  }, [stableCredit, address, reservePool, feeToken, transactions])
 
   return (
     <Stack w="100%">

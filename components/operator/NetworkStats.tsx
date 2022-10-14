@@ -33,7 +33,7 @@ export const NetworkStats = () => {
     if (stableCredit) handler()
   }, [stableCredit])
 
-  const memberCount = 1000
+  const memberCount = 0
 
   return (
     <>

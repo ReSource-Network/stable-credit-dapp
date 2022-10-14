@@ -23,6 +23,9 @@ export const Member: NextPage = () => {
   const { colorMode } = useColorMode()
 
   const memberManage = useGetMember()
+  const { member, getMember } = memberManage
+
+  // TODO: add option to router param for rerender / address change
 
   return (
     <>
@@ -120,12 +123,16 @@ export const Member: NextPage = () => {
                     <Button w="100%" onClick={() => setShowOption(1)}>
                       Send
                     </Button>
-                    <Button w="100%" onClick={() => setShowOption(2)}>
-                      Make a Payment
-                    </Button>
-                    <Button w="100%" onClick={() => setShowOption(3)}>
-                      Cash out
-                    </Button>
+                    {member && member?.balance < 0 && (
+                      <Button w="100%" onClick={() => setShowOption(2)}>
+                        Make a Payment
+                      </Button>
+                    )}
+                    {member && member?.balance > 0 && (
+                      <Button w="100%" onClick={() => setShowOption(3)}>
+                        Cash out
+                      </Button>
+                    )}
                   </VStack>
                 </SlideFade>
               )}

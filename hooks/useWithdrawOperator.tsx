@@ -21,6 +21,7 @@ export const useWithdrawOperator = (): useWithdrawOperatorResponse => {
 
     try {
       const operatorBalance = await reservePool.operatorBalance()
+      if (operatorBalance.eq(0)) return
 
       const resp = await (reservePool &&
         reservePool.withdrawOperator(operatorBalance))
