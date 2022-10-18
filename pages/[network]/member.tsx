@@ -9,7 +9,7 @@ import {
 import type { NextPage } from "next"
 import Head from "next/head"
 import { VStack, Button } from "@chakra-ui/react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Transfer } from "../../components/member/Transfer"
 import { Payment } from "../../components/member/Payment"
 import { CashOut } from "../../components/member/CashOut"
@@ -17,15 +17,26 @@ import { MemberStats } from "../../components/member/MemberStats"
 import { useGetMember } from "../../hooks/useGetMember"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"
+import { useRouter } from "next/router"
 
 export const Member: NextPage = () => {
-  const [showOption, setShowOption] = useState(0)
   const { colorMode } = useColorMode()
-
+  const router = useRouter()
   const memberManage = useGetMember()
   const { member, getMember } = memberManage
 
-  // TODO: add option to router param for rerender / address change
+  const { show } = router.query
+
+  const handleChangeOption = (option?: string) => {
+    if (!option) {
+      delete router.query.show
+      router.push(router)
+      return
+    } else {
+      router.query.show = option
+      router.push(router)
+    }
+  }
 
   return (
     <>
@@ -41,23 +52,23 @@ export const Member: NextPage = () => {
           w="30em"
           m="1em"
         >
-          {showOption !== 0 && (
+          {!!show && (
             <IconButton
               pos={"absolute"}
               aria-label="back"
               variant={"ghost"}
-              onClick={() => setShowOption(0)}
+              onClick={() => handleChangeOption()}
               icon={<FontAwesomeIcon icon={faArrowLeft} />}
             />
           )}
           <Center>
             <VStack w="100%">
               <MemberStats {...memberManage} />
-              {showOption == 1 && (
+              {show == "send" && (
                 <VStack w="100%">
                   <SlideFade
                     style={{ width: "100%" }}
-                    in={showOption == 1}
+                    in={show == "send"}
                     offsetY="20px"
                   >
                     <VStack justifyContent="center">
@@ -65,7 +76,7 @@ export const Member: NextPage = () => {
                       <Button
                         variant="ghost"
                         w="100%"
-                        onClick={() => setShowOption(0)}
+                        onClick={() => handleChangeOption()}
                       >
                         Cancel
                       </Button>
@@ -73,11 +84,11 @@ export const Member: NextPage = () => {
                   </SlideFade>
                 </VStack>
               )}
-              {showOption == 2 && (
+              {show == "payment" && (
                 <VStack w="100%">
                   <SlideFade
                     style={{ width: "100%" }}
-                    in={showOption == 2}
+                    in={show === "payment"}
                     offsetY="20px"
                   >
                     <VStack justifyContent="center">
@@ -85,7 +96,7 @@ export const Member: NextPage = () => {
                       <Button
                         variant="ghost"
                         w="100%"
-                        onClick={() => setShowOption(0)}
+                        onClick={() => handleChangeOption()}
                       >
                         Cancel
                       </Button>
@@ -93,11 +104,11 @@ export const Member: NextPage = () => {
                   </SlideFade>
                 </VStack>
               )}
-              {showOption == 3 && (
+              {show === "cashout" && (
                 <VStack w="100%">
                   <SlideFade
                     style={{ width: "100%" }}
-                    in={showOption == 3}
+                    in={show === "cashout"}
                     offsetY="20px"
                   >
                     <VStack justifyContent="center">
@@ -105,7 +116,7 @@ export const Member: NextPage = () => {
                       <Button
                         variant="ghost"
                         w="100%"
-                        onClick={() => setShowOption(0)}
+                        onClick={() => handleChangeOption()}
                       >
                         Cancel
                       </Button>
@@ -113,23 +124,25 @@ export const Member: NextPage = () => {
                   </SlideFade>
                 </VStack>
               )}
-              {showOption == 0 && (
-                <SlideFade
-                  in={showOption == 0}
-                  offsetY="20px"
-                  style={{ width: "100%" }}
-                >
+              {!show && (
+                <SlideFade in={!show} offsetY="20px" style={{ width: "100%" }}>
                   <VStack mt="1em" w="100%">
-                    <Button w="100%" onClick={() => setShowOption(1)}>
+                    <Button w="100%" onClick={() => handleChangeOption("send")}>
                       Send
                     </Button>
                     {member && member?.balance < 0 && (
-                      <Button w="100%" onClick={() => setShowOption(2)}>
+                      <Button
+                        w="100%"
+                        onClick={() => handleChangeOption("payment")}
+                      >
                         Make a Payment
                       </Button>
                     )}
                     {member && member?.balance > 0 && (
-                      <Button w="100%" onClick={() => setShowOption(3)}>
+                      <Button
+                        w="100%"
+                        onClick={() => handleChangeOption("cashout")}
+                      >
                         Cash out
                       </Button>
                     )}

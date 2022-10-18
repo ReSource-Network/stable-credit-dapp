@@ -22,15 +22,24 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface IFeeManagerInterface extends ethers.utils.Interface {
   functions: {
     "collectFees(address,address,uint256)": FunctionFragment;
+    "setMemberFeePercent(address,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "collectFees",
     values: [string, string, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "setMemberFeePercent",
+    values: [string, BigNumberish]
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "collectFees",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setMemberFeePercent",
     data: BytesLike
   ): Result;
 
@@ -101,6 +110,12 @@ export class IFeeManager extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    setMemberFeePercent(
+      member: string,
+      _feePercent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
   collectFees(
@@ -110,11 +125,23 @@ export class IFeeManager extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setMemberFeePercent(
+    member: string,
+    _feePercent: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     collectFees(
       sender: string,
       receiver: string,
       amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setMemberFeePercent(
+      member: string,
+      _feePercent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -152,6 +179,12 @@ export class IFeeManager extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    setMemberFeePercent(
+      member: string,
+      _feePercent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -159,6 +192,12 @@ export class IFeeManager extends BaseContract {
       sender: string,
       receiver: string,
       amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setMemberFeePercent(
+      member: string,
+      _feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

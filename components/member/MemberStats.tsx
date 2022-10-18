@@ -56,22 +56,28 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
     <Stack w="100%">
       <Fade in={true} delay={0.1}>
         <Stack alignItems="center" w="100%">
-          <Text fontWeight="bold" fontSize="4xl" variant="title">
-            {member?.balance.toLocaleString("en", {
-              style: "currency",
-              currency: "USD",
-            })}
-          </Text>
-          {member && member.creditLimit > 0 && (
-            <HStack>
+          <HStack>
+            <Text fontSize={"lg"} opacity={".5"} mt="12px">
+              Available:
+            </Text>
+            <Text fontWeight="bold" fontSize="4xl" variant="title">
+              {member?.available.toLocaleString("en", {
+                style: "currency",
+                currency: "USD",
+              })}
+            </Text>
+          </HStack>
+          {member && (
+            <HStack mt="0 !important">
               <Text
                 fontSize="lg"
                 mt="0 !important"
                 alignSelf="center"
                 opacity=".5"
+                fontWeight={"bold"}
               >
-                Credit Limit:{" "}
-                {member?.creditLimit.toLocaleString("en", {
+                <span style={{ fontWeight: "initial" }}>Balance: </span>
+                {member?.balance.toLocaleString("en", {
                   style: "currency",
                   currency: "USD",
                 })}
@@ -104,48 +110,64 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
                 borderRadius="xl"
                 py=".5em"
               >
-                <FeeTokenBalance />
-                <HStack>
-                  {nearPastDue && (
-                    <FontAwesomeIcon
-                      color="yellow"
-                      size="sm"
-                      icon={faTriangleExclamation}
-                    />
-                  )}{" "}
-                  <Text>past due:</Text>
-                  <Text>
-                    {daysToPastDue.toLocaleString("en")} days{" "}
-                    <Tooltip
-                      label="Zero out your account within this time to avoid freezing your credit line."
-                      aria-label="Past Due Date"
-                    >
-                      <span>
-                        <FontAwesomeIcon size="sm" icon={faInfoCircle} />
-                      </span>
-                    </Tooltip>
-                  </Text>
-                </HStack>
-                <HStack>
-                  {nearDefault && (
-                    <FontAwesomeIcon
-                      color="yellow"
-                      size="sm"
-                      icon={faTriangleExclamation}
-                    />
-                  )}{" "}
-                  <Text>default:</Text>
-                  <Text>
-                    {daysToDefault.toLocaleString("en")} days{" "}
-                    <Tooltip
-                      label="A default results in a credit reset and a negative impact on your credit reputation"
-                      aria-label="Expiration Date"
-                    >
-                      <span>
-                        <FontAwesomeIcon size="sm" icon={faInfoCircle} />
-                      </span>
-                    </Tooltip>
-                  </Text>
+                <HStack w="100%" p="1em" justifyContent={"space-between"}>
+                  <VStack>
+                    <HStack alignSelf={"flex-start"}>
+                      <Text fontSize={"lg"}>Credit Limit:</Text>
+                      <Text fontWeight="bold" fontSize="lg" variant="title">
+                        {member?.creditLimit.toLocaleString("en", {
+                          style: "currency",
+                          currency: "USD",
+                        })}
+                      </Text>
+                    </HStack>
+                    <FeeTokenBalance />
+                  </VStack>
+                  <Divider orientation="vertical" h="3em" />
+                  <VStack alignItems={"flex-end"}>
+                    <HStack>
+                      {nearPastDue && (
+                        <FontAwesomeIcon
+                          color="yellow"
+                          size="sm"
+                          icon={faTriangleExclamation}
+                        />
+                      )}{" "}
+                      <Text>Past Due:</Text>
+                      <Text>
+                        {daysToPastDue.toLocaleString("en")} days{" "}
+                        <Tooltip
+                          label="Zero out your account within this time to avoid freezing your credit line."
+                          aria-label="Past Due Date"
+                        >
+                          <span>
+                            <FontAwesomeIcon size="sm" icon={faInfoCircle} />
+                          </span>
+                        </Tooltip>
+                      </Text>
+                    </HStack>
+                    <HStack>
+                      {nearDefault && (
+                        <FontAwesomeIcon
+                          color="yellow"
+                          size="sm"
+                          icon={faTriangleExclamation}
+                        />
+                      )}{" "}
+                      <Text>Default:</Text>
+                      <Text>
+                        {daysToDefault.toLocaleString("en")} days{" "}
+                        <Tooltip
+                          label="A default results in a credit reset and a negative impact on your credit reputation"
+                          aria-label="Expiration Date"
+                        >
+                          <span>
+                            <FontAwesomeIcon size="sm" icon={faInfoCircle} />
+                          </span>
+                        </Tooltip>
+                      </Text>
+                    </HStack>
+                  </VStack>
                 </HStack>
               </VStack>
             </Collapse>

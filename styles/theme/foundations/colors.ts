@@ -131,7 +131,7 @@ const black = {
 }
 
 const colors = {
-  primary: purple,
+  primary: gray,
   secondary: orange,
   alternate: blue,
   gray: gray,

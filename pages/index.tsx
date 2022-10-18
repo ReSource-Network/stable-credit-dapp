@@ -17,8 +17,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGears, faSearch, faUser } from "@fortawesome/free-solid-svg-icons"
 import { useRouter } from "next/router"
 import React, { useState } from "react"
-import { useEffectOnce } from "react-use"
-import { useFetchNetworkAddresses } from "../state/networkAddresses"
+import { useAccount } from "wagmi"
+import { useModal } from "connectkit"
 
 export const NetworkHomePage: NextPage = () => {
   const boxColor = useColorModeValue("#18202b", "white")
@@ -27,10 +27,15 @@ export const NetworkHomePage: NextPage = () => {
   const isMobile = useBreakpointValue({ base: true, md: false })
   const [value, setValue] = useState("")
   const handleChange = (event) => setValue(event.target.value)
+  const { address } = useAccount()
+  const { setOpen } = useModal()
 
   const searchNetwork = () => {
     if (!value) return
-
+    if (!address) {
+      setOpen(true)
+      return
+    }
     router.push(`/${value}`)
   }
 

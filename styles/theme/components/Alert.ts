@@ -6,14 +6,13 @@ function variantLedger(props: Dict) {
   return {
     container: {
       borderRadius: "2xl",
-      bgColor: "purple.main",
-      color: mode(`white`, `gray.900`)(props),
+      top: "5em",
     },
   }
 }
 
 const variants = {
-  ledger: variantLedger,
+  solid: variantLedger,
 }
 
 export default {

@@ -1,0 +1,11 @@
+query network($id: ID!, $skip: Int, $first: Int) {
+  network(id: $id) {
+    id
+    totalMembers
+    members(skip: $skip, first: $first) {
+      address
+      creditLimit
+      balance
+    }
+  }
+}

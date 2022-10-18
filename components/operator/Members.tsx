@@ -12,7 +12,6 @@ import {
   HStack,
   useDisclosure,
   useBreakpointValue,
-  Text,
   Stack,
 } from "@chakra-ui/react"
 import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons"
@@ -22,10 +21,18 @@ import { AddMemberModal } from "./AddMemberModal"
 import { UpdateMemberModal } from "./UpdateMemberModal"
 import { useState } from "react"
 import { useGetMember } from "../../hooks/useGetMember"
+import { useRouter } from "next/router"
+import { useFetchMembers } from "../../hooks/useFetchMembers"
+import { ethers } from "ethers"
+import { formatStableCredits } from "../../functions/bignumber"
+import Pagination from "../Pagination"
+
+const pageSize = 5
 
 export interface Member {
   address: string
   balance: number
+  available: number
   creditLimit: number
   pastDue: Date
   default: Date
@@ -34,6 +41,36 @@ export interface Member {
 export const Members = () => {
   const isMobile = useBreakpointValue({ base: true, md: false })
   const { colorMode } = useColorMode()
+  const router = useRouter()
+
+  const [page, setPage] = useState(1)
+  const network = router.query.network as string
+
+  const { network: networkData, refetch } = useFetchMembers({
+    address: network || "",
+    page,
+    limit: pageSize,
+  })
+
+  let members
+  if (networkData?.members) {
+    members = networkData?.members.map((member) => {
+      return {
+        address: member.address,
+        balance: Number(
+          formatStableCredits(ethers.utils.parseUnits(member.balance, "wei")),
+        ),
+        available: 0,
+        creditLimit: Number(
+          formatStableCredits(
+            ethers.utils.parseUnits(member.creditLimit, "wei"),
+          ),
+        ),
+        pastDue: new Date(),
+        default: new Date(),
+      }
+    })
+  }
 
   const {
     isOpen: isAddOpen,
@@ -47,8 +84,11 @@ export const Members = () => {
     onClose: onUpdateClose,
   } = useDisclosure()
 
-  const handleCloseUpdate = () => {
-    getMember(searchAddress)
+  const handleCloseUpdate = async () => {
+    if (searchAddress) getMember(searchAddress)
+    setTimeout(async () => {
+      await refetch()
+    }, 1000)
     onUpdateClose()
   }
 
@@ -65,7 +105,6 @@ export const Members = () => {
   }
   const { loading, reset, getMember, member: searchedMember } = useGetMember()
 
-  const members = []
   return (
     <Stack w="100%" h="full">
       <Box
@@ -129,8 +168,18 @@ export const Members = () => {
                     key={searchedMember.address}
                   >
                     <Td>{searchedMember.address}</Td>
-                    <Td isNumeric>{searchedMember.balance}</Td>
-                    <Td isNumeric>{searchedMember.creditLimit}</Td>
+                    <Td isNumeric>
+                      {searchedMember.balance.toLocaleString("en", {
+                        style: "currency",
+                        currency: "USD",
+                      })}
+                    </Td>
+                    <Td isNumeric>
+                      {searchedMember.creditLimit.toLocaleString("en", {
+                        style: "currency",
+                        currency: "USD",
+                      })}
+                    </Td>
                     <Td w="5em">
                       <Button
                         onClick={() => selectMember(searchedMember)}
@@ -143,26 +192,47 @@ export const Members = () => {
                   </Tr>
                 )
               ) : (
-                members.map((member) => (
-                  <></>
-                  // <Tr className={isMobile ? "" : "member-row"} key={member.id}>
-                  //   <Td>{member.address}</Td>
-                  //   <Td isNumeric>{member.balance}</Td>
-                  //   <Td isNumeric>{member.creditLimit}</Td>
-                  //   <Td w="5em">
-                  //     <Button
-                  //       onClick={() => selectMember(member)}
-                  //       className={isMobile ? "" : "member-manage-button"}
-                  //       size="sm"
-                  //     >
-                  //       extend
-                  //     </Button>
-                  //   </Td>
-                  // </Tr>
+                members?.map((member: Member) => (
+                  <Tr
+                    className={isMobile ? "" : "member-row"}
+                    key={member.address}
+                  >
+                    <Td>{member.address}</Td>
+                    <Td isNumeric>
+                      {member.balance.toLocaleString("en", {
+                        style: "currency",
+                        currency: "USD",
+                      })}
+                    </Td>
+                    <Td isNumeric>
+                      {member.creditLimit.toLocaleString("en", {
+                        style: "currency",
+                        currency: "USD",
+                      })}
+                    </Td>
+                    <Td w="5em">
+                      <Button
+                        onClick={() => selectMember(member)}
+                        className={isMobile ? "" : "member-manage-button"}
+                        size="sm"
+                      >
+                        extend
+                      </Button>
+                    </Td>
+                  </Tr>
                 ))
               )}
             </Tbody>
           </Table>
+          <Stack w="100%" mt="1em" alignItems={"flex-end"}>
+            <Pagination
+              my={4}
+              total={Number(networkData?.totalMembers)}
+              current={page}
+              pageSize={pageSize}
+              handleChange={(p) => setPage(p)}
+            />
+          </Stack>
         </TableContainer>
       </Box>
 

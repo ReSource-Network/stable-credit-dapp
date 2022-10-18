@@ -62,6 +62,24 @@ const _abi = [
     stateMutability: "nonpayable",
     type: "function",
   },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "member",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_feePercent",
+        type: "uint256",
+      },
+    ],
+    name: "setMemberFeePercent",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
 ];
 
 export class IFeeManager__factory {

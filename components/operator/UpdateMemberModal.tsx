@@ -51,9 +51,10 @@ export const UpdateMemberModal = ({
             initialValues={{
               creditLimit: member?.creditLimit || 0,
             }}
-            onSubmit={({ creditLimit }) => {
+            onSubmit={async ({ creditLimit }) => {
               if (!member) return
-              updateCreditLine(member.address, creditLimit)
+              await updateCreditLine(member.address, creditLimit)
+              onClose()
             }}
           >
             {({ handleSubmit, errors, touched }) => (

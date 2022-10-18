@@ -7,7 +7,8 @@
     "build": "next build && next export",
     "start": "next start",
     "lint": "next lint",
-    "clean": "rm -rf .next node_modules out"
+    "clean": "rm -rf .next node_modules out",
+    "generate": "yarn graphql-codegen --config ./graphql/codegen.yml && prettier --write graphql/generated.ts"
   },
   "dependencies": {
     "@babel/core": "^7.17.7",

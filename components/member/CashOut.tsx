@@ -75,42 +75,36 @@ export const CashOut = ({ getMember, member }: ManageMember) => {
                     type="number"
                     placeholder="0"
                     validate={(value) => {
-                      let error
+                      let error = "hello"
                       if (value > networkDebt) {
-                        error = `There are only ${networkDebt} credits available to reimburse`
+                        error = `${
+                          networkDebt > 0 ? "Only " : ""
+                        } ${networkDebt} credits eligable for reimbursement`
                         return error
+                      }
+                      if (value.amount > collateral) {
+                        error = `Reserve pool is low. Only ${collateral} ${feeTokenSymbol} available`
                       }
                     }}
                   />
+                  <Button
+                    ml="1em"
+                    onClick={() => {
+                      if (!member) return
+                      if (member.balance <= 0) return
+                      if (member.balance <= networkDebt)
+                        setValues({ amount: Math.abs(member.balance) })
+                      else setValues({ amount: networkDebt })
+                    }}
+                    alignSelf={"center"}
+                  >
+                    Max
+                  </Button>
                 </InputGroup>
-                <FormErrorMessage>{errors.amount}</FormErrorMessage>
                 <FormHelperText>Maximum {networkDebt}</FormHelperText>
+                <FormErrorMessage>{errors.amount}</FormErrorMessage>
               </FormControl>
-              <Button
-                mt="6px !important"
-                onClick={() => {
-                  if (!member) return
-                  if (member.balance <= 0) return
-                  if (member.balance <= networkDebt)
-                    setValues({ amount: Math.abs(member.balance) })
-                  else setValues({ amount: networkDebt })
-                }}
-                alignSelf={"center"}
-              >
-                Max
-              </Button>
             </HStack>
-            {values.amount && values.amount > collateral && (
-              <FormControl mb="1em" isInvalid={true}>
-                <FormErrorMessage>
-                  <Text mr={"2px"}>Reserve pool is low. Only</Text>
-                  <Text fontWeight={"bold"}>
-                    {collateral} {feeTokenSymbol}
-                  </Text>
-                  <Text ml={"2px"}> available.</Text>
-                </FormErrorMessage>
-              </FormControl>
-            )}
             <FeeTokenBalance />
 
             <HStack w="100%" mt="1em">

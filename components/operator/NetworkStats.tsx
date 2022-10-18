@@ -14,12 +14,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
 import { useStableCreditContract } from "../../hooks/useStableCreditContract"
 import { formatStableCredits } from "../../functions/bignumber"
+import { useFetchMembers } from "../../hooks/useFetchMembers"
+import { useRouter } from "next/router"
 
 export const NetworkStats = () => {
   const { colorMode } = useColorMode()
   const stableCredit = useStableCreditContract()
   const [totalSupply, setTotalSupply] = useState(0)
   const [networkDebt, setNetworkDebt] = useState(0)
+  const router = useRouter()
 
   useEffect(() => {
     const handler = async () => {
@@ -33,7 +36,13 @@ export const NetworkStats = () => {
     if (stableCredit) handler()
   }, [stableCredit])
 
-  const memberCount = 0
+  const network = router.query.network as string
+
+  const { network: networkData } = useFetchMembers({
+    address: network || "",
+    page: 1,
+    limit: 1,
+  })
 
   return (
     <>
@@ -56,7 +65,7 @@ export const NetworkStats = () => {
           <Stack direction={{ md: "row", base: "column" }} alignSelf="center">
             <Stack p="1em" alignItems="center">
               <Text fontSize="24px" fontWeight="bold">
-                {memberCount.toLocaleString("en")}
+                {Number(networkData?.totalMembers || 0)}
               </Text>
               <Text mt="0 !important">Members</Text>
             </Stack>

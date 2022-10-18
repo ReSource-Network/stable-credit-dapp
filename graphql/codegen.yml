@@ -1,0 +1,13 @@
+overwrite: true
+schema: "http://localhost:8000/subgraphs/name/stable-credits"
+documents:
+  - "graphql/**/*.graphql"
+generates:
+  graphql/generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-query
+    config:
+      fetcher: graphql-request
+      withHooks: true

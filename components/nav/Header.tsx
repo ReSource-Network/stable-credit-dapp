@@ -54,12 +54,6 @@ export const Header = () => {
           <HStack h={10} w="100%" justifyContent="space-between">
             <HStack>
               <NavLogotypeButton />
-              <Button variant="ghost" onClick={toggleColorMode}>
-                <FontAwesomeIcon
-                  icon={colorMode === "light" ? faMoon : faSun}
-                  size="lg"
-                />
-              </Button>
               <Link href={`/${router.query.network}`} passHref>
                 <ChakraLink>
                   <HStack>
@@ -94,6 +88,12 @@ export const Header = () => {
                   w="2em"
                 />
               )}
+              <Button variant="ghost" onClick={toggleColorMode}>
+                <FontAwesomeIcon
+                  icon={colorMode === "light" ? faMoon : faSun}
+                  size="lg"
+                />
+              </Button>
             </HStack>
           </HStack>
         </Stack>

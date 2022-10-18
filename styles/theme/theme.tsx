@@ -8,7 +8,7 @@ import { CacheProvider } from "@emotion/react"
 
 const overrides: any = {
   ...foundations,
-  // components,
+  components,
   styles: globalStyles,
   textStyles,
   config: {

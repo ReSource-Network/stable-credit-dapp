@@ -23,7 +23,9 @@ import { useEffect } from "react"
 import { useSigner } from "wagmi"
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [CHAIN_INFO[42220], chain.hardhat, chain.mainnet, ...defaultL2Chains],
+  process.env.NODE_ENV === "development"
+    ? [chain.hardhat, CHAIN_INFO[42220], chain.mainnet, ...defaultL2Chains]
+    : [CHAIN_INFO[42220], chain.hardhat, chain.mainnet, ...defaultL2Chains],
   [publicProvider()],
 )
 

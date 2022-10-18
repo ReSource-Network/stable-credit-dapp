@@ -32,6 +32,7 @@ export const useGetMember = (): ManageMember => {
             address: "",
             creditLimit: 0,
             balance: 0,
+            available: 0,
             default: new Date(),
             pastDue: new Date(),
           })
@@ -43,6 +44,7 @@ export const useGetMember = (): ManageMember => {
             address: "",
             creditLimit: 0,
             balance: 0,
+            available: 0,
             default: new Date(),
             pastDue: new Date(),
           })
@@ -54,6 +56,12 @@ export const useGetMember = (): ManageMember => {
         const memberBalance = await stableCredit.balanceOf(address)
 
         const creditBalance = await stableCredit.creditBalanceOf(address)
+
+        const available = Number(
+          formatStableCredits(
+            (await stableCredit.creditLimitLeftOf(address)).add(memberBalance),
+          ),
+        )
 
         const terms = await stableCredit.creditTerms(address)
 
@@ -68,6 +76,7 @@ export const useGetMember = (): ManageMember => {
           address: address,
           creditLimit,
           balance,
+          available,
           default: new Date(terms.defaultDate.toNumber() * 1000),
           pastDue: new Date(terms.pastDueDate.toNumber() * 1000),
         })

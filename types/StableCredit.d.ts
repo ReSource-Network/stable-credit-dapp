@@ -32,7 +32,7 @@ interface StableCreditInterface extends ethers.utils.Interface {
     "burnNetworkDebt(uint256)": FunctionFragment;
     "conversionRate()": FunctionFragment;
     "convertCreditToFeeToken(uint256)": FunctionFragment;
-    "createCreditLine(address,uint256,uint256,uint256,uint256)": FunctionFragment;
+    "createCreditLine(address,uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "creditBalanceOf(address)": FunctionFragment;
     "creditLimitLeftOf(address)": FunctionFragment;
     "creditLimitOf(address)": FunctionFragment;
@@ -107,7 +107,14 @@ interface StableCreditInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "createCreditLine",
-    values: [string, BigNumberish, BigNumberish, BigNumberish, BigNumberish]
+    values: [
+      string,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "creditBalanceOf",
@@ -544,8 +551,9 @@ export class StableCredit extends BaseContract {
     createCreditLine(
       _member: string,
       _creditLimit: BigNumberish,
-      _pastDue: BigNumberish,
-      _default: BigNumberish,
+      _pastDueTime: BigNumberish,
+      _defaultTime: BigNumberish,
+      _feePercent: BigNumberish,
       _balance: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -749,8 +757,9 @@ export class StableCredit extends BaseContract {
   createCreditLine(
     _member: string,
     _creditLimit: BigNumberish,
-    _pastDue: BigNumberish,
-    _default: BigNumberish,
+    _pastDueTime: BigNumberish,
+    _defaultTime: BigNumberish,
+    _feePercent: BigNumberish,
     _balance: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -942,8 +951,9 @@ export class StableCredit extends BaseContract {
     createCreditLine(
       _member: string,
       _creditLimit: BigNumberish,
-      _pastDue: BigNumberish,
-      _default: BigNumberish,
+      _pastDueTime: BigNumberish,
+      _defaultTime: BigNumberish,
+      _feePercent: BigNumberish,
       _balance: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -1303,8 +1313,9 @@ export class StableCredit extends BaseContract {
     createCreditLine(
       _member: string,
       _creditLimit: BigNumberish,
-      _pastDue: BigNumberish,
-      _default: BigNumberish,
+      _pastDueTime: BigNumberish,
+      _defaultTime: BigNumberish,
+      _feePercent: BigNumberish,
       _balance: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1503,8 +1514,9 @@ export class StableCredit extends BaseContract {
     createCreditLine(
       _member: string,
       _creditLimit: BigNumberish,
-      _pastDue: BigNumberish,
-      _default: BigNumberish,
+      _pastDueTime: BigNumberish,
+      _defaultTime: BigNumberish,
+      _feePercent: BigNumberish,
       _balance: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

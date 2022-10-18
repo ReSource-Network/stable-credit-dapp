@@ -5,6 +5,7 @@ import { useCallback } from "react"
 import { nanoid } from "../functions/nanoid"
 import { parseStableCredits } from "../functions/bignumber"
 import { useToast } from "@chakra-ui/react"
+import { useAccount } from "wagmi"
 
 export type UseTransferCreditsResponse = {
   transfer: (address: string, amount: number) => Promise<void>
@@ -14,7 +15,7 @@ export type UseTransferCreditsResponse = {
 export const useTransferCredits = (): UseTransferCreditsResponse => {
   const stableCredit = useStableCreditContract()
   const [transfering, setTransfering] = useMountedState(false)
-
+  const { address: signerAddress } = useAccount()
   const addTransaction = useAddTransaction()
   const toast = useToast()
 
@@ -23,6 +24,7 @@ export const useTransferCredits = (): UseTransferCreditsResponse => {
       setTransfering(true)
 
       try {
+        if (address == signerAddress) throw Error("Recipient can't be Sender")
         const resp = await (stableCredit &&
           stableCredit.transfer(address, parseStableCredits(amount.toString())))
 
