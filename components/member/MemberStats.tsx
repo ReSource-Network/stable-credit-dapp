@@ -116,7 +116,7 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
                   p="1em"
                   justifyContent={"space-between"}
                 >
-                  <VStack>
+                  <VStack alignItems={{ md: "flex-start", base: "center" }}>
                     <HStack alignSelf={{ md: "flex-start", base: "center" }}>
                       <Text fontSize={"lg"}>Credit Limit:</Text>
                       <Text fontWeight="bold" fontSize="lg" variant="title">

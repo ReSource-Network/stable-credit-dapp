@@ -39,7 +39,7 @@ export const FeeTokenBalance = () => {
 
   return (
     <HStack justifyContent="space-between">
-      <Text whiteSpace={"nowrap"}>{feeTokenSymbol} Balance:</Text>
+      <Text whiteSpace={"nowrap"}>{feeTokenSymbol}:</Text>
       <HStack>
         <FontAwesomeIcon color="#38a5fd" icon={faCircle} />
         <Text whiteSpace={"nowrap"} fontSize="lg" fontWeight="bold">

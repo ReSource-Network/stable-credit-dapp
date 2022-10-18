@@ -24,8 +24,14 @@ import { useSigner } from "wagmi"
 
 const { chains, provider, webSocketProvider } = configureChains(
   process.env.NODE_ENV === "development"
-    ? [chain.hardhat, CHAIN_INFO[42220], chain.mainnet, ...defaultL2Chains]
-    : [CHAIN_INFO[42220], chain.hardhat, chain.mainnet, ...defaultL2Chains],
+    ? [
+        chain.hardhat,
+        CHAIN_INFO[42220],
+        CHAIN_INFO[44787],
+        chain.mainnet,
+        ...defaultL2Chains,
+      ]
+    : [CHAIN_INFO[42220], CHAIN_INFO[44787], chain.mainnet, ...defaultL2Chains],
   [publicProvider()],
 )
 
