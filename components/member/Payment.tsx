@@ -66,7 +66,7 @@ export const Payment = ({ getMember, member }: ManageMember) => {
       ) : (
         <Formik
           initialValues={{
-            amount: undefined,
+            amount: undefined || 0,
           }}
           validateOnChange={true}
           onSubmit={async ({ amount }) => {

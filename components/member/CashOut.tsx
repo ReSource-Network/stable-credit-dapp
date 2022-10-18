@@ -53,7 +53,7 @@ export const CashOut = ({ getMember, member }: ManageMember) => {
       </Text>
       <Formik
         initialValues={{
-          amount: undefined,
+          amount: undefined || 0,
         }}
         onSubmit={async ({ amount }) => {
           if (!address || !amount) return

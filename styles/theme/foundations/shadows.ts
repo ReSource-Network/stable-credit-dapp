@@ -1,5 +1,5 @@
 import colors from "./colors"
-const focusOutlineColor = colors.primary.dark
+const focusOutlineColor = colors.primary.main
 
 const shadows = {
   xs: "0 0 0 1px rgba(0, 0, 0, 0.05)",
