@@ -9,8 +9,8 @@ export type UseCreateResponse = {
   createCreditLine: (
     address: string,
     creditLimit: number,
-    pastDueTime: number,
-    defaultTime: number,
+    pastDueDays: number,
+    defaultDays: number,
   ) => Promise<void>
   loading: boolean
 }
@@ -26,8 +26,8 @@ export const useCreateCreditLine = (): UseCreateResponse => {
     async (
       address: string,
       creditLimit: number,
-      pastDueTime: number,
-      defaultTime: number,
+      pastDueDays: number,
+      defaultDays: number,
     ) => {
       setCreating(true)
 
@@ -37,8 +37,8 @@ export const useCreateCreditLine = (): UseCreateResponse => {
           stableCredit.createCreditLine(
             address,
             limit,
-            pastDueTime,
-            defaultTime,
+            pastDueDays * 60 * 60 * 24,
+            defaultDays * 60 * 60 * 24,
             0,
             0,
           ))

@@ -38,22 +38,12 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
             initialValues={{
               address: "",
               creditLimit: undefined,
-              pastDueSeconds: undefined,
-              defaultSeconds: undefined,
+              pastDueDays: undefined,
+              defaultDays: undefined,
             }}
-            onSubmit={({
-              address,
-              creditLimit,
-              pastDueSeconds,
-              defaultSeconds,
-            }) => {
-              if (!creditLimit || !pastDueSeconds || !defaultSeconds) return
-              createCreditLine(
-                address,
-                creditLimit,
-                pastDueSeconds,
-                defaultSeconds,
-              )
+            onSubmit={({ address, creditLimit, pastDueDays, defaultDays }) => {
+              if (!creditLimit || !pastDueDays || !defaultDays) return
+              createCreditLine(address, creditLimit, pastDueDays, defaultDays)
             }}
           >
             {({ handleSubmit, values, errors, touched }) => (
@@ -94,17 +84,15 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
                 </FormControl>
                 <FormControl
                   mt="1em"
-                  isInvalid={!!errors.pastDueSeconds && touched.pastDueSeconds}
+                  isInvalid={!!errors.pastDueDays && touched.pastDueDays}
                 >
-                  <FormLabel htmlFor="pastDueSeconds">
-                    Credit past due
-                  </FormLabel>
+                  <FormLabel htmlFor="pastDueDays">Credit past due</FormLabel>
                   <InputGroup>
-                    <InputLeftAddon>seconds</InputLeftAddon>
+                    <InputLeftAddon>days</InputLeftAddon>
                     <Field
                       as={Input}
-                      id="pastDueSeconds"
-                      name="pastDueSeconds"
+                      id="pastDueDays"
+                      name="pastDueDays"
                       type="number"
                       placeholder="0"
                       validate={(value) => {
@@ -116,25 +104,25 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
                       }}
                     />
                   </InputGroup>
-                  <FormErrorMessage>{errors.pastDueSeconds}</FormErrorMessage>
+                  <FormErrorMessage>{errors.pastDueDays}</FormErrorMessage>
                 </FormControl>
                 <FormControl
                   mt="1em"
-                  isInvalid={!!errors.defaultSeconds && touched.defaultSeconds}
+                  isInvalid={!!errors.defaultDays && touched.defaultDays}
                 >
-                  <FormLabel htmlFor="defaultSeconds">Credit default</FormLabel>
+                  <FormLabel htmlFor="defaultDays">Credit default</FormLabel>
                   <InputGroup>
-                    <InputLeftAddon>seconds</InputLeftAddon>
+                    <InputLeftAddon>days</InputLeftAddon>
                     <Field
                       as={Input}
-                      id="defaultSeconds"
-                      name="defaultSeconds"
+                      id="defaultDays"
+                      name="defaultDays"
                       type="number"
                       placeholder="0"
                       validate={(value) => {
                         let error
-                        if (!values.pastDueSeconds) return
-                        if (value <= values.pastDueSeconds) {
+                        if (!values.pastDueDays) return
+                        if (value <= values.pastDueDays) {
                           error =
                             "default time must be greater than past due time"
                           return error
@@ -142,7 +130,7 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
                       }}
                     />
                   </InputGroup>
-                  <FormErrorMessage>{errors.defaultSeconds}</FormErrorMessage>
+                  <FormErrorMessage>{errors.defaultDays}</FormErrorMessage>
                 </FormControl>
                 <HStack mt="1em" justifyContent="flex-end" py="1em">
                   <Button isLoading={loading} onClick={handleClose}>

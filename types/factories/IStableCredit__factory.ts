@@ -12,8 +12,14 @@ const _abi = [
     inputs: [
       {
         indexed: false,
+        internalType: "address",
+        name: "member",
+        type: "address",
+      },
+      {
+        indexed: false,
         internalType: "uint128",
-        name: "expiration",
+        name: "amount",
         type: "uint128",
       },
     ],
@@ -31,19 +37,6 @@ const _abi = [
       },
     ],
     name: "CreditDefault",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "expiration",
-        type: "uint256",
-      },
-    ],
-    name: "CreditExpirationUpdated",
     type: "event",
   },
   {
@@ -83,7 +76,25 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "timestamp",
+        name: "pastDueTime",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "defaultTime",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "feePercent",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "balance",
         type: "uint256",
       },
     ],
@@ -120,19 +131,6 @@ const _abi = [
       },
     ],
     name: "NetworkDebtBurned",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "expiration",
-        type: "uint256",
-      },
-    ],
-    name: "PastDueExpirationUpdated",
     type: "event",
   },
   {

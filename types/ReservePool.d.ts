@@ -21,13 +21,13 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ReservePoolInterface extends ethers.utils.Interface {
   functions: {
-    "LTV()": FunctionFragment;
+    "RTD()": FunctionFragment;
     "collateral()": FunctionFragment;
     "depositCollateral(uint256)": FunctionFragment;
     "depositFees(uint256)": FunctionFragment;
     "getNeededCollateral()": FunctionFragment;
     "initialize(address,address,address)": FunctionFragment;
-    "minLTV()": FunctionFragment;
+    "minRTD()": FunctionFragment;
     "operatorBalance()": FunctionFragment;
     "operatorPercent()": FunctionFragment;
     "owner()": FunctionFragment;
@@ -36,7 +36,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     "recoverERC20(address,uint256)": FunctionFragment;
     "reimburseMember(address,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "setMinLTV(uint256)": FunctionFragment;
+    "setMinRTD(uint256)": FunctionFragment;
     "setOperatorPercent(uint256)": FunctionFragment;
     "setPoolFee(uint24)": FunctionFragment;
     "setSource(address)": FunctionFragment;
@@ -48,7 +48,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     "withdrawOperator(uint256)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "LTV", values?: undefined): string;
+  encodeFunctionData(functionFragment: "RTD", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "collateral",
     values?: undefined
@@ -69,7 +69,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     functionFragment: "initialize",
     values: [string, string, string]
   ): string;
-  encodeFunctionData(functionFragment: "minLTV", values?: undefined): string;
+  encodeFunctionData(functionFragment: "minRTD", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "operatorBalance",
     values?: undefined
@@ -94,7 +94,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setMinLTV",
+    functionFragment: "setMinRTD",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
@@ -128,7 +128,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
 
-  decodeFunctionResult(functionFragment: "LTV", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "RTD", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "collateral", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "depositCollateral",
@@ -143,7 +143,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "minLTV", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "minRTD", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "operatorBalance",
     data: BytesLike
@@ -167,7 +167,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setMinLTV", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setMinRTD", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setOperatorPercent",
     data: BytesLike
@@ -274,7 +274,7 @@ export class ReservePool extends BaseContract {
   interface: ReservePoolInterface;
 
   functions: {
-    LTV(overrides?: CallOverrides): Promise<[BigNumber]>;
+    RTD(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     collateral(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -297,7 +297,7 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    minLTV(overrides?: CallOverrides): Promise<[BigNumber]>;
+    minRTD(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     operatorBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -325,8 +325,8 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setMinLTV(
-      _minLTV: BigNumberish,
+    setMinRTD(
+      _minRTD: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -364,7 +364,7 @@ export class ReservePool extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  LTV(overrides?: CallOverrides): Promise<BigNumber>;
+  RTD(overrides?: CallOverrides): Promise<BigNumber>;
 
   collateral(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -387,7 +387,7 @@ export class ReservePool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  minLTV(overrides?: CallOverrides): Promise<BigNumber>;
+  minRTD(overrides?: CallOverrides): Promise<BigNumber>;
 
   operatorBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -415,8 +415,8 @@ export class ReservePool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setMinLTV(
-    _minLTV: BigNumberish,
+  setMinRTD(
+    _minRTD: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -454,7 +454,7 @@ export class ReservePool extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    LTV(overrides?: CallOverrides): Promise<BigNumber>;
+    RTD(overrides?: CallOverrides): Promise<BigNumber>;
 
     collateral(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -474,7 +474,7 @@ export class ReservePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    minLTV(overrides?: CallOverrides): Promise<BigNumber>;
+    minRTD(overrides?: CallOverrides): Promise<BigNumber>;
 
     operatorBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -500,7 +500,7 @@ export class ReservePool extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
-    setMinLTV(_minLTV: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    setMinRTD(_minRTD: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     setOperatorPercent(
       _operatorPercent: BigNumberish,
@@ -612,7 +612,7 @@ export class ReservePool extends BaseContract {
   };
 
   estimateGas: {
-    LTV(overrides?: CallOverrides): Promise<BigNumber>;
+    RTD(overrides?: CallOverrides): Promise<BigNumber>;
 
     collateral(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -635,7 +635,7 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    minLTV(overrides?: CallOverrides): Promise<BigNumber>;
+    minRTD(overrides?: CallOverrides): Promise<BigNumber>;
 
     operatorBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -663,8 +663,8 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setMinLTV(
-      _minLTV: BigNumberish,
+    setMinRTD(
+      _minRTD: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -703,7 +703,7 @@ export class ReservePool extends BaseContract {
   };
 
   populateTransaction: {
-    LTV(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    RTD(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     collateral(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -728,7 +728,7 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    minLTV(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    minRTD(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     operatorBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -756,8 +756,8 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setMinLTV(
-      _minLTV: BigNumberish,
+    setMinRTD(
+      _minRTD: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

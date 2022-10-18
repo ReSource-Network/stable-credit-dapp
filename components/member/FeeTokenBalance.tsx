@@ -39,10 +39,10 @@ export const FeeTokenBalance = () => {
 
   return (
     <HStack justifyContent="space-between">
-      <Text>{feeTokenSymbol} Balance:</Text>
+      <Text whiteSpace={"nowrap"}>{feeTokenSymbol} Balance:</Text>
       <HStack>
         <FontAwesomeIcon color="#38a5fd" icon={faCircle} />
-        <Text fontSize="lg" fontWeight="bold">
+        <Text whiteSpace={"nowrap"} fontSize="lg" fontWeight="bold">
           {feeTokenBalance.toLocaleString("en", {
             style: "currency",
             currency: "USD",

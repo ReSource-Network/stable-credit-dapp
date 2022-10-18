@@ -124,8 +124,8 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
                     <FeeTokenBalance />
                   </VStack>
                   <Divider orientation="vertical" h="3em" />
-                  <VStack alignItems={"flex-end"}>
-                    <HStack>
+                  <VStack alignItems={"flex-end"} whiteSpace="nowrap">
+                    <HStack whiteSpace="nowrap">
                       {nearPastDue && (
                         <FontAwesomeIcon
                           color="yellow"

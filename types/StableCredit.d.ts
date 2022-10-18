@@ -373,30 +373,26 @@ interface StableCreditInterface extends ethers.utils.Interface {
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
-    "CreditBalanceRepayed(uint128)": EventFragment;
+    "CreditBalanceRepayed(address,uint128)": EventFragment;
     "CreditDefault(address)": EventFragment;
-    "CreditExpirationUpdated(uint256)": EventFragment;
     "CreditLimitExtended(address,uint256)": EventFragment;
     "CreditLimitUpdate(address,uint256)": EventFragment;
-    "CreditLineCreated(address,uint256,uint256)": EventFragment;
+    "CreditLineCreated(address,uint256,uint256,uint256,uint256,uint256)": EventFragment;
     "MembersDemurraged(uint256)": EventFragment;
     "NetworkDebtBurned(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "PastDueExpirationUpdated(uint256)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditBalanceRepayed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditDefault"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "CreditExpirationUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLimitExtended"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLimitUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLineCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MembersDemurraged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NetworkDebtBurned"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PastDueExpirationUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
@@ -409,14 +405,10 @@ export type ApprovalEvent = TypedEvent<
 >;
 
 export type CreditBalanceRepayedEvent = TypedEvent<
-  [BigNumber] & { expiration: BigNumber }
+  [string, BigNumber] & { member: string; amount: BigNumber }
 >;
 
 export type CreditDefaultEvent = TypedEvent<[string] & { member: string }>;
-
-export type CreditExpirationUpdatedEvent = TypedEvent<
-  [BigNumber] & { expiration: BigNumber }
->;
 
 export type CreditLimitExtendedEvent = TypedEvent<
   [string, BigNumber] & { member: string; creditLimit: BigNumber }
@@ -427,10 +419,13 @@ export type CreditLimitUpdateEvent = TypedEvent<
 >;
 
 export type CreditLineCreatedEvent = TypedEvent<
-  [string, BigNumber, BigNumber] & {
+  [string, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
     member: string;
     creditLimit: BigNumber;
-    timestamp: BigNumber;
+    pastDueTime: BigNumber;
+    defaultTime: BigNumber;
+    feePercent: BigNumber;
+    balance: BigNumber;
   }
 >;
 
@@ -444,10 +439,6 @@ export type NetworkDebtBurnedEvent = TypedEvent<
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
->;
-
-export type PastDueExpirationUpdatedEvent = TypedEvent<
-  [BigNumber] & { expiration: BigNumber }
 >;
 
 export type TransferEvent = TypedEvent<
@@ -1118,13 +1109,21 @@ export class StableCredit extends BaseContract {
       { owner: string; spender: string; value: BigNumber }
     >;
 
-    "CreditBalanceRepayed(uint128)"(
-      expiration?: null
-    ): TypedEventFilter<[BigNumber], { expiration: BigNumber }>;
+    "CreditBalanceRepayed(address,uint128)"(
+      member?: null,
+      amount?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { member: string; amount: BigNumber }
+    >;
 
     CreditBalanceRepayed(
-      expiration?: null
-    ): TypedEventFilter<[BigNumber], { expiration: BigNumber }>;
+      member?: null,
+      amount?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { member: string; amount: BigNumber }
+    >;
 
     "CreditDefault(address)"(
       member?: null
@@ -1133,14 +1132,6 @@ export class StableCredit extends BaseContract {
     CreditDefault(
       member?: null
     ): TypedEventFilter<[string], { member: string }>;
-
-    "CreditExpirationUpdated(uint256)"(
-      expiration?: null
-    ): TypedEventFilter<[BigNumber], { expiration: BigNumber }>;
-
-    CreditExpirationUpdated(
-      expiration?: null
-    ): TypedEventFilter<[BigNumber], { expiration: BigNumber }>;
 
     "CreditLimitExtended(address,uint256)"(
       member?: null,
@@ -1174,22 +1165,42 @@ export class StableCredit extends BaseContract {
       { member: string; limit: BigNumber }
     >;
 
-    "CreditLineCreated(address,uint256,uint256)"(
+    "CreditLineCreated(address,uint256,uint256,uint256,uint256,uint256)"(
       member?: null,
       creditLimit?: null,
-      timestamp?: null
+      pastDueTime?: null,
+      defaultTime?: null,
+      feePercent?: null,
+      balance?: null
     ): TypedEventFilter<
-      [string, BigNumber, BigNumber],
-      { member: string; creditLimit: BigNumber; timestamp: BigNumber }
+      [string, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber],
+      {
+        member: string;
+        creditLimit: BigNumber;
+        pastDueTime: BigNumber;
+        defaultTime: BigNumber;
+        feePercent: BigNumber;
+        balance: BigNumber;
+      }
     >;
 
     CreditLineCreated(
       member?: null,
       creditLimit?: null,
-      timestamp?: null
+      pastDueTime?: null,
+      defaultTime?: null,
+      feePercent?: null,
+      balance?: null
     ): TypedEventFilter<
-      [string, BigNumber, BigNumber],
-      { member: string; creditLimit: BigNumber; timestamp: BigNumber }
+      [string, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber],
+      {
+        member: string;
+        creditLimit: BigNumber;
+        pastDueTime: BigNumber;
+        defaultTime: BigNumber;
+        feePercent: BigNumber;
+        balance: BigNumber;
+      }
     >;
 
     "MembersDemurraged(uint256)"(
@@ -1231,14 +1242,6 @@ export class StableCredit extends BaseContract {
       [string, string],
       { previousOwner: string; newOwner: string }
     >;
-
-    "PastDueExpirationUpdated(uint256)"(
-      expiration?: null
-    ): TypedEventFilter<[BigNumber], { expiration: BigNumber }>;
-
-    PastDueExpirationUpdated(
-      expiration?: null
-    ): TypedEventFilter<[BigNumber], { expiration: BigNumber }>;
 
     "Transfer(address,address,uint256)"(
       from?: string | null,

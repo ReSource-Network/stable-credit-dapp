@@ -7,11 +7,12 @@ import {
   IconButton,
   useDisclosure,
   useColorMode,
+  Tooltip,
 } from "@chakra-ui/react"
 import {
   faArrowUpFromBracket,
   faGear,
-  faShare,
+  faInfoCircle,
   faShareNodes,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -38,7 +39,7 @@ export const ReserveStats = () => {
   const { withdraw, loading } = useWithdrawOperator()
   const { distribute, loading: distributeLoading } = useDistributeFees()
   const [operatorBalance, setOperatorBalance] = useState(0)
-  const [ltv, setLTV] = useState(0)
+  const [rtd, setRTD] = useState(0)
   const [fees, setFees] = useState(0)
   const [swapSink, setSwapSink] = useState(0)
 
@@ -47,7 +48,7 @@ export const ReserveStats = () => {
       setOperatorBalance(
         Number(formatEther(await reservePool.operatorBalance())),
       )
-      setLTV((await reservePool.LTV()).toNumber() / 10000)
+      setRTD((await reservePool.RTD()).toNumber() / 10000)
       setSwapSink(Number(formatEther(await reservePool.swapSink())))
       setFees(Number(formatEther(await ƒeeManager.collectedFees())))
     }
@@ -57,9 +58,14 @@ export const ReserveStats = () => {
   const handleDistribute = async () => {
     await distribute()
     setOperatorBalance(Number(formatEther(await reservePool.operatorBalance())))
-    setLTV((await reservePool.LTV()).toNumber() / 10000)
+    setRTD((await reservePool.RTD()).toNumber() / 10000)
     setSwapSink(Number(formatEther(await reservePool.swapSink())))
     setFees(Number(formatEther(await ƒeeManager.collectedFees())))
+  }
+
+  const handleWithdraw = async () => {
+    await withdraw()
+    setOperatorBalance(Number(formatEther(await reservePool.operatorBalance())))
   }
 
   return (
@@ -99,7 +105,7 @@ export const ReserveStats = () => {
             <Stack p="1em" alignItems="center" alignSelf="center">
               <Button
                 size="sm"
-                onClick={withdraw}
+                onClick={handleWithdraw}
                 isLoading={loading}
                 leftIcon={<FontAwesomeIcon icon={faArrowUpFromBracket} />}
               >
@@ -133,9 +139,16 @@ export const ReserveStats = () => {
           <Stack direction={{ md: "row", base: "column" }}>
             <Stack p="1em" alignItems="center" textAlign="center">
               <Text fontSize="24px" fontWeight="bold">
-                {ltv.toString()}%
+                {rtd.toString()}%
               </Text>
-              <Text mt="0 !important">LTV</Text>
+              <HStack>
+                <Text mt="0 !important">RTD</Text>
+                <Tooltip label="Reserve to Debt Ratio" aria-label="RTD">
+                  <span>
+                    <FontAwesomeIcon size="sm" icon={faInfoCircle} />
+                  </span>
+                </Tooltip>
+              </HStack>
             </Stack>
             <Stack p="1em" alignItems="center" textAlign="center">
               <HStack textAlign="center">
