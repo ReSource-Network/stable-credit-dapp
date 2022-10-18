@@ -32,15 +32,15 @@ export const NetworkHomePage: NextPage = () => {
 
   if (!valid)
     return (
-      <Flex width="100%" mt="5em" justifyContent="center">
-        <Container maxW="container.xl" mt="25vh" p={0}>
+      <Flex width="100%" justifyContent="center">
+        <Container maxW="container.xl" p={0}>
           <Stack
             direction={{ md: "row", base: "column" }}
             w="100%"
             h="100%"
             justifyContent="center"
           >
-            <Text fontSize="24px" ml="5px" variant="title">
+            <Text alignSelf={"center"} fontSize="24px" ml="5px" variant="title">
               No network found
             </Text>
           </Stack>
@@ -53,13 +53,14 @@ export const NetworkHomePage: NextPage = () => {
       <Head>
         <title>Stable Credit | Home</title>
       </Head>
-      <Flex width="100%" mt="5em" justifyContent="center">
-        <Container maxW="container.xl" mt="25vh" p={0}>
+      <Flex width="100%" justifyContent="center">
+        <Container maxW="container.xl" p={0}>
           <Stack
             direction={{ md: "row", base: "column" }}
             w="100%"
             h="100%"
             justifyContent="center"
+            textAlign="center"
           >
             <>
               <Link href={`/${router.query.network}/member`} passHref>

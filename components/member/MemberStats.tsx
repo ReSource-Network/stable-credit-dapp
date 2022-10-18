@@ -110,9 +110,14 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
                 borderRadius="xl"
                 py=".5em"
               >
-                <HStack w="100%" p="1em" justifyContent={"space-between"}>
+                <Stack
+                  direction={{ md: "row", base: "column" }}
+                  w="100%"
+                  p="1em"
+                  justifyContent={"space-between"}
+                >
                   <VStack>
-                    <HStack alignSelf={"flex-start"}>
+                    <HStack alignSelf={{ md: "flex-start", base: "center" }}>
                       <Text fontSize={"lg"}>Credit Limit:</Text>
                       <Text fontWeight="bold" fontSize="lg" variant="title">
                         {member?.creditLimit.toLocaleString("en", {
@@ -123,8 +128,15 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
                     </HStack>
                     <FeeTokenBalance />
                   </VStack>
-                  <Divider orientation="vertical" h="3em" />
-                  <VStack alignItems={"flex-end"} whiteSpace="nowrap">
+                  <Divider
+                    display={{ md: "initial", base: "none" }}
+                    orientation="vertical"
+                    h="3em"
+                  />
+                  <VStack
+                    alignItems={{ md: "flex-end", base: "center" }}
+                    whiteSpace="nowrap"
+                  >
                     <HStack whiteSpace="nowrap">
                       {nearPastDue && (
                         <FontAwesomeIcon
@@ -168,7 +180,7 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
                       </Text>
                     </HStack>
                   </VStack>
-                </HStack>
+                </Stack>
               </VStack>
             </Collapse>
           </>

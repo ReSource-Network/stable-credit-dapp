@@ -44,8 +44,8 @@ export const NetworkHomePage: NextPage = () => {
       <Head>
         <title>Stable Credit | Home</title>
       </Head>
-      <Flex width="100%" mt="5em" justifyContent="center">
-        <Container maxW="container.xl" mt="25vh" p={0}>
+      <Flex width="100%" justifyContent="center">
+        <Container maxW="container.xl" p={0}>
           <Stack
             direction={{ md: "row", base: "column" }}
             w="100%"
@@ -65,6 +65,7 @@ export const NetworkHomePage: NextPage = () => {
                   </Text>
                   <HStack w="22em">
                     <Input
+                      variant={"filled"}
                       value={value}
                       onChange={handleChange}
                       placeholder="0x000...000"

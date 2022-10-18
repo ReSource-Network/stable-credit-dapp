@@ -17,7 +17,7 @@ export const NavLogotypeButton = () => {
     >
       <FontAwesomeIcon
         icon={hovered ? faScaleUnbalancedFlip : faScaleBalanced}
-        size="lg"
+        fontSize="1.75em"
       />
     </Link>
   )

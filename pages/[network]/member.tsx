@@ -43,7 +43,7 @@ export const Member: NextPage = () => {
       <Head>
         <title>StableCredit | Member</title>
       </Head>
-      <Flex width="100%" mt="7em" justifyContent="center">
+      <Flex width="100%" justifyContent="center">
         <Box
           minH="75vh"
           borderRadius="3xl"
@@ -54,6 +54,8 @@ export const Member: NextPage = () => {
         >
           {!!show && (
             <IconButton
+              mt="-1em"
+              ml="-1em"
               pos={"absolute"}
               aria-label="back"
               variant={"ghost"}

@@ -26,8 +26,8 @@ export const Operator: NextPage = () => {
       <Head>
         <title>StableCredit | Operator</title>
       </Head>
-      <Flex p="1em" width="100%" justifyContent="center">
-        <Container maxW="container.xl" mt="7em" p={0}>
+      <Flex pt="5em !important" p="1em" width="100%" alignSelf={"flex-start"}>
+        <Container maxW="container.xl" p={0}>
           {loading ? (
             <Center>
               <Spinner />

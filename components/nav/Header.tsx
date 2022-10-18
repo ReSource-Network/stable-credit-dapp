@@ -41,16 +41,15 @@ export const Header = () => {
   }, [router])
 
   return (
-    <Center position="fixed" w="100vw" bgColor="#0000001d" zIndex="100">
+    <Center
+      position="fixed"
+      w="100vw"
+      bgColor="#0000001d"
+      zIndex="100"
+      backdropFilter="blur(2px)"
+    >
       <Container maxW="container.xl" p={0}>
-        <Stack
-          p="1em"
-          top={0}
-          w="100%"
-          zIndex={6}
-          backdropFilter="blur(8px)"
-          alignItems="center"
-        >
+        <Stack p="1em" top={0} w="100%" zIndex={6} alignItems="center">
           <HStack h={10} w="100%" justifyContent="space-between">
             <HStack>
               <NavLogotypeButton />
