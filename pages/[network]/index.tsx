@@ -139,4 +139,12 @@ export const NetworkHomePage: NextPage = () => {
   )
 }
 
+export async function getServerSidePath(context) {
+  const network = context.query.network
+
+  return {
+    paths: [{ network }],
+  }
+}
+
 export default NetworkHomePage
