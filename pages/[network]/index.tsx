@@ -137,13 +137,4 @@ export const NetworkHomePage: NextPage = () => {
   )
 }
 
-function getServerSideProps(ctx) {
-  const network = ctx.query.network
-  return {
-    props: {
-      network: network || null,
-    },
-  }
-}
-
 export default NetworkHomePage
