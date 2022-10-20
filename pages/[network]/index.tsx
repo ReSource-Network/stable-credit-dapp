@@ -137,7 +137,7 @@ export const NetworkHomePage: NextPage = () => {
   )
 }
 
-export async function getServerSideProps(ctx) {
+function getServerSideProps(ctx) {
   const network = ctx.query.network
   return {
     props: {
