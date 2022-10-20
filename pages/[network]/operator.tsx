@@ -1,17 +1,30 @@
-import { Center, Container, Flex, Stack, Spinner, Text } from "@chakra-ui/react"
+import {
+  Center,
+  Container,
+  Flex,
+  Stack,
+  Spinner,
+  Text,
+  Link as ChakraLink,
+  HStack,
+} from "@chakra-ui/react"
 import type { NextPage } from "next"
 import Head from "next/head"
 import { useState, useEffect } from "react"
 import { Members } from "../../components/operator/Members"
 import { NetworkStats } from "../../components/operator/NetworkStats"
 import { ReserveStats } from "../../components/operator/ReserveStats"
-import { useAccessManagerContract } from "../../hooks/useAccessManagerContract"
 import { useAccount } from "wagmi"
 import { useIsOperator, IsOperator } from "../../hooks/useIsOperator"
+import Link from "next/link"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faBackward } from "@fortawesome/free-solid-svg-icons"
+import { useRouter } from "next/router"
 
 export const Operator: NextPage = () => {
   const { isOperator, check, loading } = useIsOperator()
   const { address } = useAccount()
+  const router = useRouter()
 
   useEffect(() => {
     const handler = async () => {
@@ -20,6 +33,25 @@ export const Operator: NextPage = () => {
     }
     if (address) handler()
   }, [address, check])
+
+  if (!isOperator)
+    return (
+      <Flex width="100%" justifyContent="center">
+        <Container maxW="container.xl" p={0}>
+          <Stack alignItems={"center"} h="100%" justifyContent="center">
+            <Text alignSelf={"center"} fontSize="24px" ml="5px" variant="title">
+              Operator access only
+            </Text>
+            <ChakraLink>
+              <HStack spacing=".5em">
+                <FontAwesomeIcon icon={faBackward} />
+                <Link href={`/${router.query.network}`}>Go back</Link>
+              </HStack>
+            </ChakraLink>
+          </Stack>
+        </Container>
+      </Flex>
+    )
 
   return (
     <>
@@ -32,7 +64,7 @@ export const Operator: NextPage = () => {
             <Center>
               <Spinner />
             </Center>
-          ) : isOperator ? (
+          ) : (
             <Stack
               direction={{ md: "row", base: "column" }}
               spacing="1em"
@@ -45,10 +77,6 @@ export const Operator: NextPage = () => {
                 <ReserveStats />
               </Stack>
             </Stack>
-          ) : (
-            <Center>
-              <Text variant="title">Operator access only</Text>
-            </Center>
           )}
         </Container>
       </Flex>

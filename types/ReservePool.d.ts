@@ -31,6 +31,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     "operatorBalance()": FunctionFragment;
     "operatorPercent()": FunctionFragment;
     "owner()": FunctionFragment;
+    "pauseSourceSink()": FunctionFragment;
     "paused()": FunctionFragment;
     "poolFee()": FunctionFragment;
     "recoverERC20(address,uint256)": FunctionFragment;
@@ -45,6 +46,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     "swapSink()": FunctionFragment;
     "swapSinkPercent()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "unPauseSourceSink()": FunctionFragment;
     "withdrawOperator(uint256)": FunctionFragment;
   };
 
@@ -79,6 +81,10 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "pauseSourceSink",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(functionFragment: "poolFee", values?: undefined): string;
   encodeFunctionData(
@@ -124,6 +130,10 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
+    functionFragment: "unPauseSourceSink",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "withdrawOperator",
     values: [BigNumberish]
   ): string;
@@ -153,6 +163,10 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "pauseSourceSink",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "poolFee", data: BytesLike): Result;
   decodeFunctionResult(
@@ -186,6 +200,10 @@ interface ReservePoolInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "unPauseSourceSink",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -305,6 +323,10 @@ export class ReservePool extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
+    pauseSourceSink(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     paused(overrides?: CallOverrides): Promise<[boolean]>;
 
     poolFee(overrides?: CallOverrides): Promise<[number]>;
@@ -358,6 +380,10 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    unPauseSourceSink(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     withdrawOperator(
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -394,6 +420,10 @@ export class ReservePool extends BaseContract {
   operatorPercent(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
+
+  pauseSourceSink(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   paused(overrides?: CallOverrides): Promise<boolean>;
 
@@ -448,6 +478,10 @@ export class ReservePool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  unPauseSourceSink(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   withdrawOperator(
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -481,6 +515,8 @@ export class ReservePool extends BaseContract {
     operatorPercent(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
+
+    pauseSourceSink(overrides?: CallOverrides): Promise<void>;
 
     paused(overrides?: CallOverrides): Promise<boolean>;
 
@@ -526,6 +562,8 @@ export class ReservePool extends BaseContract {
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    unPauseSourceSink(overrides?: CallOverrides): Promise<void>;
 
     withdrawOperator(
       amount: BigNumberish,
@@ -643,6 +681,10 @@ export class ReservePool extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
+    pauseSourceSink(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     paused(overrides?: CallOverrides): Promise<BigNumber>;
 
     poolFee(overrides?: CallOverrides): Promise<BigNumber>;
@@ -696,6 +738,10 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    unPauseSourceSink(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     withdrawOperator(
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -735,6 +781,10 @@ export class ReservePool extends BaseContract {
     operatorPercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    pauseSourceSink(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -786,6 +836,10 @@ export class ReservePool extends BaseContract {
 
     transferOwnership(
       newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    unPauseSourceSink(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

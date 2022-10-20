@@ -66,6 +66,7 @@ export function useContract(key: Contracts): Contract | null {
   const { data: signer } = useSigner()
   const provider = useProvider()
   const networkAddresses = useNetworkAddresses()
+  console.log(networkAddresses)
   const valid = !!networkAddresses.accessManager
   const router = useRouter()
   const network = router.query.network as string

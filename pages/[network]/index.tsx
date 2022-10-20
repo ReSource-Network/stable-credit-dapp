@@ -8,12 +8,13 @@ import {
   useColorModeValue,
   useBreakpointValue,
   Link as ChakraLink,
+  HStack,
 } from "@chakra-ui/react"
 import type { NextPage } from "next"
 import Head from "next/head"
 import { Divider, Stack, Spinner } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faGears, faUser } from "@fortawesome/free-solid-svg-icons"
+import { faBackward, faGears, faUser } from "@fortawesome/free-solid-svg-icons"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import {
@@ -34,15 +35,16 @@ export const NetworkHomePage: NextPage = () => {
     return (
       <Flex width="100%" justifyContent="center">
         <Container maxW="container.xl" p={0}>
-          <Stack
-            direction={{ md: "row", base: "column" }}
-            w="100%"
-            h="100%"
-            justifyContent="center"
-          >
+          <Stack alignItems={"center"} h="100%" justifyContent="center">
             <Text alignSelf={"center"} fontSize="24px" ml="5px" variant="title">
               No network found
             </Text>
+            <ChakraLink>
+              <HStack spacing=".5em">
+                <FontAwesomeIcon icon={faBackward} />
+                <Link href="/">Go back</Link>
+              </HStack>
+            </ChakraLink>
           </Stack>
         </Container>
       </Flex>
