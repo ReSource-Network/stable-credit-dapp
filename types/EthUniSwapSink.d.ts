@@ -19,90 +19,60 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface ReservePoolInterface extends ethers.utils.Interface {
+interface EthUniSwapSinkInterface extends ethers.utils.Interface {
   functions: {
-    "RTD()": FunctionFragment;
-    "collateral()": FunctionFragment;
-    "depositCollateral(uint256)": FunctionFragment;
+    "__SwapSink_init(address,address)": FunctionFragment;
+    "convertFeesToSwapToken()": FunctionFragment;
     "depositFees(uint256)": FunctionFragment;
-    "getNeededCollateral()": FunctionFragment;
-    "initialize(address,address)": FunctionFragment;
-    "minRTD()": FunctionFragment;
-    "operatorBalance()": FunctionFragment;
-    "operatorPercent()": FunctionFragment;
+    "initialize(address,address,address)": FunctionFragment;
     "owner()": FunctionFragment;
-    "recoverERC20(address,uint256)": FunctionFragment;
-    "reimburseMember(address,uint256)": FunctionFragment;
+    "pauseSink()": FunctionFragment;
+    "paused()": FunctionFragment;
+    "poolFee()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "setMinRTD(uint256)": FunctionFragment;
-    "setOperatorPercent(uint256)": FunctionFragment;
-    "setSwapSink(address)": FunctionFragment;
+    "setPoolFee(uint24)": FunctionFragment;
+    "setSource(address)": FunctionFragment;
     "stableCredit()": FunctionFragment;
-    "swapSink()": FunctionFragment;
-    "swapSinkPercent()": FunctionFragment;
+    "swapRouter()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "withdrawOperator(uint256)": FunctionFragment;
+    "unPauseSink()": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "RTD", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "collateral",
-    values?: undefined
+    functionFragment: "__SwapSink_init",
+    values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "depositCollateral",
-    values: [BigNumberish]
+    functionFragment: "convertFeesToSwapToken",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "depositFees",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "getNeededCollateral",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "initialize",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(functionFragment: "minRTD", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "operatorBalance",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "operatorPercent",
-    values?: undefined
+    values: [string, string, string]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "recoverERC20",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "reimburseMember",
-    values: [string, BigNumberish]
-  ): string;
+  encodeFunctionData(functionFragment: "pauseSink", values?: undefined): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
+  encodeFunctionData(functionFragment: "poolFee", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setMinRTD",
+    functionFragment: "setPoolFee",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "setOperatorPercent",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "setSwapSink", values: [string]): string;
+  encodeFunctionData(functionFragment: "setSource", values: [string]): string;
   encodeFunctionData(
     functionFragment: "stableCredit",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "swapSink", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "swapSinkPercent",
+    functionFragment: "swapRouter",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -110,90 +80,69 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawOperator",
-    values: [BigNumberish]
+    functionFragment: "unPauseSink",
+    values?: undefined
   ): string;
 
-  decodeFunctionResult(functionFragment: "RTD", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "collateral", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "depositCollateral",
+    functionFragment: "__SwapSink_init",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "convertFeesToSwapToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "depositFees",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "getNeededCollateral",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "minRTD", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "operatorBalance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "operatorPercent",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "recoverERC20",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "reimburseMember",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "pauseSink", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "poolFee", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setMinRTD", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setOperatorPercent",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setSwapSink",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "setPoolFee", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setSource", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "stableCredit",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "swapSink", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "swapSinkPercent",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "swapRouter", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "withdrawOperator",
+    functionFragment: "unPauseSink",
     data: BytesLike
   ): Result;
 
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
+    "Paused(address)": EventFragment;
     "Recovered(address,uint256)": EventFragment;
     "Staked(address,uint256)": EventFragment;
+    "Unpaused(address)": EventFragment;
     "Withdrawn(address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Recovered"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Staked"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Withdrawn"): EventFragment;
 }
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
+
+export type PausedEvent = TypedEvent<[string] & { account: string }>;
 
 export type RecoveredEvent = TypedEvent<
   [string, BigNumber] & { token: string; amount: BigNumber }
@@ -203,11 +152,13 @@ export type StakedEvent = TypedEvent<
   [string, BigNumber] & { user: string; amount: BigNumber }
 >;
 
+export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
+
 export type WithdrawnEvent = TypedEvent<
   [string, BigNumber] & { user: string; amount: BigNumber }
 >;
 
-export class ReservePool extends BaseContract {
+export class EthUniSwapSink extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -248,15 +199,16 @@ export class ReservePool extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: ReservePoolInterface;
+  interface: EthUniSwapSinkInterface;
 
   functions: {
-    RTD(overrides?: CallOverrides): Promise<[BigNumber]>;
+    __SwapSink_init(
+      _stableCredit: string,
+      _sourceAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
-    collateral(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    depositCollateral(
-      amount: BigNumberish,
+    convertFeesToSwapToken(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -265,76 +217,58 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    getNeededCollateral(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     initialize(
       _stableCredit: string,
-      _swapSink: string,
+      _sourceAddress: string,
+      _swapRouter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    minRTD(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    operatorBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    operatorPercent(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    recoverERC20(
-      tokenAddress: string,
-      tokenAmount: BigNumberish,
+    pauseSink(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    reimburseMember(
-      member: string,
-      credits: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    paused(overrides?: CallOverrides): Promise<[boolean]>;
+
+    poolFee(overrides?: CallOverrides): Promise<[number]>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setMinRTD(
-      _minRTD: BigNumberish,
+    setPoolFee(
+      _poolFee: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setOperatorPercent(
-      _operatorPercent: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    setSwapSink(
-      _swapSink: string,
+    setSource(
+      _sourceAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     stableCredit(overrides?: CallOverrides): Promise<[string]>;
 
-    swapSink(overrides?: CallOverrides): Promise<[string]>;
-
-    swapSinkPercent(overrides?: CallOverrides): Promise<[BigNumber]>;
+    swapRouter(overrides?: CallOverrides): Promise<[string]>;
 
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    withdrawOperator(
-      amount: BigNumberish,
+    unPauseSink(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  RTD(overrides?: CallOverrides): Promise<BigNumber>;
+  __SwapSink_init(
+    _stableCredit: string,
+    _sourceAddress: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
-  collateral(overrides?: CallOverrides): Promise<BigNumber>;
-
-  depositCollateral(
-    amount: BigNumberish,
+  convertFeesToSwapToken(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -343,135 +277,95 @@ export class ReservePool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  getNeededCollateral(overrides?: CallOverrides): Promise<BigNumber>;
-
   initialize(
     _stableCredit: string,
-    _swapSink: string,
+    _sourceAddress: string,
+    _swapRouter: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  minRTD(overrides?: CallOverrides): Promise<BigNumber>;
-
-  operatorBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-  operatorPercent(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
-  recoverERC20(
-    tokenAddress: string,
-    tokenAmount: BigNumberish,
+  pauseSink(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  reimburseMember(
-    member: string,
-    credits: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  paused(overrides?: CallOverrides): Promise<boolean>;
+
+  poolFee(overrides?: CallOverrides): Promise<number>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setMinRTD(
-    _minRTD: BigNumberish,
+  setPoolFee(
+    _poolFee: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setOperatorPercent(
-    _operatorPercent: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  setSwapSink(
-    _swapSink: string,
+  setSource(
+    _sourceAddress: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   stableCredit(overrides?: CallOverrides): Promise<string>;
 
-  swapSink(overrides?: CallOverrides): Promise<string>;
-
-  swapSinkPercent(overrides?: CallOverrides): Promise<BigNumber>;
+  swapRouter(overrides?: CallOverrides): Promise<string>;
 
   transferOwnership(
     newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  withdrawOperator(
-    amount: BigNumberish,
+  unPauseSink(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    RTD(overrides?: CallOverrides): Promise<BigNumber>;
-
-    collateral(overrides?: CallOverrides): Promise<BigNumber>;
-
-    depositCollateral(
-      amount: BigNumberish,
+    __SwapSink_init(
+      _stableCredit: string,
+      _sourceAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    convertFeesToSwapToken(overrides?: CallOverrides): Promise<void>;
 
     depositFees(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    getNeededCollateral(overrides?: CallOverrides): Promise<BigNumber>;
-
     initialize(
       _stableCredit: string,
-      _swapSink: string,
+      _sourceAddress: string,
+      _swapRouter: string,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    minRTD(overrides?: CallOverrides): Promise<BigNumber>;
-
-    operatorBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    operatorPercent(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
-    recoverERC20(
-      tokenAddress: string,
-      tokenAmount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    pauseSink(overrides?: CallOverrides): Promise<void>;
 
-    reimburseMember(
-      member: string,
-      credits: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    paused(overrides?: CallOverrides): Promise<boolean>;
+
+    poolFee(overrides?: CallOverrides): Promise<number>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
-    setMinRTD(_minRTD: BigNumberish, overrides?: CallOverrides): Promise<void>;
-
-    setOperatorPercent(
-      _operatorPercent: BigNumberish,
+    setPoolFee(
+      _poolFee: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setSwapSink(_swapSink: string, overrides?: CallOverrides): Promise<void>;
+    setSource(_sourceAddress: string, overrides?: CallOverrides): Promise<void>;
 
     stableCredit(overrides?: CallOverrides): Promise<string>;
 
-    swapSink(overrides?: CallOverrides): Promise<string>;
-
-    swapSinkPercent(overrides?: CallOverrides): Promise<BigNumber>;
+    swapRouter(overrides?: CallOverrides): Promise<string>;
 
     transferOwnership(
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    withdrawOperator(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    unPauseSink(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -490,6 +384,12 @@ export class ReservePool extends BaseContract {
       [string, string],
       { previousOwner: string; newOwner: string }
     >;
+
+    "Paused(address)"(
+      account?: null
+    ): TypedEventFilter<[string], { account: string }>;
+
+    Paused(account?: null): TypedEventFilter<[string], { account: string }>;
 
     "Recovered(address,uint256)"(
       token?: null,
@@ -523,6 +423,12 @@ export class ReservePool extends BaseContract {
       { user: string; amount: BigNumber }
     >;
 
+    "Unpaused(address)"(
+      account?: null
+    ): TypedEventFilter<[string], { account: string }>;
+
+    Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
+
     "Withdrawn(address,uint256)"(
       user?: string | null,
       amount?: null
@@ -541,12 +447,13 @@ export class ReservePool extends BaseContract {
   };
 
   estimateGas: {
-    RTD(overrides?: CallOverrides): Promise<BigNumber>;
+    __SwapSink_init(
+      _stableCredit: string,
+      _sourceAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
-    collateral(overrides?: CallOverrides): Promise<BigNumber>;
-
-    depositCollateral(
-      amount: BigNumberish,
+    convertFeesToSwapToken(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -555,77 +462,59 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getNeededCollateral(overrides?: CallOverrides): Promise<BigNumber>;
-
     initialize(
       _stableCredit: string,
-      _swapSink: string,
+      _sourceAddress: string,
+      _swapRouter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    minRTD(overrides?: CallOverrides): Promise<BigNumber>;
-
-    operatorBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    operatorPercent(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    recoverERC20(
-      tokenAddress: string,
-      tokenAmount: BigNumberish,
+    pauseSink(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    reimburseMember(
-      member: string,
-      credits: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    paused(overrides?: CallOverrides): Promise<BigNumber>;
+
+    poolFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setMinRTD(
-      _minRTD: BigNumberish,
+    setPoolFee(
+      _poolFee: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setOperatorPercent(
-      _operatorPercent: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    setSwapSink(
-      _swapSink: string,
+    setSource(
+      _sourceAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     stableCredit(overrides?: CallOverrides): Promise<BigNumber>;
 
-    swapSink(overrides?: CallOverrides): Promise<BigNumber>;
-
-    swapSinkPercent(overrides?: CallOverrides): Promise<BigNumber>;
+    swapRouter(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    withdrawOperator(
-      amount: BigNumberish,
+    unPauseSink(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    RTD(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    __SwapSink_init(
+      _stableCredit: string,
+      _sourceAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
-    collateral(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    depositCollateral(
-      amount: BigNumberish,
+    convertFeesToSwapToken(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -634,68 +523,47 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    getNeededCollateral(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     initialize(
       _stableCredit: string,
-      _swapSink: string,
+      _sourceAddress: string,
+      _swapRouter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
-
-    minRTD(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    operatorBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    operatorPercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    recoverERC20(
-      tokenAddress: string,
-      tokenAmount: BigNumberish,
+    pauseSink(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    reimburseMember(
-      member: string,
-      credits: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    poolFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setMinRTD(
-      _minRTD: BigNumberish,
+    setPoolFee(
+      _poolFee: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setOperatorPercent(
-      _operatorPercent: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setSwapSink(
-      _swapSink: string,
+    setSource(
+      _sourceAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     stableCredit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    swapSink(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    swapSinkPercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    swapRouter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    withdrawOperator(
-      amount: BigNumberish,
+    unPauseSink(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

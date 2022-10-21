@@ -25,6 +25,7 @@ import { formatEther } from "@ethersproject/units"
 import { useWithdrawOperator } from "../../hooks/useWithdrawOperator"
 import { useDistributeFees } from "../../hooks/useDistributeFees"
 import { useFeeManagerContract } from "../../hooks/useFeeManagerContract"
+import { useFeeTokenContract } from "../../hooks/useFeeTokenContract"
 export const ReserveStats = () => {
   const { colorMode } = useColorMode()
 
@@ -35,7 +36,8 @@ export const ReserveStats = () => {
   } = useDisclosure()
 
   const reservePool = useReservePoolContract()
-  const ƒeeManager = useFeeManagerContract()
+  const feeManager = useFeeManagerContract()
+  const feeToken = useFeeTokenContract()
   const { withdraw, loading } = useWithdrawOperator()
   const { distribute, loading: distributeLoading } = useDistributeFees()
   const [operatorBalance, setOperatorBalance] = useState(0)
@@ -49,18 +51,26 @@ export const ReserveStats = () => {
         Number(formatEther(await reservePool.operatorBalance())),
       )
       setRTD((await reservePool.RTD()).toNumber() / 10000)
-      setSwapSink(Number(formatEther(await reservePool.swapSink())))
-      setFees(Number(formatEther(await ƒeeManager.collectedFees())))
+      setSwapSink(
+        Number(
+          formatEther(await feeToken.balanceOf(await reservePool.swapSink())),
+        ),
+      )
+      setFees(Number(formatEther(await feeManager.collectedFees())))
     }
-    if (reservePool && ƒeeManager) handler()
-  }, [reservePool, ƒeeManager])
+    if (reservePool && feeManager) handler()
+  }, [reservePool, feeManager])
 
   const handleDistribute = async () => {
     await distribute()
     setOperatorBalance(Number(formatEther(await reservePool.operatorBalance())))
     setRTD((await reservePool.RTD()).toNumber() / 10000)
-    setSwapSink(Number(formatEther(await reservePool.swapSink())))
-    setFees(Number(formatEther(await ƒeeManager.collectedFees())))
+    setSwapSink(
+      Number(
+        formatEther(await feeToken.balanceOf(await reservePool.swapSink())),
+      ),
+    )
+    setFees(Number(formatEther(await feeManager.collectedFees())))
   }
 
   const handleWithdraw = async () => {
