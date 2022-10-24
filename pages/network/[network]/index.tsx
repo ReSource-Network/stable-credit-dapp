@@ -61,7 +61,7 @@ export const NetworkHomePage: NextPage = () => {
             justifyContent="center"
             textAlign="center"
           >
-            <Link href={`/network/${router.query.network}/member`} passHref>
+            <Link href={`network/${router.query.network}/member`} passHref>
               <ChakraLink>
                 <Button h="14em" variant="ghost">
                   <Box
@@ -102,7 +102,7 @@ export const NetworkHomePage: NextPage = () => {
                 w="90%"
               />
             )}
-            <Link href={`/network/${router.query.network}/operator`} passHref>
+            <Link href={`network/${router.query.network}/operator`} passHref>
               <ChakraLink>
                 <Button h="14em" variant="ghost">
                   <Box
