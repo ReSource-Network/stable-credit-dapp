@@ -34,7 +34,7 @@ export const NetworkHomePage: NextPage = () => {
       setOpen(true)
       return
     }
-    router.push(`/${value}`)
+    router.push(`/network/${value}`)
   }
 
   return (

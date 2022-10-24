@@ -11,11 +11,11 @@ import {
 import type { NextPage } from "next"
 import Head from "next/head"
 import { useState, useEffect } from "react"
-import { Members } from "../../components/operator/Members"
-import { NetworkStats } from "../../components/operator/NetworkStats"
-import { ReserveStats } from "../../components/operator/ReserveStats"
+import { Members } from "../../../components/operator/Members"
+import { NetworkStats } from "../../../components/operator/NetworkStats"
+import { ReserveStats } from "../../../components/operator/ReserveStats"
 import { useAccount } from "wagmi"
-import { useIsOperator, IsOperator } from "../../hooks/useIsOperator"
+import { useIsOperator, IsOperator } from "../../../hooks/useIsOperator"
 import Link from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBackward } from "@fortawesome/free-solid-svg-icons"
@@ -45,7 +45,7 @@ export const Operator: NextPage = () => {
             <ChakraLink>
               <HStack spacing=".5em">
                 <FontAwesomeIcon icon={faBackward} />
-                <Link href={`/${router.query.network}`}>Go back</Link>
+                <Link href={`/network/${router.query.network}`}>Go back</Link>
               </HStack>
             </ChakraLink>
           </Stack>
