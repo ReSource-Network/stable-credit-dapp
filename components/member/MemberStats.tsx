@@ -21,6 +21,7 @@ import { useEffect } from "react"
 import { ManageMember } from "../../hooks/useGetMember"
 import { useAccount } from "wagmi"
 import { FeeTokenBalance } from "./FeeTokenBalance"
+import { useInterval } from "../../hooks/useInterval"
 
 export const MemberStats = ({ getMember, member }: ManageMember) => {
   const { isOpen: isInfoOpen, onToggle: onInfoToggle } = useDisclosure()
@@ -34,6 +35,14 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
     }
     if (address) handler()
   }, [getMember, address])
+
+  useInterval(() => {
+    const handler = async () => {
+      if (!address) return
+      await getMember(address)
+    }
+    if (address) handler()
+  }, 1000)
 
   const now = new Date()
 
