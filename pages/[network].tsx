@@ -134,10 +134,4 @@ export const NetworkHomePage: NextPage = () => {
   )
 }
 
-export async function getServerSideProps(context) {
-  return {
-    props: {},
-  }
-}
-
 export default NetworkHomePage
