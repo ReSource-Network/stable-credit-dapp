@@ -22,9 +22,7 @@ import { useModal } from "connectkit"
 
 export const NetworkHomePage: NextPage = () => {
   const boxColor = useColorModeValue("#18202b", "white")
-  const textColor = useColorModeValue("white", "#18202b")
   const router = useRouter()
-  const isMobile = useBreakpointValue({ base: true, md: false })
   const [value, setValue] = useState("")
   const handleChange = (event) => setValue(event.target.value)
   const { address } = useAccount()

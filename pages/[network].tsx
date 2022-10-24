@@ -17,10 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBackward, faGears, faUser } from "@fortawesome/free-solid-svg-icons"
 import { useRouter } from "next/router"
 import Link from "next/link"
-import {
-  useFetchNetworkAddresses,
-  useNetworkAddresses,
-} from "../../state/networkAddresses/index"
+import { useNetworkAddresses } from "../state/networkAddresses/index"
 import { useEffect } from "react"
 
 export const NetworkHomePage: NextPage = () => {
@@ -135,6 +132,12 @@ export const NetworkHomePage: NextPage = () => {
       </Flex>
     </>
   )
+}
+
+export async function getServerSideProps(context) {
+  return {
+    props: {},
+  }
 }
 
 export default NetworkHomePage
