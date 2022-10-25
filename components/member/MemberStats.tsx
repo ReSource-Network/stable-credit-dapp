@@ -61,6 +61,9 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
   const nearPastDue = daysToPastDue <= 1
   const nearDefault = daysToDefault <= 1
 
+  const isPastDue = daysToPastDue <= 0
+  const inDefault = daysToDefault <= 0
+
   return (
     <Stack w="100%">
       <Fade in={true} delay={0.1}>
@@ -149,7 +152,7 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
                     <HStack whiteSpace="nowrap">
                       {nearPastDue && (
                         <FontAwesomeIcon
-                          color="yellow"
+                          color={isPastDue ? "red" : "yellow"}
                           size="sm"
                           icon={faTriangleExclamation}
                         />
@@ -170,7 +173,7 @@ export const MemberStats = ({ getMember, member }: ManageMember) => {
                     <HStack>
                       {nearDefault && (
                         <FontAwesomeIcon
-                          color="yellow"
+                          color={inDefault ? "red" : "yellow"}
                           size="sm"
                           icon={faTriangleExclamation}
                         />

@@ -11,6 +11,7 @@ export type UseCreateResponse = {
     creditLimit: number,
     pastDueDays: number,
     defaultDays: number,
+    feeRate: number,
   ) => Promise<void>
   loading: boolean
 }
@@ -28,18 +29,20 @@ export const useCreateCreditLine = (): UseCreateResponse => {
       creditLimit: number,
       pastDueDays: number,
       defaultDays: number,
+      feeRate: number,
     ) => {
       setCreating(true)
-
       try {
+        console.log(Math.ceil(pastDueDays * 60 * 60 * 24))
+
         const limit = parseStableCredits(creditLimit.toString())
         const resp = await (stableCredit &&
           stableCredit.createCreditLine(
             address,
             limit,
-            pastDueDays * 60 * 60 * 24,
-            defaultDays * 60 * 60 * 24,
-            0,
+            Math.ceil(pastDueDays * 60 * 60 * 24),
+            Math.ceil(defaultDays * 60 * 60 * 24),
+            Math.ceil(feeRate * 10000),
             0,
           ))
 

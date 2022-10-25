@@ -46,8 +46,6 @@ interface StableCreditInterface extends ethers.utils.Interface {
     "extendCreditLine(address,uint256)": FunctionFragment;
     "feeManager()": FunctionFragment;
     "feeToken()": FunctionFragment;
-    "getFeeToken()": FunctionFragment;
-    "getReservePool()": FunctionFragment;
     "inDefault(address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(address,address,string,string)": FunctionFragment;
@@ -159,14 +157,6 @@ interface StableCreditInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "feeToken", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "getFeeToken",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getReservePool",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "inDefault", values: [string]): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
@@ -303,14 +293,6 @@ interface StableCreditInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "feeManager", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "feeToken", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getFeeToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getReservePool",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "inDefault", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
@@ -607,10 +589,6 @@ export class StableCredit extends BaseContract {
 
     feeToken(overrides?: CallOverrides): Promise<[string]>;
 
-    getFeeToken(overrides?: CallOverrides): Promise<[string]>;
-
-    getReservePool(overrides?: CallOverrides): Promise<[string]>;
-
     inDefault(_member: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     increaseAllowance(
@@ -810,10 +788,6 @@ export class StableCredit extends BaseContract {
 
   feeToken(overrides?: CallOverrides): Promise<string>;
 
-  getFeeToken(overrides?: CallOverrides): Promise<string>;
-
-  getReservePool(overrides?: CallOverrides): Promise<string>;
-
   inDefault(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
   increaseAllowance(
@@ -1006,10 +980,6 @@ export class StableCredit extends BaseContract {
     feeManager(overrides?: CallOverrides): Promise<string>;
 
     feeToken(overrides?: CallOverrides): Promise<string>;
-
-    getFeeToken(overrides?: CallOverrides): Promise<string>;
-
-    getReservePool(overrides?: CallOverrides): Promise<string>;
 
     inDefault(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
@@ -1372,10 +1342,6 @@ export class StableCredit extends BaseContract {
 
     feeToken(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getFeeToken(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getReservePool(overrides?: CallOverrides): Promise<BigNumber>;
-
     inDefault(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseAllowance(
@@ -1575,10 +1541,6 @@ export class StableCredit extends BaseContract {
     feeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     feeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getFeeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getReservePool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     inDefault(
       _member: string,

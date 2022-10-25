@@ -8,6 +8,10 @@ import {
   Button,
   FormControl,
   Divider,
+  List,
+  ListItem,
+  Link,
+  UnorderedList,
 } from "@chakra-ui/react"
 import { constants, ethers } from "ethers"
 import { Formik, Field } from "formik"
@@ -24,6 +28,8 @@ import { useNetworkAddresses } from "../../state/networkAddresses"
 import { useEffect, useState } from "react"
 import { useFeeTokenContract } from "../../hooks/useFeeTokenContract"
 import { useFeeManagerContract } from "../../hooks/useFeeManagerContract"
+import { useStableCreditContract } from "../../hooks/useStableCreditContract"
+import { useRouter } from "next/router"
 
 export const Transfer = ({ getMember }: ManageMember) => {
   const { transfer, loading } = useTransferCredits()
@@ -32,21 +38,30 @@ export const Transfer = ({ getMember }: ManageMember) => {
   const [feeTokenSymbol, setFeeSymbol] = useState("")
   const [feesPaused, setFeesPaused] = useState(false)
   const [sufficient, setSufficient] = useState(false)
+  const [isPastDue, setIsPastDue] = useState(false)
   const feeToken = useFeeTokenContract()
   const feeManager = useFeeManagerContract()
+  const stableCredit = useStableCreditContract()
+  const router = useRouter()
 
   const { approve, approving, approvalState } = useApproveFeeToken(
     constants.MaxUint256,
     feeManagerAddress,
   )
 
+  const toPayment = () => {
+    router.query.show = "payment"
+    router.push(router)
+  }
+
   useEffect(() => {
     const handler = async () => {
       if (!signerAddress) return
       setFeeSymbol(await feeToken.symbol())
       setFeesPaused(await feeManager.paused())
+      setIsPastDue(await stableCredit.isPastDue(signerAddress))
     }
-    if (signerAddress && feeToken && feeManager) handler()
+    if (signerAddress && feeToken && feeManager && stableCredit) handler()
   }, [feeToken, feeManager, signerAddress])
 
   return (
@@ -54,7 +69,30 @@ export const Transfer = ({ getMember }: ManageMember) => {
       <Text alignSelf="center" fontWeight="bold" fontSize="2xl" variant="title">
         Transfer
       </Text>
-      {signerAddress && approvalState !== ApprovalState.APPROVED ? (
+      {isPastDue ? (
+        <Stack>
+          <Divider mb="1em" />
+          <Text>
+            Your account is{" "}
+            <span style={{ fontStyle: "italic" }}>past due.</span> To unfreeze
+            your credit line, reduce your debt to zero.
+          </Text>
+          <UnorderedList ml="2em !important">
+            <ListItem>Aquire more credits from other network members.</ListItem>
+            <ListItem>
+              Make a credit{" "}
+              <Link
+                textDecoration={"underline"}
+                onClick={toPayment}
+                fontWeight={"bold"}
+              >
+                payment.
+              </Link>
+            </ListItem>
+          </UnorderedList>
+          <Divider mt="1em !important" />
+        </Stack>
+      ) : signerAddress && approvalState !== ApprovalState.APPROVED ? (
         <Button
           w="100%"
           variant="solid"

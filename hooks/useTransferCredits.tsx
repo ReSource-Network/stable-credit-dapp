@@ -25,6 +25,7 @@ export const useTransferCredits = (): UseTransferCreditsResponse => {
 
       try {
         if (address == signerAddress) throw Error("Recipient can't be Sender")
+        const inDefault = await stableCredit.inDefault(address)
         const resp = await (stableCredit &&
           stableCredit.transfer(address, parseStableCredits(amount.toString())))
 
@@ -32,7 +33,9 @@ export const useTransferCredits = (): UseTransferCreditsResponse => {
 
         if (resp)
           addTransaction(resp, {
-            summary: `Credits transfered`,
+            summary: inDefault
+              ? "Credit line defaulted!"
+              : "Credits transfered",
           })
 
         setTransfering(false)
