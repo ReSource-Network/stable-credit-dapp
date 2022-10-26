@@ -5,27 +5,30 @@ import {
   SlideFade,
   useColorMode,
   IconButton,
+  Collapse,
 } from "@chakra-ui/react"
 import type { NextPage } from "next"
 import Head from "next/head"
-import { VStack, Button } from "@chakra-ui/react"
+import { VStack } from "@chakra-ui/react"
 import { useState, useEffect } from "react"
-import { Transfer } from "../../components/member/Transfer"
-import { Payment } from "../../components/member/Payment"
-import { CashOut } from "../../components/member/CashOut"
-import { MemberStats } from "../../components/member/MemberStats"
 import { useGetMember } from "../../hooks/useGetMember"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"
 import { useRouter } from "next/router"
+import { StableCreditCard } from "../../components/member/wallet/StableCreditCard"
+import { FeeTokenCard } from "../../components/member/wallet/FeeTokenCard"
+import { useAccount } from "wagmi"
+import { useInterval } from "react-use"
 
 export const Member: NextPage = () => {
   const { colorMode } = useColorMode()
   const router = useRouter()
-  const memberManage = useGetMember()
-  const { member, getMember } = memberManage
-
+  const [showStableCredit, setShowStableCredit] = useState(false)
+  const [showFeeToken, setShowFeeToken] = useState(false)
+  const { address } = useAccount()
   const { show } = router.query
+  const memberManage = useGetMember()
+  const { getMember } = memberManage
 
   const handleChangeOption = (option?: string) => {
     if (!option) {
@@ -38,20 +41,29 @@ export const Member: NextPage = () => {
     }
   }
 
+  useEffect(() => {
+    const handler = async () => {
+      if (!address) return
+      await getMember(address)
+    }
+    if (address) handler()
+  }, [getMember, address])
+
+  useInterval(() => {
+    const handler = async () => {
+      if (!address) return
+      await getMember(address)
+    }
+    if (address) handler()
+  }, 1000)
+
   return (
     <>
       <Head>
         <title>StableCredit | Member</title>
       </Head>
       <Flex width="100%" justifyContent="center">
-        <Box
-          minH="75vh"
-          borderRadius="3xl"
-          bg={colorMode === "light" ? "#ffffff" : "#262626"}
-          p="2em"
-          w="30em"
-          m="1em"
-        >
+        <Box minH="75vh" borderRadius="3xl" p="2em" w="30em" m="1em">
           {!!show && (
             <IconButton
               mt="-1em"
@@ -64,93 +76,21 @@ export const Member: NextPage = () => {
             />
           )}
           <Center>
-            <VStack w="100%">
-              <MemberStats {...memberManage} />
-              {show == "send" && (
-                <VStack w="100%">
-                  <SlideFade
-                    style={{ width: "100%" }}
-                    in={show == "send"}
-                    offsetY="20px"
-                  >
-                    <VStack justifyContent="center">
-                      <Transfer {...memberManage} />
-                      <Button
-                        variant="ghost"
-                        w="100%"
-                        onClick={() => handleChangeOption()}
-                      >
-                        Cancel
-                      </Button>
-                    </VStack>
-                  </SlideFade>
-                </VStack>
-              )}
-              {show == "payment" && (
-                <VStack w="100%">
-                  <SlideFade
-                    style={{ width: "100%" }}
-                    in={show === "payment"}
-                    offsetY="20px"
-                  >
-                    <VStack justifyContent="center">
-                      <Payment {...memberManage} />
-                      <Button
-                        variant="ghost"
-                        w="100%"
-                        onClick={() => handleChangeOption()}
-                      >
-                        Cancel
-                      </Button>
-                    </VStack>
-                  </SlideFade>
-                </VStack>
-              )}
-              {show === "cashout" && (
-                <VStack w="100%">
-                  <SlideFade
-                    style={{ width: "100%" }}
-                    in={show === "cashout"}
-                    offsetY="20px"
-                  >
-                    <VStack justifyContent="center">
-                      <CashOut {...memberManage} />
-                      <Button
-                        variant="ghost"
-                        w="100%"
-                        onClick={() => handleChangeOption()}
-                      >
-                        Cancel
-                      </Button>
-                    </VStack>
-                  </SlideFade>
-                </VStack>
-              )}
-              {!show && (
-                <SlideFade in={!show} offsetY="20px" style={{ width: "100%" }}>
-                  <VStack mt="1em" w="100%">
-                    <Button w="100%" onClick={() => handleChangeOption("send")}>
-                      Send
-                    </Button>
-                    {member && member?.balance < 0 && (
-                      <Button
-                        w="100%"
-                        onClick={() => handleChangeOption("payment")}
-                      >
-                        Make a Payment
-                      </Button>
-                    )}
-                    {member && member?.balance > 0 && (
-                      <Button
-                        w="100%"
-                        onClick={() => handleChangeOption("cashout")}
-                      >
-                        Cash out
-                      </Button>
-                    )}
-                  </VStack>
-                </SlideFade>
-              )}
+            <VStack w="100%" spacing={!showFeeToken ? "2em" : "0em"}>
+              <Collapse style={{ width: "100%" }} in={!showFeeToken}>
+                <StableCreditCard
+                  memberManage={memberManage}
+                  showCredit={showStableCredit}
+                  setShowCredit={setShowStableCredit}
+                />
+              </Collapse>
+
+              <Collapse style={{ width: "100%" }} in={!showStableCredit}>
+                <FeeTokenCard
+                  showFeeToken={showFeeToken}
+                  setShowFeeToken={setShowFeeToken}
+                />
+              </Collapse>
             </VStack>
           </Center>
         </Box>

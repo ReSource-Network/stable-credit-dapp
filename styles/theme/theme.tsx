@@ -12,7 +12,7 @@ const overrides: any = {
   styles: globalStyles,
   textStyles,
   config: {
-    initialColorMode: "light",
+    initialColorMode: "dark",
     useSystemColorMode: false,
   },
 }
