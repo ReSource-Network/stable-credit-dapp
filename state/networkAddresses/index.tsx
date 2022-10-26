@@ -1,13 +1,14 @@
-import { ContractTransaction, ethers } from "ethers"
+import { ethers } from "ethers"
 import { useCallback, useMemo } from "react"
+import { useSigner } from "wagmi"
 import shallow from "zustand/shallow"
 
-import { TransactionNotifier } from "../../functions/notifier"
-
-import { NetworkContractAddresses, useNetworkAddressesStore } from "./store"
-import { useAccount, useNetwork, useSigner, useProvider } from "wagmi"
-import { useRouter } from "next/router"
-import { StableCredit, StableCredit__factory } from "../../types"
+import { StableCredit__factory } from "../../types"
+import {
+  NetworkContractAddresses,
+  useCreditAddrStore,
+  useNetworkAddressesStore,
+} from "./store"
 
 export const useNetworkAddresses = () => {
   const { addresses } = useNetworkAddressesStore(
@@ -21,8 +22,7 @@ export const useNetworkAddresses = () => {
 }
 
 export const useFetchNetworkAddresses = () => {
-  const router = useRouter()
-  const network = router.query.network as string
+  const { creditAddr } = useCreditAddrStore()
   const { data: signer } = useSigner()
 
   const { set } = useNetworkAddressesStore(
@@ -32,15 +32,15 @@ export const useFetchNetworkAddresses = () => {
     shallow,
   )
 
-  const validNetworkAddress = ethers.utils.isAddress(network)
+  const validNetworkAddress = ethers.utils.isAddress(creditAddr)
 
   return useCallback(async () => {
     let addresses = {} as NetworkContractAddresses
-    if (!validNetworkAddress || !network) return set(addresses)
+    if (!validNetworkAddress || !creditAddr) return set(addresses)
     if (!signer) return
-    const stableCredit = StableCredit__factory.connect(network, signer)
+    const stableCredit = StableCredit__factory.connect(creditAddr, signer)
 
-    addresses.stableCredit = network
+    addresses.stableCredit = creditAddr
     try {
       addresses.accessManager = await stableCredit.access()
       addresses.feeManager = await stableCredit.feeManager()
@@ -51,5 +51,5 @@ export const useFetchNetworkAddresses = () => {
     }
 
     set(addresses)
-  }, [set, validNetworkAddress, signer, network])
+  }, [set, validNetworkAddress, signer, creditAddr])
 }

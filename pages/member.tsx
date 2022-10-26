@@ -1,23 +1,25 @@
 import {
-  Flex,
   Box,
+  Button,
   Center,
+  Flex,
+  IconButton,
   SlideFade,
   useColorMode,
-  IconButton,
+  VStack,
 } from "@chakra-ui/react"
-import type { NextPage } from "next"
-import Head from "next/head"
-import { VStack, Button } from "@chakra-ui/react"
-import { useState, useEffect } from "react"
-import { Transfer } from "../../components/member/Transfer"
-import { Payment } from "../../components/member/Payment"
-import { CashOut } from "../../components/member/CashOut"
-import { MemberStats } from "../../components/member/MemberStats"
-import { useGetMember } from "../../hooks/useGetMember"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import Head from "next/head"
 import { useRouter } from "next/router"
+
+import { CashOut } from "../components/member/CashOut"
+import { MemberStats } from "../components/member/MemberStats"
+import { Payment } from "../components/member/Payment"
+import { Transfer } from "../components/member/Transfer"
+import { useGetMember } from "../hooks/useGetMember"
+
+import type { NextPage } from "next"
 
 export const Member: NextPage = () => {
   const { colorMode } = useColorMode()
