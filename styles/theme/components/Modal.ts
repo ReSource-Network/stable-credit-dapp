@@ -10,11 +10,6 @@ const parts = [
   "footer",
 ]
 
-const baseStyleOverlay = {
-  bg: "blackAlpha.600",
-  zIndex: "modal",
-}
-
 type Dict = Record<string, any>
 
 function baseStyleDialogContainer(props: Dict) {
@@ -34,7 +29,7 @@ function baseStyleDialog(props: Dict) {
 
   return {
     borderRadius: "2xl",
-    bg: mode("black", "black.700")(props),
+    bg: mode("white", "#2c2c2c")(props),
     color: "inherit",
     my: "3.75rem",
     zIndex: "modal",
@@ -72,7 +67,6 @@ const baseStyleFooter = {
 }
 
 const baseStyle = (props: Dict) => ({
-  overlay: baseStyleOverlay,
   dialogContainer: baseStyleDialogContainer(props),
   dialog: baseStyleDialog(props),
   header: baseStyleHeader,

@@ -81,28 +81,7 @@ export const useGetMember = (): ManageMember => {
           pastDue: new Date(terms.pastDueDate.toNumber() * 1000),
         })
       } catch (e) {
-        if (e && (e as any).code === 4001) {
-          console.log("Transaction rejected.")
-
-          toast({
-            position: "top-right",
-            title: "Transaction rejected",
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-          })
-        } else {
-          console.error(`Transaction failed`, e, "memberCreate")
-          console.log(`Transaction failed: ${(e as any).message}`)
-
-          toast({
-            position: "top-right",
-            title: "Oops. Something went wrong.",
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-          })
-        }
+        console.log(e)
       } finally {
         setSearching(false)
       }

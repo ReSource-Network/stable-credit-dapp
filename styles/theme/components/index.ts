@@ -3,7 +3,7 @@ import Alert from "./Alert"
 // import Heading from "./Heading"
 // import Input from "./Input"
 // import Menu from "./Menu"
-// import Modal from "./Modal"
+import Modal from "./Modal"
 // import NumberInput from "./NumberInput"
 // import Progress from "./Progress"
 // import Select from "./Select"
@@ -28,5 +28,5 @@ export default {
   // Tabs,
   // Progress,
   // Menu,
-  // Modal,
+  Modal,
 }

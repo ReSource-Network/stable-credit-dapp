@@ -124,6 +124,7 @@ export const Members = () => {
               onChange={handleSearchChange}
               placeholder="0x000...000"
               onKeyPress={(event) => {
+                if (!searchAddress) return
                 if (event.key === "Enter") {
                   getMember(searchAddress)
                 }
@@ -137,7 +138,10 @@ export const Members = () => {
               variant="unstyled"
               isLoading={loading}
               icon={<FontAwesomeIcon icon={faSearch} />}
-              onClick={() => getMember(searchAddress)}
+              onClick={() => {
+                if (!searchAddress) return
+                getMember(searchAddress)
+              }}
             />
           </HStack>
           <IconButton
