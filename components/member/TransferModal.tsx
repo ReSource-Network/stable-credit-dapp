@@ -19,6 +19,7 @@ import {
   ModalCloseButton,
   ModalHeader,
   ModalFooter,
+  Skeleton,
 } from "@chakra-ui/react"
 import { constants, ethers } from "ethers"
 import { Formik, Field } from "formik"
@@ -125,7 +126,28 @@ export const TransferModal = ({
                     </Stack>
                   ) : signerAddress &&
                     approvalState !== ApprovalState.APPROVED ? (
-                    <></>
+                    <Stack>
+                      <Stack spacing="1em" opacity=".2">
+                        <Skeleton
+                          startColor="gray.700"
+                          endColor="gray.500"
+                          height="30px"
+                        />
+                        <Skeleton
+                          startColor="gray.700"
+                          endColor="gray.500"
+                          height="30px"
+                        />
+                        <Skeleton
+                          startColor="gray.700"
+                          endColor="gray.500"
+                          height="30px"
+                        />
+                      </Stack>
+                      <Stack marginTop="2em" alignItems={"center"}>
+                        <Text>Approve USDC for network transaction fees.</Text>
+                      </Stack>
+                    </Stack>
                   ) : (
                     <Stack w="100%" p="1em" borderRadius="lg">
                       <FormControl

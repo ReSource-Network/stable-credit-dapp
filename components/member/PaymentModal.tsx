@@ -14,6 +14,7 @@ import {
   ModalBody,
   ModalContent,
   ModalFooter,
+  Skeleton,
 } from "@chakra-ui/react"
 import { Formik, Field } from "formik"
 import { Stack, Text } from "@chakra-ui/react"
@@ -82,52 +83,74 @@ export const PaymentModal = ({
             <form onSubmit={handleSubmit}>
               <ModalBody>
                 <Stack w="100%" minH="15em">
-                  <Stack w="100%" py="1em" borderRadius="lg">
-                    <FeeTokenBalance />
-                    <HStack>
-                      <FormControl
-                        isInvalid={!!errors.amount && touched.amount}
-                      >
-                        <FormLabel htmlFor="address">Amount</FormLabel>
-                        <InputGroup>
-                          <InputLeftAddon>$</InputLeftAddon>
-                          <Field
-                            as={Input}
-                            id="amount"
-                            name="amount"
-                            type="number"
-                            placeholder="0"
-                            validate={(value) => {
-                              let error
-                              if (value > feeTokenBalance) {
-                                error = "Insufficient Funds"
-                              }
-                              return error
-                            }}
-                          />
-                        </InputGroup>
-                        <FormErrorMessage>{errors.amount}</FormErrorMessage>
-                      </FormControl>
-                      <Button
-                        onClick={() => {
-                          if (!member) return
-                          if (member.balance >= 0) return
-                          if (Math.abs(member.balance) <= feeTokenBalance)
-                            setValues({ amount: Math.abs(member.balance) })
-                          else setValues({ amount: feeTokenBalance })
-                        }}
-                        alignSelf={"flex-end"}
-                      >
-                        Max
-                      </Button>
-                    </HStack>
-                  </Stack>
+                  {address && approvalState !== ApprovalState.APPROVED ? (
+                    <Stack>
+                      <Stack spacing="1em" opacity=".2">
+                        <Skeleton
+                          startColor="gray.700"
+                          endColor="gray.500"
+                          height="30px"
+                        />
+                        <Skeleton
+                          startColor="gray.700"
+                          endColor="gray.500"
+                          height="30px"
+                        />
+                        <Skeleton
+                          startColor="gray.700"
+                          endColor="gray.500"
+                          height="30px"
+                        />
+                      </Stack>
+                      <Stack marginTop="2em" alignItems={"center"}>
+                        <Text>Approve USDC for making a credit payment.</Text>
+                      </Stack>
+                    </Stack>
+                  ) : (
+                    <Stack w="100%" py="1em" borderRadius="lg">
+                      <FeeTokenBalance />
+                      <HStack>
+                        <FormControl
+                          isInvalid={!!errors.amount && touched.amount}
+                        >
+                          <FormLabel htmlFor="address">Amount</FormLabel>
+                          <InputGroup>
+                            <InputLeftAddon>$</InputLeftAddon>
+                            <Field
+                              as={Input}
+                              id="amount"
+                              name="amount"
+                              type="number"
+                              placeholder="0"
+                              validate={(value) => {
+                                let error
+                                if (value > feeTokenBalance) {
+                                  error = "Insufficient Funds"
+                                }
+                                return error
+                              }}
+                            />
+                          </InputGroup>
+                          <FormErrorMessage>{errors.amount}</FormErrorMessage>
+                        </FormControl>
+                        <Button
+                          onClick={() => {
+                            if (!member) return
+                            if (member.balance >= 0) return
+                            if (Math.abs(member.balance) <= feeTokenBalance)
+                              setValues({ amount: Math.abs(member.balance) })
+                            else setValues({ amount: feeTokenBalance })
+                          }}
+                          alignSelf={"flex-end"}
+                        >
+                          Max
+                        </Button>
+                      </HStack>
+                    </Stack>
+                  )}
                 </Stack>
               </ModalBody>
               <ModalFooter>
-                {/* <Button colorScheme="blue" mr={3} onClick={onClose}>
-                  Close
-                </Button> */}
                 {address && approvalState !== ApprovalState.APPROVED ? (
                   <Button
                     w="100%"

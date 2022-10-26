@@ -14,7 +14,6 @@ const innerStyles: BoxProps = {
   p: 6,
   bgColor: "gray.100",
   borderRadius: "inherit",
-  border: "7px solid gray",
   h: "full",
 }
 
@@ -53,7 +52,7 @@ export const FeeTokenCardBack = ({
         position="relative"
         overflow="hidden"
       >
-        <HStack zIndex={1} w="100%">
+        <HStack zIndex={1} w="100%" mt={".5em !important"}>
           <HStack>
             <Heading color="white" size="header">
               {symbol}
