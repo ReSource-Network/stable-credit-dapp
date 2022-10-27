@@ -11,7 +11,7 @@ import {
 import type { NextPage } from "next"
 import Head from "next/head"
 import { useState, useEffect } from "react"
-import { Members } from "../../components/operator/Members"
+import { MembersTable } from "../../components/operator/MembersTable"
 import { NetworkStats } from "../../components/operator/NetworkStats"
 import { ReserveStats } from "../../components/operator/ReserveStats"
 import { useAccount } from "wagmi"
@@ -71,7 +71,7 @@ export const Operator: NextPage = () => {
               alignItems="flex-start"
               mt="2em"
             >
-              <Members />
+              <MembersTable />
               <Stack spacing="1em" w={{ md: "initial", base: "100%" }}>
                 <NetworkStats />
                 <ReserveStats />

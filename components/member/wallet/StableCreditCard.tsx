@@ -11,7 +11,7 @@ import { ManageMember, useGetMember } from "../../../hooks/useGetMember"
 import { CashOutModal } from "../CashOutModal"
 import { PaymentModal } from "../PaymentModal"
 import { TransferModal } from "../TransferModal"
-import { BalanceBar } from "./BalanceBar"
+import { TermBar } from "./TermBar"
 import { StableCreditCardFront } from "./StableCreditCardFront"
 import { StableCreditCardBack } from "./StableCreditCardBack"
 import { CreditUsageBar } from "./CreditUsageBar"
@@ -123,11 +123,7 @@ export const StableCreditCard = ({
             availableCredit={member?.available || 0}
             creditLimit={member?.creditLimit ?? 0}
           />
-          <BalanceBar
-            w="100%"
-            balance={member?.balance || 0}
-            creditLimit={member?.creditLimit || 0}
-          />
+          <TermBar />
         </Collapse>
       </Collapse>
       <TransferModal
