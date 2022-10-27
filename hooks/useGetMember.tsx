@@ -2,7 +2,7 @@ import { useStableCreditContract } from "./useStableCreditContract"
 import { useMountedState } from "./useMountedState"
 import { useAddTransaction } from "../state/transactions"
 import { useCallback, useState } from "react"
-import { Member } from "../components/operator/Members"
+import { Member } from "../components/operator/MembersTable"
 import { useAccessManagerContract } from "./useAccessManagerContract"
 import { formatStableCredits } from "../functions/bignumber"
 import { useToast } from "@chakra-ui/react"
@@ -79,6 +79,7 @@ export const useGetMember = (): ManageMember => {
           available,
           default: new Date(terms.defaultDate.toNumber() * 1000),
           pastDue: new Date(terms.pastDueDate.toNumber() * 1000),
+          issued: new Date(terms.issueDate.toNumber() * 1000),
         })
       } catch (e) {
         console.log(e)

@@ -1,5 +1,5 @@
 import Alert from "./Alert"
-// import Button from "./Button"
+import Button from "./Button"
 // import Heading from "./Heading"
 // import Input from "./Input"
 // import Menu from "./Menu"
@@ -15,7 +15,7 @@ import Modal from "./Modal"
 
 export default {
   Alert,
-  // Button,
+  Button,
   // Card,
   // CardHeader,
   // Input,

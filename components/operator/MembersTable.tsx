@@ -17,7 +17,7 @@ import {
 import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Button, useColorMode } from "@chakra-ui/react"
-import { AddMemberModal } from "./AddMemberModal"
+import { AddMemberModal } from "./member/AddMemberModal"
 import { UpdateMemberModal } from "./UpdateMemberModal"
 import { useState } from "react"
 import { useGetMember } from "../../hooks/useGetMember"
@@ -36,9 +36,10 @@ export interface Member {
   creditLimit: number
   pastDue: Date
   default: Date
+  issued?: Date
 }
 
-export const Members = () => {
+export const MembersTable = () => {
   const isMobile = useBreakpointValue({ base: true, md: false })
   const { colorMode } = useColorMode()
   const router = useRouter()
