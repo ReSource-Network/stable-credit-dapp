@@ -52,25 +52,13 @@ export const TermBar = () => {
       (now.getTime()! - member?.issued?.getTime()!) / (1000 * 3600 * 24),
     ) || 0
 
-  const nearPastDue = daysToPastDue <= 1
-  const nearDefault = daysToDefault <= 1
-
   const isPastDue = daysToPastDue <= 0
   const inDefault = daysToDefault <= 0
 
   const color = !!isPastDue ? "yellow" : !!inDefault ? "red" : "gray"
 
   let pastDuePercent = Math.abs((daysToPastDue / daysInPeriod) * 100) || 0
-  let defaultPercent = Math.abs((daysToDefault / daysInPeriod) * 100) || 0
   let nowPercent = Math.abs((daysPassed / daysInPeriod) * 100) || 0
-
-  console.log("days to default: ", daysToDefault)
-  console.log("days to past due: ", daysToPastDue)
-  console.log("total days: ", daysInPeriod)
-
-  console.log(pastDuePercent)
-  console.log(defaultPercent)
-  console.log(nowPercent)
 
   return (
     <Box
@@ -101,12 +89,7 @@ export const TermBar = () => {
               aria-label="Past Due Date"
             >
               <span>
-                <FontAwesomeIcon
-                  opacity=".7"
-                  color="white"
-                  size="md"
-                  icon={faClock}
-                />
+                <FontAwesomeIcon opacity=".7" color="white" icon={faClock} />
               </span>
             </Tooltip>
           </Stack>
@@ -124,12 +107,7 @@ export const TermBar = () => {
               aria-label="Expiration Date"
             >
               <span>
-                <FontAwesomeIcon
-                  opacity=".7"
-                  color="white"
-                  size="md"
-                  icon={faClock}
-                />
+                <FontAwesomeIcon opacity=".7" color="white" icon={faClock} />
               </span>
             </Tooltip>
           </Stack>

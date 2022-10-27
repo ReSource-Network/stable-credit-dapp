@@ -10,7 +10,6 @@ import { useStableCreditContract } from "../../../hooks/useStableCreditContract"
 import { formatEther } from "ethers/lib/utils"
 
 interface Props extends BoxProps {
-  feeTokenBalance: number
   showFeeToken: boolean
   setShowFeeToken: (val: boolean) => void
 }
