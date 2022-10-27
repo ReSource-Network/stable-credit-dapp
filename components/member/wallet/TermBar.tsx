@@ -1,5 +1,12 @@
 import { Box, BoxProps, HStack, Text } from "@chakra-ui/layout"
-import { Progress, Stack, Tooltip, VStack } from "@chakra-ui/react"
+import {
+  Divider,
+  Progress,
+  Stack,
+  Tooltip,
+  useColorMode,
+  VStack,
+} from "@chakra-ui/react"
 import React, { useEffect } from "react"
 import { useGetMember } from "../../../hooks/useGetMember"
 import { useAccount } from "wagmi"
@@ -10,6 +17,7 @@ import { useInterval } from "react-use"
 export const TermBar = () => {
   const { address } = useAccount()
   const { member, getMember } = useGetMember()
+  const { colorMode } = useColorMode()
 
   useEffect(() => {
     const handler = async () => {
@@ -67,7 +75,7 @@ export const TermBar = () => {
       backgroundColor="gray"
       borderRadius="1em"
     >
-      <Box mb="2em" backgroundColor="gray" borderRadius="1em">
+      <Box mb="1em" backgroundColor="gray" borderRadius="1em">
         <Stack>
           <Text ml={1} color="white">
             Credit Terms
@@ -89,7 +97,10 @@ export const TermBar = () => {
               aria-label="Past Due Date"
             >
               <span>
-                <FontAwesomeIcon opacity=".7" color="white" icon={faClock} />
+                <FontAwesomeIcon
+                  color={colorMode === "light" ? "#bdbdbd" : "white"}
+                  icon={faClock}
+                />
               </span>
             </Tooltip>
           </Stack>
@@ -107,10 +118,43 @@ export const TermBar = () => {
               aria-label="Expiration Date"
             >
               <span>
-                <FontAwesomeIcon opacity=".7" color="white" icon={faClock} />
+                <FontAwesomeIcon
+                  style={{ marginRight: "-.6em" }}
+                  color={colorMode === "light" ? "#bdbdbd" : "white"}
+                  icon={faClock}
+                />
               </span>
             </Tooltip>
           </Stack>
+          <HStack justifyContent={"space-between"}>
+            <Text color="white">
+              <span style={{ fontWeight: "bold" }}>{daysToPastDue} days</span>{" "}
+              till{" "}
+              <Tooltip
+                hasArrow
+                label={`${daysToPastDue} days till past due. Zero out your account within this time to avoid freezing your credit line.`}
+                aria-label="Expiration Date"
+              >
+                <span style={{ textDecoration: "underline" }}>past due</span>
+              </Tooltip>
+            </Text>
+            <Divider
+              orientation="vertical"
+              height={"1em"}
+              borderColor="white"
+            />
+            <Text color="white">
+              <span style={{ fontWeight: "bold" }}>{daysToDefault} days</span>{" "}
+              till{" "}
+              <Tooltip
+                hasArrow
+                label={`${daysToDefault} days till default. A default results in a credit reset and a negative impact on your credit reputation`}
+                aria-label="Expiration Date"
+              >
+                <span style={{ textDecoration: "underline" }}>default</span>
+              </Tooltip>
+            </Text>
+          </HStack>
         </Stack>
         <Box />
       </Box>

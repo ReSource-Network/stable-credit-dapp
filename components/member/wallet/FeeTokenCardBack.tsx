@@ -4,18 +4,12 @@ import {
   HStack,
   Image,
   useBreakpointValue,
+  useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { FeeTokenBalance } from "../FeeTokenBalance"
-
-const innerStyles: BoxProps = {
-  p: 6,
-  bgColor: "gray.100",
-  borderRadius: "inherit",
-  h: "full",
-}
 
 const defaultStyles: BoxProps = {
   h: "full",
@@ -34,6 +28,14 @@ export const FeeTokenCardBack = ({
   symbol,
   ...rest
 }: Props) => {
+  const { colorMode } = useColorMode()
+
+  const innerStyles: BoxProps = {
+    p: 6,
+    bgColor: colorMode === "light" ? "gray.900" : "gray.100",
+    borderRadius: "inherit",
+    h: "full",
+  }
   return (
     <Box {...defaultStyles} {...rest}>
       <HStack width="100%" left="0" top="1.5em" pos="absolute">
@@ -66,11 +68,15 @@ export const FeeTokenCardBack = ({
         </HStack>
 
         <HStack w="100%">
-          <Text color="black" variant="title" w="100%">
+          <Text
+            color={colorMode === "light" ? "white" : "black"}
+            variant="title"
+            w="100%"
+          >
             {symbol} Balance
           </Text>
 
-          <Text color="black">
+          <Text color={colorMode === "light" ? "white" : "black"}>
             {feeTokenBalance.toLocaleString("en", {
               style: "currency",
               currency: "USD",

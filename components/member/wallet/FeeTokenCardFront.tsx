@@ -17,13 +17,6 @@ import { useEffect, useState } from "react"
 import { useAccount } from "wagmi"
 import { useFeeTokenContract } from "../../../hooks/useFeeTokenContract"
 
-const innerStyles: BoxProps = {
-  p: 6,
-  bgColor: "gray.100",
-  borderRadius: "inherit",
-  h: "full",
-}
-
 const defaultStyles: BoxProps = {
   p: "2px",
   h: "full",
@@ -37,6 +30,13 @@ interface Props extends BoxProps {
 
 export const FeeTokenCardFront = ({ flip, symbol, ...rest }: Props) => {
   const { colorMode } = useColorMode()
+
+  const innerStyles: BoxProps = {
+    p: 6,
+    bgColor: colorMode === "light" ? "gray.900" : "gray.100",
+    borderRadius: "inherit",
+    h: "full",
+  }
 
   return (
     <Box {...defaultStyles} {...rest}>
@@ -77,9 +77,13 @@ export const FeeTokenCardFront = ({ flip, symbol, ...rest }: Props) => {
           bottom="2em"
         >
           <Image
-            color="black"
+            color={colorMode === "light" ? "white" : "black"}
             w="6em"
-            src={"/images/resource-black.svg"}
+            src={
+              colorMode === "light"
+                ? "/images/resource-white.svg"
+                : "/images/resource-black.svg"
+            }
             alt="Nothing found"
           />
         </HStack>
@@ -89,13 +93,24 @@ export const FeeTokenCardFront = ({ flip, symbol, ...rest }: Props) => {
           paddingRight="3em"
           justifyContent="flex-end"
         >
-          <Button size="sm" variant="outline" color="black" onClick={flip}>
-            <FontAwesomeIcon color="black" icon={faEllipsis} />
+          <Button
+            size="sm"
+            variant="outline"
+            color={colorMode === "light" ? "white" : "black"}
+            onClick={flip}
+          >
+            <FontAwesomeIcon
+              color={colorMode === "light" ? "white" : "black"}
+              icon={faEllipsis}
+            />
           </Button>
         </HStack>
         <HStack>
           <HStack>
-            <Heading size="header" color="black">
+            <Heading
+              size="header"
+              color={colorMode === "light" ? "white" : "black"}
+            >
               {symbol}
             </Heading>
           </HStack>
