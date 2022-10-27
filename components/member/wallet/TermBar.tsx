@@ -96,13 +96,14 @@ export const TermBar = () => {
             bgColor="transparent"
           >
             <Tooltip
+              hasArrow
               label={`${daysToPastDue} days till past due. Zero out your account within this time to avoid freezing your credit line.`}
               aria-label="Past Due Date"
             >
               <span>
                 <FontAwesomeIcon
                   opacity=".7"
-                  color="yellow"
+                  color="white"
                   size="md"
                   icon={faClock}
                 />
@@ -118,13 +119,14 @@ export const TermBar = () => {
             bgColor="transparent"
           >
             <Tooltip
+              hasArrow
               label={`${daysToDefault} days till default. A default results in a credit reset and a negative impact on your credit reputation`}
               aria-label="Expiration Date"
             >
               <span>
                 <FontAwesomeIcon
                   opacity=".7"
-                  color="red"
+                  color="white"
                   size="md"
                   icon={faClock}
                 />
