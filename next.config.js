@@ -12,5 +12,5 @@ module.exports = {
     return config
   },
   reactStrictMode: true,
-  trailingSlash: false,
+  trailingSlash: true,
 }
