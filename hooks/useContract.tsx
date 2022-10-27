@@ -1,7 +1,7 @@
 import { Provider } from "@ethersproject/providers"
 import { Contract } from "@ethersproject/contracts"
 import { Signer } from "ethers"
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import { useSigner, useProvider } from "wagmi"
 
 import { Contracts } from "../config"
@@ -12,14 +12,8 @@ import {
   getReservePoolContract,
   getStableCreditContract,
 } from "../functions/contracts"
-import {
-  NetworkContractAddresses,
-  useCreditAddrStore,
-} from "../state/networkAddresses/store"
-import {
-  useFetchNetworkAddresses,
-  useNetworkAddresses,
-} from "../state/networkAddresses/index"
+import { NetworkContractAddresses } from "../state/networkAddresses/store"
+import { useNetworkAddresses } from "../state/networkAddresses/index"
 import { useRouter } from "next/router"
 
 export function getContract(
@@ -73,17 +67,8 @@ export function useContract(key: Contracts): Contract | null {
   const provider = useProvider()
   const networkAddresses = useNetworkAddresses()
   const valid = !!networkAddresses.accessManager
-  const { creditAddr } = useCreditAddrStore()
-
-  const fetch = useFetchNetworkAddresses()
-
-  useEffect(() => {
-    if (!creditAddr) return
-    else {
-      fetch()
-    }
-  }, [creditAddr])
-
+  const router = useRouter()
+  const network = router.query.network as string
   return useMemo(() => {
     if (!valid) return null
     if (!signer) return getContract(networkAddresses, provider, key)
@@ -94,5 +79,5 @@ export function useContract(key: Contracts): Contract | null {
       console.error("Failed to get contract", error)
       return null
     }
-  }, [key, signer, valid, creditAddr, networkAddresses])
+  }, [key, signer, network, networkAddresses])
 }

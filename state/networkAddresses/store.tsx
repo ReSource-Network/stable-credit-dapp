@@ -9,13 +9,13 @@ export type NetworkContractAddresses = {
   reservePool: string
 }
 
-export type NetworkState = {
+export type NetworkAddressesStoreState = {
   addresses: NetworkContractAddresses
   get: () => NetworkContractAddresses
   set: (_addresses: NetworkContractAddresses) => void
 }
 
-export const useNetworkAddressesStore = create<NetworkState>(
+export const useNetworkAddressesStore = create<NetworkAddressesStoreState>(
   persist(
     (set, get) => ({
       addresses: {} as NetworkContractAddresses,
@@ -25,27 +25,6 @@ export const useNetworkAddressesStore = create<NetworkState>(
     }),
     {
       name: "network-addresses",
-      getStorage: () => localStorage,
-    },
-  ),
-)
-
-type AddrState = {
-  creditAddr: string
-}
-
-type AddrAction = {
-  setCreditAddr: (firstName: AddrState["creditAddr"]) => void
-}
-
-export const useCreditAddrStore = create<AddrState & AddrAction>(
-  persist(
-    (set) => ({
-      creditAddr: "",
-      setCreditAddr: (addr) => set(() => ({ creditAddr: addr })),
-    }),
-    {
-      name: "credit-address",
       getStorage: () => localStorage,
     },
   ),

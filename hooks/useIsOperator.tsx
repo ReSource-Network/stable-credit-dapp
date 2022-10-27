@@ -1,45 +1,37 @@
 import { useMountedState } from "./useMountedState"
-import { useCallback, useState, useEffect } from "react"
+import { useCallback, useState } from "react"
 import { useAccessManagerContract } from "./useAccessManagerContract"
-import { useAccount } from "wagmi"
 
 export type IsOperator = {
-  verifyRole: (address: string) => Promise<void>
+  check: (address: string) => Promise<void>
   isOperator?: boolean
   loading: boolean
 }
 
 export const useIsOperator = (): IsOperator => {
-  const { address } = useAccount()
   const accessManager = useAccessManagerContract()
   const [loading, setLoading] = useMountedState(false)
   const [isOperator, setIsOperator] = useState(false)
 
-  const verifyRole = useCallback(async () => {
-    const check = async (address: string) => {
-      setLoading(true)
+  const check = useCallback(async (address: string) => {
+    setLoading(true)
 
-      try {
-        if (!accessManager) {
-          setLoading(false)
-          return setIsOperator(false)
-        }
-        const validOperator = await accessManager.isOperator(address)
-        setIsOperator(validOperator)
+    try {
+      if (!accessManager) {
         setLoading(false)
-      } catch (e) {
-        console.log(e)
-        setLoading(false)
-      } finally {
-        setLoading(false)
+        return setIsOperator(false)
       }
+      setIsOperator(await accessManager.isOperator(address))
+      return setLoading(false)
+    } catch (e) {
+      console.log(e)
+    } finally {
+      setLoading(false)
     }
-
-    check(address || "")
-  }, [accessManager, address])
+  }, [])
 
   return {
-    verifyRole,
+    check,
     isOperator,
     get loading() {
       return loading
