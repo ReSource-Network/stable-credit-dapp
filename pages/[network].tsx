@@ -22,7 +22,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 import { useRouter } from "next/router"
 import Link from "next/link"
-import { useNetworkAddresses } from "../../state/networkAddresses/index"
+import { useNetworkAddresses } from "../state/networkAddresses/index"
 import { useEffect } from "react"
 import { useModal } from "connectkit"
 
@@ -82,7 +82,7 @@ export const NetworkHomePage: NextPage = () => {
             justifyContent="center"
             textAlign="center"
           >
-            <Link href={`${router.query.network}/member`} passHref>
+            <Link href={`member/?network=${router.query.network}`} passHref>
               <ChakraLink>
                 <Button h="14em" variant="ghost">
                   <Box
@@ -123,7 +123,7 @@ export const NetworkHomePage: NextPage = () => {
                 w="90%"
               />
             )}
-            <Link href={`${router.query.network}/operator`} passHref>
+            <Link href={`operator/?network=${router.query.network}`} passHref>
               <ChakraLink>
                 <Button h="14em" variant="ghost">
                   <Box
