@@ -66,9 +66,9 @@ export const FeeTokenCard = ({
           >
             <Text>
               Use <span style={{ fontWeight: "bold" }}>{feeTokenSymbol}</span>{" "}
-              to pay for transaction fees in the{" "}
+              to pay for transaction fees or repay your credit balance in the{" "}
               <span style={{ fontWeight: "bold" }}>{stableCreditSymbol}</span>{" "}
-              network. Fees are pooled together in the network reserve to
+              network. Fees are pooled together in a network reserve to
               strengthen the network.
             </Text>
             {/* <HStack w="100%" justifyContent="flex-end" mt="1em !important">
