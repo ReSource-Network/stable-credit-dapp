@@ -21,28 +21,31 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface FeeManagerInterface extends ethers.utils.Interface {
   functions: {
-    "access()": FunctionFragment;
+    "averageFeeRate()": FunctionFragment;
     "calculateMemberFee(address,uint256)": FunctionFragment;
     "collectFees(address,address,uint256)": FunctionFragment;
     "collectedFees()": FunctionFragment;
-    "defaultFeePercent()": FunctionFragment;
     "distributeFees()": FunctionFragment;
+    "getMemberFeeRate(address)": FunctionFragment;
     "initialize(address,address,uint256)": FunctionFragment;
-    "memberFeePercent(address)": FunctionFragment;
+    "memberFeeRate(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "pauseFees()": FunctionFragment;
     "paused()": FunctionFragment;
     "recoverERC20(address,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "reservePool()": FunctionFragment;
-    "setDefaultFeePercent(uint256)": FunctionFragment;
-    "setMemberFeePercent(address,uint256)": FunctionFragment;
+    "setAverageFeeRate(uint256)": FunctionFragment;
+    "setMemberFeeRate(address,uint256)": FunctionFragment;
     "stableCredit()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unpauseFees()": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "access", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "averageFeeRate",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "calculateMemberFee",
     values: [string, BigNumberish]
@@ -56,19 +59,19 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "defaultFeePercent",
+    functionFragment: "distributeFees",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "distributeFees",
-    values?: undefined
+    functionFragment: "getMemberFeeRate",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
     values: [string, string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "memberFeePercent",
+    functionFragment: "memberFeeRate",
     values: [string]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -87,11 +90,11 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setDefaultFeePercent",
+    functionFragment: "setAverageFeeRate",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "setMemberFeePercent",
+    functionFragment: "setMemberFeeRate",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
@@ -107,7 +110,10 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
 
-  decodeFunctionResult(functionFragment: "access", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "averageFeeRate",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "calculateMemberFee",
     data: BytesLike
@@ -121,16 +127,16 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "defaultFeePercent",
+    functionFragment: "distributeFees",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "distributeFees",
+    functionFragment: "getMemberFeeRate",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "memberFeePercent",
+    functionFragment: "memberFeeRate",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
@@ -149,11 +155,11 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setDefaultFeePercent",
+    functionFragment: "setAverageFeeRate",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setMemberFeePercent",
+    functionFragment: "setMemberFeeRate",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -244,7 +250,7 @@ export class FeeManager extends BaseContract {
   interface: FeeManagerInterface;
 
   functions: {
-    access(overrides?: CallOverrides): Promise<[string]>;
+    averageFeeRate(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     calculateMemberFee(
       _member: string,
@@ -261,20 +267,23 @@ export class FeeManager extends BaseContract {
 
     collectedFees(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    defaultFeePercent(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     distributeFees(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    getMemberFeeRate(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     initialize(
       _stableCredit: string,
       _reservePool: string,
-      _defaultFeePercent: BigNumberish,
+      _averageFeeRate: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    memberFeePercent(
+    memberFeeRate(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
@@ -299,12 +308,12 @@ export class FeeManager extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<[string]>;
 
-    setDefaultFeePercent(
+    setAverageFeeRate(
       _feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setMemberFeePercent(
+    setMemberFeeRate(
       member: string,
       _feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -322,7 +331,7 @@ export class FeeManager extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  access(overrides?: CallOverrides): Promise<string>;
+  averageFeeRate(overrides?: CallOverrides): Promise<BigNumber>;
 
   calculateMemberFee(
     _member: string,
@@ -339,20 +348,23 @@ export class FeeManager extends BaseContract {
 
   collectedFees(overrides?: CallOverrides): Promise<BigNumber>;
 
-  defaultFeePercent(overrides?: CallOverrides): Promise<BigNumber>;
-
   distributeFees(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  getMemberFeeRate(
+    _member: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   initialize(
     _stableCredit: string,
     _reservePool: string,
-    _defaultFeePercent: BigNumberish,
+    _averageFeeRate: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  memberFeePercent(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+  memberFeeRate(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -374,12 +386,12 @@ export class FeeManager extends BaseContract {
 
   reservePool(overrides?: CallOverrides): Promise<string>;
 
-  setDefaultFeePercent(
+  setAverageFeeRate(
     _feePercent: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setMemberFeePercent(
+  setMemberFeeRate(
     member: string,
     _feePercent: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -397,7 +409,7 @@ export class FeeManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    access(overrides?: CallOverrides): Promise<string>;
+    averageFeeRate(overrides?: CallOverrides): Promise<BigNumber>;
 
     calculateMemberFee(
       _member: string,
@@ -414,21 +426,21 @@ export class FeeManager extends BaseContract {
 
     collectedFees(overrides?: CallOverrides): Promise<BigNumber>;
 
-    defaultFeePercent(overrides?: CallOverrides): Promise<BigNumber>;
-
     distributeFees(overrides?: CallOverrides): Promise<void>;
+
+    getMemberFeeRate(
+      _member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     initialize(
       _stableCredit: string,
       _reservePool: string,
-      _defaultFeePercent: BigNumberish,
+      _averageFeeRate: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    memberFeePercent(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    memberFeeRate(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -446,12 +458,12 @@ export class FeeManager extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<string>;
 
-    setDefaultFeePercent(
+    setAverageFeeRate(
       _feePercent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setMemberFeePercent(
+    setMemberFeeRate(
       member: string,
       _feePercent: BigNumberish,
       overrides?: CallOverrides
@@ -522,7 +534,7 @@ export class FeeManager extends BaseContract {
   };
 
   estimateGas: {
-    access(overrides?: CallOverrides): Promise<BigNumber>;
+    averageFeeRate(overrides?: CallOverrides): Promise<BigNumber>;
 
     calculateMemberFee(
       _member: string,
@@ -539,23 +551,23 @@ export class FeeManager extends BaseContract {
 
     collectedFees(overrides?: CallOverrides): Promise<BigNumber>;
 
-    defaultFeePercent(overrides?: CallOverrides): Promise<BigNumber>;
-
     distributeFees(
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    getMemberFeeRate(
+      _member: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     initialize(
       _stableCredit: string,
       _reservePool: string,
-      _defaultFeePercent: BigNumberish,
+      _averageFeeRate: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    memberFeePercent(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    memberFeeRate(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -577,12 +589,12 @@ export class FeeManager extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setDefaultFeePercent(
+    setAverageFeeRate(
       _feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setMemberFeePercent(
+    setMemberFeeRate(
       member: string,
       _feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -601,7 +613,7 @@ export class FeeManager extends BaseContract {
   };
 
   populateTransaction: {
-    access(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    averageFeeRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     calculateMemberFee(
       _member: string,
@@ -618,20 +630,23 @@ export class FeeManager extends BaseContract {
 
     collectedFees(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    defaultFeePercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     distributeFees(
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getMemberFeeRate(
+      _member: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     initialize(
       _stableCredit: string,
       _reservePool: string,
-      _defaultFeePercent: BigNumberish,
+      _averageFeeRate: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    memberFeePercent(
+    memberFeeRate(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -656,12 +671,12 @@ export class FeeManager extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    setDefaultFeePercent(
+    setAverageFeeRate(
       _feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setMemberFeePercent(
+    setMemberFeeRate(
       member: string,
       _feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }

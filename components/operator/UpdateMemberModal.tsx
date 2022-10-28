@@ -16,7 +16,8 @@ import {
 } from "@chakra-ui/react"
 import { Button, Input, HStack } from "@chakra-ui/react"
 import { Formik, Field } from "formik"
-import { Member } from "./MembersTable"
+import { Member } from "../../hooks/useGetMember"
+
 import { useUpdateCreditLine } from "../../hooks/useUpdateCreditLine"
 
 interface UpdateMemberModalProps extends ModalProps {

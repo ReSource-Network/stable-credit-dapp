@@ -49,7 +49,6 @@ interface StableCreditInterface extends ethers.utils.Interface {
     "inDefault(address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(address,address,string,string)": FunctionFragment;
-    "isAuthorized(address)": FunctionFragment;
     "isPastDue(address)": FunctionFragment;
     "name()": FunctionFragment;
     "networkDebt()": FunctionFragment;
@@ -57,7 +56,6 @@ interface StableCreditInterface extends ethers.utils.Interface {
     "renounceOwnership()": FunctionFragment;
     "repayCreditBalance(uint128)": FunctionFragment;
     "reservePool()": FunctionFragment;
-    "setCreditLimit(address,uint256)": FunctionFragment;
     "setFeeManager(address)": FunctionFragment;
     "setReservePool(address)": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -166,10 +164,6 @@ interface StableCreditInterface extends ethers.utils.Interface {
     functionFragment: "initialize",
     values: [string, string, string, string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "isAuthorized",
-    values: [string]
-  ): string;
   encodeFunctionData(functionFragment: "isPastDue", values: [string]): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
@@ -188,10 +182,6 @@ interface StableCreditInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "reservePool",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setCreditLimit",
-    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setFeeManager",
@@ -299,10 +289,6 @@ interface StableCreditInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "isAuthorized",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "isPastDue", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
@@ -320,10 +306,6 @@ interface StableCreditInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "reservePool",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setCreditLimit",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -605,11 +587,6 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    isAuthorized(
-      _member: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
     isPastDue(_member: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
@@ -628,12 +605,6 @@ export class StableCredit extends BaseContract {
     ): Promise<ContractTransaction>;
 
     reservePool(overrides?: CallOverrides): Promise<[string]>;
-
-    setCreditLimit(
-      _member: string,
-      _limit: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
 
     setFeeManager(
       _feeManager: string,
@@ -804,8 +775,6 @@ export class StableCredit extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  isAuthorized(_member: string, overrides?: CallOverrides): Promise<boolean>;
-
   isPastDue(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
   name(overrides?: CallOverrides): Promise<string>;
@@ -824,12 +793,6 @@ export class StableCredit extends BaseContract {
   ): Promise<ContractTransaction>;
 
   reservePool(overrides?: CallOverrides): Promise<string>;
-
-  setCreditLimit(
-    _member: string,
-    _limit: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   setFeeManager(
     _feeManager: string,
@@ -997,8 +960,6 @@ export class StableCredit extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    isAuthorized(_member: string, overrides?: CallOverrides): Promise<boolean>;
-
     isPastDue(_member: string, overrides?: CallOverrides): Promise<boolean>;
 
     name(overrides?: CallOverrides): Promise<string>;
@@ -1015,12 +976,6 @@ export class StableCredit extends BaseContract {
     ): Promise<void>;
 
     reservePool(overrides?: CallOverrides): Promise<string>;
-
-    setCreditLimit(
-      _member: string,
-      _limit: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     setFeeManager(
       _feeManager: string,
@@ -1358,11 +1313,6 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    isAuthorized(
-      _member: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     isPastDue(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1381,12 +1331,6 @@ export class StableCredit extends BaseContract {
     ): Promise<BigNumber>;
 
     reservePool(overrides?: CallOverrides): Promise<BigNumber>;
-
-    setCreditLimit(
-      _member: string,
-      _limit: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
 
     setFeeManager(
       _feeManager: string,
@@ -1561,11 +1505,6 @@ export class StableCredit extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    isAuthorized(
-      _member: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     isPastDue(
       _member: string,
       overrides?: CallOverrides
@@ -1587,12 +1526,6 @@ export class StableCredit extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     reservePool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    setCreditLimit(
-      _member: string,
-      _limit: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
 
     setFeeManager(
       _feeManager: string,

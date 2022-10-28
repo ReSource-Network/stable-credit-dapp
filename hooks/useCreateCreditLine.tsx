@@ -12,7 +12,7 @@ export type UseCreateResponse = {
     pastDueDays: number,
     defaultDays: number,
     feeRate: number,
-  ) => Promise<void>
+  ) => Promise<boolean>
   loading: boolean
 }
 
@@ -54,6 +54,7 @@ export const useCreateCreditLine = (): UseCreateResponse => {
           })
 
         setCreating(false)
+        return true
       } catch (e) {
         if (e && (e as any).code === 4001) {
           console.log("Transaction rejected.")
@@ -77,6 +78,7 @@ export const useCreateCreditLine = (): UseCreateResponse => {
             isClosable: true,
           })
         }
+        return false
       } finally {
         setCreating(false)
       }

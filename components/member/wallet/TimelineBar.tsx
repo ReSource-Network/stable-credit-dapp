@@ -1,40 +1,17 @@
-import { Box, BoxProps, HStack, Text } from "@chakra-ui/layout"
+import { Box, HStack, Text } from "@chakra-ui/layout"
 import {
   Divider,
   Progress,
   Stack,
   Tooltip,
   useColorMode,
-  VStack,
 } from "@chakra-ui/react"
-import React, { useEffect } from "react"
-import { useGetMember } from "../../../hooks/useGetMember"
-import { useAccount } from "wagmi"
+import { Member } from "../../../hooks/useGetMember"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faClock } from "@fortawesome/free-solid-svg-icons"
-import { useInterval } from "react-use"
 
-export const TermBar = () => {
-  const { address } = useAccount()
-  const { member, getMember } = useGetMember()
+export const TimelineBar = ({ member }: { member?: Member }) => {
   const { colorMode } = useColorMode()
-
-  useEffect(() => {
-    const handler = async () => {
-      if (!address) return
-      await getMember(address)
-    }
-    if (address) handler()
-  }, [getMember, address])
-
-  useInterval(() => {
-    const handler = async () => {
-      if (!address) return
-      await getMember(address)
-    }
-    if (address) handler()
-  }, 100000)
-
   const now = new Date()
 
   const daysToPastDue =
@@ -75,14 +52,12 @@ export const TermBar = () => {
       backgroundColor="gray"
       borderRadius="1em"
     >
-      <Box mb="1em" backgroundColor="gray" borderRadius="1em">
+      <Box backgroundColor="gray" borderRadius="1em">
         <Stack>
-          <Text ml={1} color="white">
-            Credit Terms
+          <Text fontWeight={"bold"} color="white">
+            Credit Timeline
           </Text>
-
           <Progress mt={3} colorScheme={color} value={nowPercent} />
-
           <Stack
             zIndex={5}
             alignItems={"flex-end"}
@@ -90,6 +65,7 @@ export const TermBar = () => {
             mt="-18px !important"
             width={`${pastDuePercent}%`}
             bgColor="transparent"
+            ml=".6em !important"
           >
             <Tooltip
               hasArrow
@@ -126,7 +102,7 @@ export const TermBar = () => {
               </span>
             </Tooltip>
           </Stack>
-          <HStack justifyContent={"space-between"}>
+          <HStack py=".5em" justifyContent={"space-between"}>
             <Text color="white">
               <span style={{ fontWeight: "bold" }}>{daysToPastDue} days</span>{" "}
               till{" "}

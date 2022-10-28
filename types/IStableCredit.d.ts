@@ -20,24 +20,21 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface IStableCreditInterface extends ethers.utils.Interface {
   functions: {
+    "access()": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "convertCreditToFeeToken(uint256)": FunctionFragment;
     "feeToken()": FunctionFragment;
-    "isAuthorized(address)": FunctionFragment;
     "networkDebt()": FunctionFragment;
     "reservePool()": FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: "access", values?: undefined): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
     functionFragment: "convertCreditToFeeToken",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "feeToken", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "isAuthorized",
-    values: [string]
-  ): string;
   encodeFunctionData(
     functionFragment: "networkDebt",
     values?: undefined
@@ -47,16 +44,13 @@ interface IStableCreditInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
 
+  decodeFunctionResult(functionFragment: "access", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "convertCreditToFeeToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "feeToken", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "isAuthorized",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "networkDebt",
     data: BytesLike
@@ -156,6 +150,8 @@ export class IStableCredit extends BaseContract {
   interface: IStableCreditInterface;
 
   functions: {
+    access(overrides?: CallOverrides): Promise<[string]>;
+
     balanceOf(_member: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     convertCreditToFeeToken(
@@ -165,15 +161,12 @@ export class IStableCredit extends BaseContract {
 
     feeToken(overrides?: CallOverrides): Promise<[string]>;
 
-    isAuthorized(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
     networkDebt(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     reservePool(overrides?: CallOverrides): Promise<[string]>;
   };
+
+  access(overrides?: CallOverrides): Promise<string>;
 
   balanceOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -184,13 +177,13 @@ export class IStableCredit extends BaseContract {
 
   feeToken(overrides?: CallOverrides): Promise<string>;
 
-  isAuthorized(account: string, overrides?: CallOverrides): Promise<boolean>;
-
   networkDebt(overrides?: CallOverrides): Promise<BigNumber>;
 
   reservePool(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
+    access(overrides?: CallOverrides): Promise<string>;
+
     balanceOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     convertCreditToFeeToken(
@@ -199,8 +192,6 @@ export class IStableCredit extends BaseContract {
     ): Promise<BigNumber>;
 
     feeToken(overrides?: CallOverrides): Promise<string>;
-
-    isAuthorized(account: string, overrides?: CallOverrides): Promise<boolean>;
 
     networkDebt(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -312,6 +303,8 @@ export class IStableCredit extends BaseContract {
   };
 
   estimateGas: {
+    access(overrides?: CallOverrides): Promise<BigNumber>;
+
     balanceOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     convertCreditToFeeToken(
@@ -321,17 +314,14 @@ export class IStableCredit extends BaseContract {
 
     feeToken(overrides?: CallOverrides): Promise<BigNumber>;
 
-    isAuthorized(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     networkDebt(overrides?: CallOverrides): Promise<BigNumber>;
 
     reservePool(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    access(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     balanceOf(
       _member: string,
       overrides?: CallOverrides
@@ -343,11 +333,6 @@ export class IStableCredit extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     feeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    isAuthorized(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
 
     networkDebt(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

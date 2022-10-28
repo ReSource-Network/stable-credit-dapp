@@ -67,7 +67,7 @@ export const CashOutModal = ({
     <Modal isCentered size="md" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Cash Out</ModalHeader>
+        <ModalHeader>Cash Back</ModalHeader>
         <ModalCloseButton />
         <Formik
           initialValues={{
@@ -125,13 +125,28 @@ export const CashOutModal = ({
                       <FormErrorMessage>{errors.amount}</FormErrorMessage>
                     </FormControl>
                   </HStack>
-                  <FeeTokenBalance />
+                  <Stack>
+                    <HStack justifyContent="space-between">
+                      <Text>Credits: </Text>
+                      <Text
+                        whiteSpace={"nowrap"}
+                        fontSize="lg"
+                        fontWeight="bold"
+                      >
+                        {member?.balance.toLocaleString("en", {
+                          style: "currency",
+                          currency: "USD",
+                        })}
+                      </Text>
+                    </HStack>
+                    <FeeTokenBalance />
+                  </Stack>
                 </Stack>
               </ModalBody>
               <ModalFooter>
                 <HStack w="100%" mt="1em">
                   <Button isLoading={loading} w="100%" type="submit">
-                    Cash Out
+                    Cash Back
                   </Button>
                 </HStack>
               </ModalFooter>

@@ -39,6 +39,7 @@ import { useFeeManagerContract } from "../../hooks/useFeeManagerContract"
 import { useStableCreditContract } from "../../hooks/useStableCreditContract"
 import { useRouter } from "next/router"
 import { MemberModalProps } from "./CashOutModal"
+import { useAccessManagerContract } from "../../hooks/useAccessManagerContract"
 
 export const TransferModal = ({
   getMember,
@@ -55,6 +56,7 @@ export const TransferModal = ({
   const feeToken = useFeeTokenContract()
   const feeManager = useFeeManagerContract()
   const stableCredit = useStableCreditContract()
+  const accessManager = useAccessManagerContract()
   const router = useRouter()
 
   const { approve, approving, approvalState } = useApproveFeeToken(
@@ -84,6 +86,7 @@ export const TransferModal = ({
         <ModalHeader>Transfer Credits</ModalHeader>
         <ModalCloseButton />
         <Formik
+          validateOnChange={false}
           initialValues={{
             address: "",
             amount: undefined,
@@ -163,10 +166,13 @@ export const TransferModal = ({
                           name="address"
                           type="address"
                           placeholder="0x000...000"
-                          validate={(value) => {
+                          validate={async (value) => {
                             let error
                             if (!ethers.utils.isAddress(value)) {
-                              error = "Invalid address"
+                              return (error = "Invalid address")
+                            }
+                            if (!(await accessManager.isMember(value))) {
+                              error = "Recipient is not a member"
                             }
                             return error
                           }}

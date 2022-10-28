@@ -2,10 +2,10 @@ import { useStableCreditContract } from "./useStableCreditContract"
 import { useMountedState } from "./useMountedState"
 import { useAddTransaction } from "../state/transactions"
 import { useCallback, useState } from "react"
-import { Member } from "../components/operator/MembersTable"
 import { useAccessManagerContract } from "./useAccessManagerContract"
 import { formatStableCredits } from "../functions/bignumber"
 import { useToast } from "@chakra-ui/react"
+import { useFeeManagerContract } from "./useFeeManagerContract"
 
 export type ManageMember = {
   getMember: (address: string) => Promise<void>
@@ -14,9 +14,21 @@ export type ManageMember = {
   loading: boolean
 }
 
+export interface Member {
+  address: string
+  balance: number
+  available: number
+  creditLimit: number
+  pastDue: Date
+  default: Date
+  issued?: Date
+  feeRate?: number
+}
+
 export const useGetMember = (): ManageMember => {
   const stableCredit = useStableCreditContract()
   const accessManager = useAccessManagerContract()
+  const feeManager = useFeeManagerContract()
   const [searching, setSearching] = useMountedState(false)
   const [member, setMember] = useState<Member>()
   const toast = useToast()
@@ -71,6 +83,8 @@ export const useGetMember = (): ManageMember => {
           balance = 0 - Number(formatStableCredits(creditBalance))
         else balance = Number(formatStableCredits(memberBalance))
 
+        const feeRate = await feeManager.getMemberFeeRate(address)
+
         setSearching(false)
         setMember({
           address: address,
@@ -80,6 +94,7 @@ export const useGetMember = (): ManageMember => {
           default: new Date(terms.defaultDate.toNumber() * 1000),
           pastDue: new Date(terms.pastDueDate.toNumber() * 1000),
           issued: new Date(terms.issueDate.toNumber() * 1000),
+          feeRate: feeRate.toNumber() / 10000,
         })
       } catch (e) {
         console.log(e)

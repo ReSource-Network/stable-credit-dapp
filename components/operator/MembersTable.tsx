@@ -29,16 +29,6 @@ import Pagination from "../Pagination"
 
 const pageSize = 5
 
-export interface Member {
-  address: string
-  balance: number
-  available: number
-  creditLimit: number
-  pastDue: Date
-  default: Date
-  issued?: Date
-}
-
 export const MembersTable = () => {
   const isMobile = useBreakpointValue({ base: true, md: false })
   const { colorMode } = useColorMode()

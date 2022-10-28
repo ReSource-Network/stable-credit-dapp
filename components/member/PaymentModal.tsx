@@ -73,10 +73,11 @@ export const PaymentModal = ({
             amount: undefined || 0,
           }}
           validateOnChange={true}
-          onSubmit={async ({ amount }) => {
+          onSubmit={async ({ amount }, { resetForm }) => {
             if (!address || !amount) return
             await repay(amount)
             await getMember(address)
+            resetForm()
           }}
         >
           {({ handleSubmit, setValues, values, errors, touched }) => (
@@ -107,8 +108,23 @@ export const PaymentModal = ({
                       </Stack>
                     </Stack>
                   ) : (
-                    <Stack w="100%" py="1em" borderRadius="lg">
-                      <FeeTokenBalance />
+                    <Stack h="full" w="100%" py="1em" borderRadius="lg">
+                      <Stack>
+                        <HStack justifyContent="space-between">
+                          <Text>Credit balance: </Text>
+                          <Text
+                            whiteSpace={"nowrap"}
+                            fontSize="lg"
+                            fontWeight="bold"
+                          >
+                            {member?.balance.toLocaleString("en", {
+                              style: "currency",
+                              currency: "USD",
+                            })}
+                          </Text>
+                        </HStack>
+                        <FeeTokenBalance />
+                      </Stack>
                       <HStack>
                         <FormControl
                           isInvalid={!!errors.amount && touched.amount}

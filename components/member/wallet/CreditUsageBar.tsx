@@ -23,7 +23,7 @@ export const CreditUsageBar = ({
 
   return (
     <Box p={"1.5em"} {...rest} backgroundColor="gray" borderRadius="1em">
-      <Text ml={1} color="white">
+      <Text fontWeight={"bold"} color="white">
         Credit usage
       </Text>
       <Progress

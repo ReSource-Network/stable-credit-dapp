@@ -63,7 +63,14 @@ export const Member: NextPage = () => {
         <title>StableCredit | Member</title>
       </Head>
       <Flex width="100%" justifyContent="center">
-        <Box minH="75vh" borderRadius="3xl" p="2em" w="30em" m="1em">
+        <Box
+          minH="75vh"
+          borderRadius="3xl"
+          p="2em"
+          w="30em"
+          m="1em"
+          mt="4em !important"
+        >
           {!!show && (
             <IconButton
               mt="-1em"

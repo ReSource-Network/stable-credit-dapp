@@ -75,7 +75,7 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "setMemberFeePercent",
+    name: "setMemberFeeRate",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

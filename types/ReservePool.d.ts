@@ -35,7 +35,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     "reimburseMember(address,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setMinRTD(uint256)": FunctionFragment;
-    "setOperatorPercent(uint256)": FunctionFragment;
+    "setSwapPercent(uint256)": FunctionFragment;
     "setSwapSink(address)": FunctionFragment;
     "stableCredit()": FunctionFragment;
     "swapSink()": FunctionFragment;
@@ -92,7 +92,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "setOperatorPercent",
+    functionFragment: "setSwapPercent",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "setSwapSink", values: [string]): string;
@@ -153,7 +153,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "setMinRTD", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "setOperatorPercent",
+    functionFragment: "setSwapPercent",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -302,8 +302,8 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setOperatorPercent(
-      _operatorPercent: BigNumberish,
+    setSwapPercent(
+      _swapPercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -380,8 +380,8 @@ export class ReservePool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setOperatorPercent(
-    _operatorPercent: BigNumberish,
+  setSwapPercent(
+    _swapPercent: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -450,8 +450,8 @@ export class ReservePool extends BaseContract {
 
     setMinRTD(_minRTD: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    setOperatorPercent(
-      _operatorPercent: BigNumberish,
+    setSwapPercent(
+      _swapPercent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -592,8 +592,8 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setOperatorPercent(
-      _operatorPercent: BigNumberish,
+    setSwapPercent(
+      _swapPercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -673,8 +673,8 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setOperatorPercent(
-      _operatorPercent: BigNumberish,
+    setSwapPercent(
+      _swapPercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

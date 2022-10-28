@@ -49,9 +49,7 @@ export const ReserveConfigModal = ({ isOpen, onClose }: ModalProps) => {
 
   useEffect(() => {
     const handler = async () => {
-      setDefaultFeeRate(
-        (await feeManager.defaultFeePercent()).toNumber() / 10000,
-      )
+      setDefaultFeeRate((await feeManager.averageFeeRate()).toNumber() / 10000)
       setMinRTD((await reservePool.minRTD()).toNumber() / 10000)
     }
     if (feeManager && reservePool) handler()
@@ -245,7 +243,7 @@ export const ReserveConfigModal = ({ isOpen, onClose }: ModalProps) => {
                   </FormControl>
                   <FormControl mt="1em">
                     <FormLabel htmlFor="txFeeRate">
-                      Default Transaction Fee Rate
+                      Average Transaction Fee Rate
                     </FormLabel>
                     <InputGroup>
                       <Field

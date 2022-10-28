@@ -56,7 +56,7 @@ export const PaymentHistory = ({}: UnderwritingProps) => {
       </InputGroup>
       <Stack w="100%">
         <HStack>
-          <FormLabel mb="0 !important">Turnover rate value</FormLabel>
+          <FormLabel mb="0 !important">Total loan history</FormLabel>
           <Tooltip label="Total value of loans accross all periods">
             <span>
               <FontAwesomeIcon icon={faQuestionCircle} />

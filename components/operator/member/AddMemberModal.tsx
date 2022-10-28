@@ -37,9 +37,7 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
 
   useEffect(() => {
     const handler = async () => {
-      setDefaultFeeRate(
-        (await feeManager.defaultFeePercent()).toNumber() / 10000,
-      )
+      setDefaultFeeRate((await feeManager.averageFeeRate()).toNumber() / 10000)
     }
     if (feeManager) handler()
   }, [feeManager])
@@ -66,30 +64,23 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
               creditLimit: undefined,
               pastDueDays: 50,
               defaultDays: 100,
-              feeRate: defaultFeeRate,
+              feeRate: 0,
             }}
-            onSubmit={({
-              address,
-              creditLimit,
-              pastDueDays,
-              defaultDays,
-              feeRate,
-            }) => {
-              if (
-                !creditLimit ||
-                !address ||
-                !pastDueDays ||
-                !defaultDays ||
-                !feeRate
-              )
+            onSubmit={async (
+              { address, creditLimit, pastDueDays, defaultDays, feeRate },
+              { resetForm },
+            ) => {
+              if (!creditLimit || !address || !pastDueDays || !defaultDays)
                 return
-              createCreditLine(
+              await createCreditLine(
                 address,
                 creditLimit,
                 pastDueDays,
                 defaultDays,
-                feeRate,
+                feeRate || 0,
               )
+              resetForm()
+              handleClose()
             }}
           >
             {({
@@ -228,7 +219,7 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
                           isInvalid={!!errors.feeRate && touched.feeRate}
                         >
                           <FormLabel htmlFor="feeRate">
-                            Transaction Fee Rate
+                            Transaction Fee Weight
                           </FormLabel>
                           <InputGroup>
                             <InputLeftAddon>%</InputLeftAddon>
@@ -250,6 +241,17 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
                       {step + 1} / 4
                     </Text>
                     <HStack mt="1em" justifyContent="flex-end" py="1em">
+                      {step === 0 && (
+                        <Button
+                          isLoading={loading}
+                          variant="ghost"
+                          onClick={() => {
+                            setStep(3)
+                          }}
+                        >
+                          Skip
+                        </Button>
+                      )}
                       <Button
                         isLoading={loading}
                         variant="ghost"
@@ -262,7 +264,7 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
                       </Button>
                       <Button
                         w="6em"
-                        type={step === 3 ? "submit" : "button"}
+                        type={"button"}
                         isLoading={loading}
                         onClick={() => {
                           if (step === 3) return handleSubmit()

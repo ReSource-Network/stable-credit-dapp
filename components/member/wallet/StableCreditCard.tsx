@@ -11,7 +11,8 @@ import { ManageMember, useGetMember } from "../../../hooks/useGetMember"
 import { CashOutModal } from "../CashOutModal"
 import { PaymentModal } from "../PaymentModal"
 import { TransferModal } from "../TransferModal"
-import { TermBar } from "./TermBar"
+import { FeeBar } from "./FeeBar"
+import { TimelineBar } from "./TimelineBar"
 import { StableCreditCardFront } from "./StableCreditCardFront"
 import { StableCreditCardBack } from "./StableCreditCardBack"
 import { CreditUsageBar } from "./CreditUsageBar"
@@ -77,7 +78,7 @@ export const StableCreditCard = ({
       <Collapse style={{ width: "100%" }} in={showCredit}>
         <VStack mt="1em" w="100%" spacing={"1em"}>
           <Button
-            variant={"solid"}
+            variant={"primary"}
             borderRadius={"full"}
             w="100%"
             onClick={onTransferOpen}
@@ -86,7 +87,7 @@ export const StableCreditCard = ({
           </Button>
           {member && member?.balance < 0 && (
             <Button
-              variant={"solid"}
+              variant={"primary"}
               w="100%"
               borderRadius={"full"}
               onClick={onPaymentOpen}
@@ -96,12 +97,12 @@ export const StableCreditCard = ({
           )}
           {member && member?.balance > 0 && (
             <Button
-              variant={"solid"}
+              variant={"primary"}
               borderRadius={"full"}
               w="100%"
               onClick={onCashOutOpen}
             >
-              Cash out
+              Cash back
             </Button>
           )}
           <Button
@@ -123,7 +124,8 @@ export const StableCreditCard = ({
             availableCredit={member?.available || 0}
             creditLimit={member?.creditLimit ?? 0}
           />
-          <TermBar />
+          <TimelineBar member={member} />
+          <FeeBar member={member} />
         </Collapse>
       </Collapse>
       <TransferModal
