@@ -8,6 +8,8 @@ import { useAccount } from "wagmi"
 import { useFeeTokenContract } from "../../../hooks/useFeeTokenContract"
 import { useStableCreditContract } from "../../../hooks/useStableCreditContract"
 import { formatEther } from "ethers/lib/utils"
+import { useInterval } from "../../../hooks/useInterval"
+import { useGetTransactions } from "../../../state"
 
 interface Props extends BoxProps {
   showFeeToken: boolean
@@ -28,6 +30,7 @@ export const FeeTokenCard = ({
   const stableCredit = useStableCreditContract()
   const { address } = useAccount()
   const { colorMode } = useColorMode()
+  const transactions = useGetTransactions()
 
   useEffect(() => {
     const handler = async () => {
@@ -37,7 +40,17 @@ export const FeeTokenCard = ({
       setStableCreditSymbol(await stableCredit.symbol())
     }
     if (address && feeToken && stableCredit) handler()
-  }, [address, feeToken, stableCredit])
+  }, [address, feeToken, stableCredit, transactions])
+
+  useInterval(() => {
+    const handler = async () => {
+      if (!address) return
+      setFeeTokenSymbol(await feeToken.symbol())
+      setFeeTokenBalance(Number(formatEther(await feeToken.balanceOf(address))))
+      setStableCreditSymbol(await stableCredit.symbol())
+    }
+    if (address && feeToken && stableCredit) handler()
+  }, 5000)
 
   return (
     <>

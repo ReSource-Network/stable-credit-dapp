@@ -5,12 +5,12 @@ import { Member } from "../../../hooks/useGetMember"
 import { useFeeManagerContract } from "../../../hooks/useFeeManagerContract"
 
 export const FeeBar = ({ member }: { member?: Member }) => {
-  const [averageFeeRate, setAverageFeeRate] = useState(0)
+  const [targetFeeRate, setTargetFeeRate] = useState(0)
   const feeManager = useFeeManagerContract()
 
   useEffect(() => {
     const handler = async () => {
-      setAverageFeeRate((await feeManager.averageFeeRate()).toNumber() / 10000)
+      setTargetFeeRate((await feeManager.targetFeeRate()).toNumber() / 10000)
     }
     if (feeManager) handler()
   }, [feeManager])
@@ -45,14 +45,14 @@ export const FeeBar = ({ member }: { member?: Member }) => {
             <Tooltip
               hasArrow
               label={
-                "The average fee rate changes with network conditions. Your fee rate will be above or bellow the average depending on your credit risk"
+                "The target fee rate changes with network conditions. Your fee rate will be above or bellow the target depending on your credit risk"
               }
               aria-label="Expiration Date"
             >
-              <Text>Average fee rate: </Text>
+              <Text>Target fee rate: </Text>
             </Tooltip>
             <Text whiteSpace={"nowrap"} fontSize="lg" fontWeight="bold">
-              {averageFeeRate}%
+              {targetFeeRate}%
             </Text>
           </HStack>
         </Stack>

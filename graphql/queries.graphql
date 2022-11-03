@@ -2,10 +2,12 @@ query network($id: ID!, $skip: Int, $first: Int) {
   network(id: $id) {
     id
     totalMembers
+    totalDefaults
     members(skip: $skip, first: $first) {
       address
       creditLimit
       balance
+      defaults
     }
   }
 }

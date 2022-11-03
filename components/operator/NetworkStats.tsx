@@ -16,12 +16,15 @@ import { useStableCreditContract } from "../../hooks/useStableCreditContract"
 import { formatStableCredits } from "../../functions/bignumber"
 import { useFetchMembers } from "../../hooks/useFetchMembers"
 import { useRouter } from "next/router"
+import { useFeeManagerContract } from "../../hooks/useFeeManagerContract"
 
 export const NetworkStats = () => {
   const { colorMode } = useColorMode()
   const stableCredit = useStableCreditContract()
+  const feeManager = useFeeManagerContract()
   const [totalSupply, setTotalSupply] = useState(0)
   const [networkDebt, setNetworkDebt] = useState(0)
+  const [avgFeeRate, setAvgFeeRate] = useState(0)
   const router = useRouter()
 
   useEffect(() => {
@@ -32,9 +35,10 @@ export const NetworkStats = () => {
       setNetworkDebt(
         Number(formatStableCredits(await stableCredit.networkDebt())),
       )
+      setAvgFeeRate(Number(await feeManager.targetFeeRate()) / 10000)
     }
-    if (stableCredit) handler()
-  }, [stableCredit])
+    if (stableCredit && feeManager) handler()
+  }, [stableCredit, feeManager])
 
   const network = router.query.network as string
 
@@ -65,12 +69,6 @@ export const NetworkStats = () => {
           <Stack direction={{ md: "row", base: "column" }} alignSelf="center">
             <Stack p="1em" alignItems="center">
               <Text fontSize="24px" fontWeight="bold">
-                {Number(networkData?.totalMembers || 0)}
-              </Text>
-              <Text mt="0 !important">Members</Text>
-            </Stack>
-            <Stack p="1em" alignItems="center">
-              <Text fontSize="24px" fontWeight="bold">
                 {totalSupply.toLocaleString("en", {
                   style: "currency",
                   currency: "USD",
@@ -78,8 +76,6 @@ export const NetworkStats = () => {
               </Text>
               <Text mt="0 !important">Total Supply</Text>
             </Stack>
-          </Stack>
-          <Stack alignSelf="center" direction={{ md: "row", base: "column" }}>
             <Stack p="1em" alignItems="center">
               <Text fontSize="24px" fontWeight="bold">
                 {networkDebt.toLocaleString("en", {
@@ -87,7 +83,38 @@ export const NetworkStats = () => {
                   currency: "USD",
                 })}
               </Text>
-              <Text mt="0 !important">Network Debt</Text>
+              <Text textAlign={"center"} mt="0 !important">
+                Network Debt
+              </Text>
+            </Stack>
+            <Stack p="1em" alignItems="center">
+              <Text fontSize="24px" fontWeight="bold">
+                {avgFeeRate}%
+              </Text>
+              <Text textAlign={"center"} mt="0 !important">
+                Target Fee
+              </Text>
+            </Stack>
+          </Stack>
+          <Stack
+            placeContent="center"
+            w="100%"
+            direction={{ md: "row", base: "column" }}
+            spacing="3em"
+          >
+            <Stack p="1em" alignItems="center">
+              <Text fontSize="24px" fontWeight="bold">
+                {Number(networkData?.totalMembers || 0)}
+              </Text>
+              <Text mt="0 !important">Members</Text>
+            </Stack>
+            <Stack p="1em" alignItems="center">
+              <Text fontSize="24px" fontWeight="bold">
+                {networkData?.totalDefaults || 0}
+              </Text>
+              <Text mt="0 !important">
+                Default{networkData?.totalDefaults > 1 ? "s" : ""}
+              </Text>
             </Stack>
           </Stack>
         </Stack>

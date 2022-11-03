@@ -26,11 +26,12 @@ const defaultStyles: BoxProps = {
 }
 
 interface Props extends BoxProps {
+  symbol: string
   balance: number
   flip: () => void
 }
 
-export const StableCreditCardFront = ({ flip, ...rest }: Props) => {
+export const StableCreditCardFront = ({ flip, symbol, ...rest }: Props) => {
   return (
     <Box {...defaultStyles} {...rest}>
       <VStack
@@ -82,7 +83,7 @@ export const StableCreditCardFront = ({ flip, ...rest }: Props) => {
           <HStack mr={2}>
             {/* <RSDGlyphGradient purple={false} boxSize="40px" /> */}
             <Heading size="header" color="white">
-              RSD
+              {symbol}
             </Heading>
           </HStack>
           <Box mx={3} w="1px" bg={"gray"} height="36px" />

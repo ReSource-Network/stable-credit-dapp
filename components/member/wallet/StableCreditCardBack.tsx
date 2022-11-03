@@ -23,12 +23,16 @@ interface Props extends BoxProps {
   creditLimit: number
   balance: number
   flip: () => void
+  symbol: string
+  inDefault: boolean
 }
 export const StableCreditCardBack = ({
+  symbol,
   availableCredit,
   flip,
   creditLimit,
   balance,
+  inDefault,
   ...rest
 }: Props) => {
   return (
@@ -50,7 +54,7 @@ export const StableCreditCardBack = ({
         <HStack zIndex={1} w="100%">
           <HStack>
             <Heading color="white" size="header">
-              RSD
+              {symbol}
             </Heading>
           </HStack>
           <HStack width="100%" justifyContent="flex-end">
@@ -63,25 +67,47 @@ export const StableCreditCardBack = ({
         <VStack alignItems="flex-start" w="100%">
           <HStack w="100%">
             <Text variant="title" w="100%" color="white">
-              RSD available:
+              {symbol} <span style={{ fontWeight: "bold" }}>Available</span>:
             </Text>
-            <Text w="auto" fontSize="20px" variant="number" color="white">
-              {availableCredit.toLocaleString("en", {
-                style: "currency",
-                currency: "USD",
-              })}
-            </Text>
+            {inDefault ? (
+              <>
+                <Text w="auto" fontSize="20px" variant="number" color="red.400">
+                  Default
+                </Text>
+                <Text w="auto" fontSize="20px" variant="number" color="white">
+                  $0.00
+                </Text>
+              </>
+            ) : (
+              <Text w="auto" fontSize="20px" variant="number" color="white">
+                {availableCredit.toLocaleString("en", {
+                  style: "currency",
+                  currency: "USD",
+                })}
+              </Text>
+            )}
           </HStack>
           <HStack w="100%">
             <Text variant="title" w="100%" color="white">
               total credit limit:
             </Text>
-            <Text w="auto" fontSize="20px" variant="number" color="white">
-              {creditLimit.toLocaleString("en", {
-                style: "currency",
-                currency: "USD",
-              })}
-            </Text>
+            {inDefault ? (
+              <>
+                <Text w="auto" fontSize="20px" variant="number" color="red.400">
+                  Default
+                </Text>
+                <Text w="auto" fontSize="20px" variant="number" color="white">
+                  $0.00
+                </Text>
+              </>
+            ) : (
+              <Text w="auto" fontSize="20px" variant="number" color="white">
+                {creditLimit.toLocaleString("en", {
+                  style: "currency",
+                  currency: "USD",
+                })}
+              </Text>
+            )}
           </HStack>
           <HStack w="100%" mt="-0.25em !important">
             <Text variant="caption" mt="0" w="100%" color="white">

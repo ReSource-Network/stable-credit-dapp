@@ -345,6 +345,7 @@ interface StableCreditInterface extends ethers.utils.Interface {
     "MembersDemurraged(uint256)": EventFragment;
     "NetworkDebtBurned(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "PeriodEnded(address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
@@ -357,6 +358,7 @@ interface StableCreditInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "MembersDemurraged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NetworkDebtBurned"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PeriodEnded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
@@ -404,6 +406,8 @@ export type NetworkDebtBurnedEvent = TypedEvent<
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
+
+export type PeriodEndedEvent = TypedEvent<[string] & { member: string }>;
 
 export type TransferEvent = TypedEvent<
   [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
@@ -1167,6 +1171,12 @@ export class StableCredit extends BaseContract {
       [string, string],
       { previousOwner: string; newOwner: string }
     >;
+
+    "PeriodEnded(address)"(
+      member?: null
+    ): TypedEventFilter<[string], { member: string }>;
+
+    PeriodEnded(member?: null): TypedEventFilter<[string], { member: string }>;
 
     "Transfer(address,address,uint256)"(
       from?: string | null,

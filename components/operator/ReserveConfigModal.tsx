@@ -33,13 +33,13 @@ export const ReserveConfigModal = ({ isOpen, onClose }: ModalProps) => {
   const [loading, setLoading] = useState(false)
   const feeManager = useFeeManagerContract()
   const reservePool = useReservePoolContract()
-  const [defaultFeeRate, setDefaultFeeRate] = useState(0)
-  const [minRTD, setMinRTD] = useState(0)
+  const [targetFeeRate, setTargetFeeRate] = useState<undefined | number>()
+  const [targetRTD, setTargetRTD] = useState<undefined | number>()
 
   const [showTooltip, setShowTooltip] = useState(false)
   const [advanced, setAdvanced] = useState(false)
 
-  const [txVolume, setTxVolume] = useState(0)
+  const [txVolume, setTxVolume] = useState<undefined | number>()
   const [defaultRate, setDefaultRate] = useState(50)
   const [operatorMargin, setOperatorMargin] = useState(50)
 
@@ -49,8 +49,8 @@ export const ReserveConfigModal = ({ isOpen, onClose }: ModalProps) => {
 
   useEffect(() => {
     const handler = async () => {
-      setDefaultFeeRate((await feeManager.averageFeeRate()).toNumber() / 10000)
-      setMinRTD((await reservePool.minRTD()).toNumber() / 10000)
+      setTargetFeeRate((await feeManager.targetFeeRate()).toNumber() / 10000)
+      setTargetRTD((await reservePool.targetRTD()).toNumber() / 10000)
     }
     if (feeManager && reservePool) handler()
   }, [feeManager, reservePool])
@@ -58,34 +58,46 @@ export const ReserveConfigModal = ({ isOpen, onClose }: ModalProps) => {
   const translateTxVolume = (val: number) => {
     setTxVolume(val)
 
-    var minRTD = 1
+    var targetRTD = 1
+
+    var targetRTD = 1
 
     var txFeeRate =
-      defaultFeeRate - defaultFeeRate * (val / 100) + defaultFeeRate / 2
+      (targetFeeRate || 0) -
+      (targetFeeRate || 0) * (val / 100) +
+      (targetFeeRate || 0) / 2
 
-    return [txFeeRate, minRTD]
+    return [txFeeRate, targetRTD]
   }
 
   const translateDefaultRate = (val: number) => {
     setDefaultRate(val)
 
-    var minRTD = 1
+    var targetRTD = 1
+
+    var targetRTD = 1
 
     var txFeeRate =
-      defaultFeeRate - defaultFeeRate * (val / 100) + defaultFeeRate / 2
+      (targetFeeRate || 0) -
+      (targetFeeRate || 0) * (val / 100) +
+      (targetFeeRate || 0) / 2
 
-    return [txFeeRate, minRTD]
+    return [txFeeRate, targetRTD]
   }
 
   const translateOperatorMargin = (val: number) => {
     setOperatorMargin(val)
 
-    var minRTD = 1
+    var targetRTD = 1
+
+    var targetRTD = 1
 
     var txFeeRate =
-      defaultFeeRate - defaultFeeRate * (val / 100) + defaultFeeRate / 2
+      (targetFeeRate || 0) -
+      (targetFeeRate || 0) * (val / 100) +
+      (targetFeeRate || 0) / 2
 
-    return [txFeeRate, minRTD]
+    return [txFeeRate, targetRTD]
   }
 
   return (
@@ -100,8 +112,8 @@ export const ReserveConfigModal = ({ isOpen, onClose }: ModalProps) => {
         <ModalBody>
           <Formik
             initialValues={{
-              minRTD: undefined || 0,
-              txFeeRate: undefined || 0,
+              targetRTD: undefined || 0,
+              txFeeRate: targetFeeRate,
             }}
             onSubmit={(values) => {
               console.log(values)
@@ -133,11 +145,11 @@ export const ReserveConfigModal = ({ isOpen, onClose }: ModalProps) => {
                     min={0}
                     max={100}
                     onChange={(v) => {
-                      var [txFeeRate, minRTD] = translateDefaultRate(v)
+                      var [txFeeRate, targetRTD] = translateDefaultRate(v)
                       setValues({
                         ...values,
                         txFeeRate,
-                        minRTD,
+                        targetRTD,
                       })
                     }}
                     onMouseEnter={() => setShowTooltip(true)}
@@ -176,11 +188,11 @@ export const ReserveConfigModal = ({ isOpen, onClose }: ModalProps) => {
                     min={0}
                     max={100}
                     onChange={(v) => {
-                      var [txFeeRate, minRTD] = translateOperatorMargin(v)
+                      var [txFeeRate, targetRTD] = translateOperatorMargin(v)
                       setValues({
                         ...values,
                         txFeeRate,
-                        minRTD,
+                        targetRTD,
                       })
                     }}
                     onMouseEnter={() => setShowTooltip(true)}
@@ -227,23 +239,23 @@ export const ReserveConfigModal = ({ isOpen, onClose }: ModalProps) => {
 
                 <Collapse in={advanced} animateOpacity>
                   <FormControl>
-                    <FormLabel htmlFor="minRTD">
-                      Minimum Reserve To Debt Ratio
+                    <FormLabel htmlFor="targetRTD">
+                      Target Reserve To Debt Ratio
                     </FormLabel>
                     <InputGroup>
                       <Field
                         as={Input}
-                        id="minRTD"
-                        name="minRTD"
+                        id="targetRTD"
+                        name="targetRTD"
                         type="number"
-                        placeholder={minRTD}
+                        placeholder={targetRTD}
                       />
                       <InputRightAddon>%</InputRightAddon>
                     </InputGroup>
                   </FormControl>
                   <FormControl mt="1em">
                     <FormLabel htmlFor="txFeeRate">
-                      Average Transaction Fee Rate
+                      Target Transaction Fee Rate
                     </FormLabel>
                     <InputGroup>
                       <Field
@@ -251,7 +263,7 @@ export const ReserveConfigModal = ({ isOpen, onClose }: ModalProps) => {
                         id="txFeeRate"
                         name="txFeeRate"
                         type="number"
-                        placeholder={defaultFeeRate}
+                        placeholder={targetFeeRate}
                       />
                       <InputRightAddon>%</InputRightAddon>
                     </InputGroup>

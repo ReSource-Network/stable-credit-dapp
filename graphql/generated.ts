@@ -55,6 +55,7 @@ export type Member = {
   address: Scalars["Bytes"]
   balance: Scalars["BigInt"]
   creditLimit: Scalars["BigInt"]
+  defaults: Scalars["BigInt"]
   id: Scalars["ID"]
   network: Network
 }
@@ -82,6 +83,14 @@ export type Member_Filter = {
   creditLimit_lte?: InputMaybe<Scalars["BigInt"]>
   creditLimit_not?: InputMaybe<Scalars["BigInt"]>
   creditLimit_not_in?: InputMaybe<Array<Scalars["BigInt"]>>
+  defaults?: InputMaybe<Scalars["BigInt"]>
+  defaults_gt?: InputMaybe<Scalars["BigInt"]>
+  defaults_gte?: InputMaybe<Scalars["BigInt"]>
+  defaults_in?: InputMaybe<Array<Scalars["BigInt"]>>
+  defaults_lt?: InputMaybe<Scalars["BigInt"]>
+  defaults_lte?: InputMaybe<Scalars["BigInt"]>
+  defaults_not?: InputMaybe<Scalars["BigInt"]>
+  defaults_not_in?: InputMaybe<Array<Scalars["BigInt"]>>
   id?: InputMaybe<Scalars["ID"]>
   id_gt?: InputMaybe<Scalars["ID"]>
   id_gte?: InputMaybe<Scalars["ID"]>
@@ -116,6 +125,7 @@ export enum Member_OrderBy {
   Address = "address",
   Balance = "balance",
   CreditLimit = "creditLimit",
+  Defaults = "defaults",
   Id = "id",
   Network = "network",
 }
@@ -124,6 +134,7 @@ export type Network = {
   __typename?: "Network"
   id: Scalars["ID"]
   members?: Maybe<Array<Member>>
+  totalDefaults: Scalars["BigInt"]
   totalMembers: Scalars["BigInt"]
 }
 
@@ -144,6 +155,14 @@ export type Network_Filter = {
   id_lte?: InputMaybe<Scalars["ID"]>
   id_not?: InputMaybe<Scalars["ID"]>
   id_not_in?: InputMaybe<Array<Scalars["ID"]>>
+  totalDefaults?: InputMaybe<Scalars["BigInt"]>
+  totalDefaults_gt?: InputMaybe<Scalars["BigInt"]>
+  totalDefaults_gte?: InputMaybe<Scalars["BigInt"]>
+  totalDefaults_in?: InputMaybe<Array<Scalars["BigInt"]>>
+  totalDefaults_lt?: InputMaybe<Scalars["BigInt"]>
+  totalDefaults_lte?: InputMaybe<Scalars["BigInt"]>
+  totalDefaults_not?: InputMaybe<Scalars["BigInt"]>
+  totalDefaults_not_in?: InputMaybe<Array<Scalars["BigInt"]>>
   totalMembers?: InputMaybe<Scalars["BigInt"]>
   totalMembers_gt?: InputMaybe<Scalars["BigInt"]>
   totalMembers_gte?: InputMaybe<Scalars["BigInt"]>
@@ -157,6 +176,7 @@ export type Network_Filter = {
 export enum Network_OrderBy {
   Id = "id",
   Members = "members",
+  TotalDefaults = "totalDefaults",
   TotalMembers = "totalMembers",
 }
 
@@ -302,11 +322,13 @@ export type NetworkQuery = {
     __typename?: "Network"
     id: string
     totalMembers: any
+    totalDefaults: any
     members?: Array<{
       __typename?: "Member"
       address: any
       creditLimit: any
       balance: any
+      defaults: any
     }> | null
   } | null
 }
@@ -316,10 +338,12 @@ export const NetworkDocument = `
   network(id: $id) {
     id
     totalMembers
+    totalDefaults
     members(skip: $skip, first: $first) {
       address
       creditLimit
       balance
+      defaults
     }
   }
 }

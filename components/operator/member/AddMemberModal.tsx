@@ -27,7 +27,7 @@ import { PaymentHistory } from "./PaymentHistory"
 export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
   const { loading, createCreditLine } = useCreateCreditLine()
   const feeManager = useFeeManagerContract()
-  const [defaultFeeRate, setDefaultFeeRate] = useState(0)
+  const [targetFeeRate, setTargetFeeRate] = useState<number | undefined>()
   const [step, setStep] = useState(0)
 
   const handleClose = () => {
@@ -37,7 +37,7 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
 
   useEffect(() => {
     const handler = async () => {
-      setDefaultFeeRate((await feeManager.averageFeeRate()).toNumber() / 10000)
+      setTargetFeeRate((await feeManager.targetFeeRate()).toNumber() / 10000)
     }
     if (feeManager) handler()
   }, [feeManager])
@@ -64,7 +64,7 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
               creditLimit: undefined,
               pastDueDays: 50,
               defaultDays: 100,
-              feeRate: 0,
+              feeRate: undefined,
             }}
             onSubmit={async (
               { address, creditLimit, pastDueDays, defaultDays, feeRate },
@@ -228,7 +228,7 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
                               id="feeRate"
                               name="feeRate"
                               type="number"
-                              placeholder="0"
+                              placeholder={targetFeeRate}
                             />
                           </InputGroup>
                           <FormErrorMessage>{errors.feeRate}</FormErrorMessage>
@@ -245,8 +245,10 @@ export const AddMemberModal = ({ isOpen, onClose }: ModalProps) => {
                         <Button
                           isLoading={loading}
                           variant="ghost"
-                          onClick={() => {
-                            setStep(3)
+                          onClick={async () => {
+                            const error = await validateField("address")
+                            // @ts-ignore
+                            if (!error) setStep(3)
                           }}
                         >
                           Skip

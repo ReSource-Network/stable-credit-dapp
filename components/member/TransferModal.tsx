@@ -20,6 +20,7 @@ import {
   ModalHeader,
   ModalFooter,
   Skeleton,
+  FormHelperText,
 } from "@chakra-ui/react"
 import { constants, ethers } from "ethers"
 import { Formik, Field } from "formik"
@@ -43,6 +44,7 @@ import { useAccessManagerContract } from "../../hooks/useAccessManagerContract"
 
 export const TransferModal = ({
   getMember,
+  member,
   isOpen,
   onClose,
 }: MemberModalProps) => {
@@ -191,6 +193,13 @@ export const TransferModal = ({
                             placeholder="0"
                           />
                         </InputGroup>
+                        <FormHelperText>
+                          {member?.available.toLocaleString("en", {
+                            style: "currency",
+                            currency: "USD",
+                          })}{" "}
+                          Available
+                        </FormHelperText>
                       </FormControl>
                       <Divider mt={"1em !important"} />
                       <TransactionFee

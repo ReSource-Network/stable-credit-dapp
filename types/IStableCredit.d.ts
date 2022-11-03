@@ -67,6 +67,7 @@ interface IStableCreditInterface extends ethers.utils.Interface {
     "CreditLineCreated(address,uint256,uint256,uint256,uint256,uint256)": EventFragment;
     "MembersDemurraged(uint256)": EventFragment;
     "NetworkDebtBurned(address,uint256)": EventFragment;
+    "PeriodEnded(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "CreditBalanceRepayed"): EventFragment;
@@ -75,6 +76,7 @@ interface IStableCreditInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "CreditLineCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MembersDemurraged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NetworkDebtBurned"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PeriodEnded"): EventFragment;
 }
 
 export type CreditBalanceRepayedEvent = TypedEvent<
@@ -105,6 +107,8 @@ export type MembersDemurragedEvent = TypedEvent<
 export type NetworkDebtBurnedEvent = TypedEvent<
   [string, BigNumber] & { member: string; amount: BigNumber }
 >;
+
+export type PeriodEndedEvent = TypedEvent<[string] & { member: string }>;
 
 export class IStableCredit extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -300,6 +304,12 @@ export class IStableCredit extends BaseContract {
       [string, BigNumber],
       { member: string; amount: BigNumber }
     >;
+
+    "PeriodEnded(address)"(
+      member?: null
+    ): TypedEventFilter<[string], { member: string }>;
+
+    PeriodEnded(member?: null): TypedEventFilter<[string], { member: string }>;
   };
 
   estimateGas: {

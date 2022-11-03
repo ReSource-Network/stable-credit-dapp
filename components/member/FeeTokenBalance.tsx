@@ -17,8 +17,6 @@ export const FeeTokenBalance = () => {
 
   const transactions = useGetTransactions()
 
-  // refetch on transaction confirmation
-
   useEffect(() => {
     const handler = async () => {
       if (!address) return

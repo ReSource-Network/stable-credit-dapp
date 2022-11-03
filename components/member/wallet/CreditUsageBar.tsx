@@ -4,16 +4,12 @@ import { Progress } from "@chakra-ui/progress"
 import { HStack } from "@chakra-ui/react"
 
 interface Props extends BoxProps {
-  availableCredit: any
+  balance: number
   creditLimit: number
 }
 
-export const CreditUsageBar = ({
-  availableCredit,
-  creditLimit,
-  ...rest
-}: Props) => {
-  let creditUsed = creditLimit - parseFloat(availableCredit)
+export const CreditUsageBar = ({ balance, creditLimit, ...rest }: Props) => {
+  let creditUsed = balance > 0 ? 0 : Math.abs(balance)
   let percentUsed = Math.abs((creditUsed / creditLimit) * 100) || 0
 
   if (Number(creditLimit) === 0) {

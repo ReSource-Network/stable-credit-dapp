@@ -22,6 +22,8 @@ export interface Member {
   pastDue: Date
   default: Date
   issued?: Date
+  inDefault?: boolean
+  isPastDue?: boolean
   feeRate?: number
 }
 
@@ -95,6 +97,8 @@ export const useGetMember = (): ManageMember => {
           pastDue: new Date(terms.pastDueDate.toNumber() * 1000),
           issued: new Date(terms.issueDate.toNumber() * 1000),
           feeRate: feeRate.toNumber() / 10000,
+          inDefault: await stableCredit.inDefault(address),
+          isPastDue: await stableCredit.isPastDue(address),
         })
       } catch (e) {
         console.log(e)

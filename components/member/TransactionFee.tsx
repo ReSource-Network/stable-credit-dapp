@@ -64,7 +64,7 @@ export const TransactionFee = ({
   return (
     <VStack w="100%">
       <HStack justifyContent="space-between" w="100%">
-        <Text>Network Fee:</Text>
+        <Text>Transaction Fee:</Text>
         <HStack>
           <Text> {feeTokenSymbol}</Text>
           <FontAwesomeIcon color="#38a5fd" icon={faCircle} />

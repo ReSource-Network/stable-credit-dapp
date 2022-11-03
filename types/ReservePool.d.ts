@@ -27,19 +27,19 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     "depositFees(uint256)": FunctionFragment;
     "getNeededCollateral()": FunctionFragment;
     "initialize(address,address)": FunctionFragment;
-    "minRTD()": FunctionFragment;
     "operatorBalance()": FunctionFragment;
     "operatorPercent()": FunctionFragment;
     "owner()": FunctionFragment;
     "recoverERC20(address,uint256)": FunctionFragment;
     "reimburseMember(address,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "setMinRTD(uint256)": FunctionFragment;
     "setSwapPercent(uint256)": FunctionFragment;
     "setSwapSink(address)": FunctionFragment;
+    "setTargetRTD(uint256)": FunctionFragment;
     "stableCredit()": FunctionFragment;
     "swapSink()": FunctionFragment;
     "swapSinkPercent()": FunctionFragment;
+    "targetRTD()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "withdrawOperator(uint256)": FunctionFragment;
   };
@@ -65,7 +65,6 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     functionFragment: "initialize",
     values: [string, string]
   ): string;
-  encodeFunctionData(functionFragment: "minRTD", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "operatorBalance",
     values?: undefined
@@ -88,14 +87,14 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setMinRTD",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "setSwapPercent",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "setSwapSink", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "setTargetRTD",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "stableCredit",
     values?: undefined
@@ -105,6 +104,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     functionFragment: "swapSinkPercent",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "targetRTD", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
@@ -129,7 +129,6 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "minRTD", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "operatorBalance",
     data: BytesLike
@@ -151,13 +150,16 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setMinRTD", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setSwapPercent",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "setSwapSink",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setTargetRTD",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -169,6 +171,7 @@ interface ReservePoolInterface extends ethers.utils.Interface {
     functionFragment: "swapSinkPercent",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "targetRTD", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
@@ -273,8 +276,6 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    minRTD(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     operatorBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     operatorPercent(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -297,11 +298,6 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setMinRTD(
-      _minRTD: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     setSwapPercent(
       _swapPercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -312,11 +308,18 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setTargetRTD(
+      _targetRTD: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     stableCredit(overrides?: CallOverrides): Promise<[string]>;
 
     swapSink(overrides?: CallOverrides): Promise<[string]>;
 
     swapSinkPercent(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    targetRTD(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transferOwnership(
       newOwner: string,
@@ -351,8 +354,6 @@ export class ReservePool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  minRTD(overrides?: CallOverrides): Promise<BigNumber>;
-
   operatorBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
   operatorPercent(overrides?: CallOverrides): Promise<BigNumber>;
@@ -375,11 +376,6 @@ export class ReservePool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setMinRTD(
-    _minRTD: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   setSwapPercent(
     _swapPercent: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -390,11 +386,18 @@ export class ReservePool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setTargetRTD(
+    _targetRTD: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   stableCredit(overrides?: CallOverrides): Promise<string>;
 
   swapSink(overrides?: CallOverrides): Promise<string>;
 
   swapSinkPercent(overrides?: CallOverrides): Promise<BigNumber>;
+
+  targetRTD(overrides?: CallOverrides): Promise<BigNumber>;
 
   transferOwnership(
     newOwner: string,
@@ -426,8 +429,6 @@ export class ReservePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    minRTD(overrides?: CallOverrides): Promise<BigNumber>;
-
     operatorBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     operatorPercent(overrides?: CallOverrides): Promise<BigNumber>;
@@ -448,8 +449,6 @@ export class ReservePool extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
-    setMinRTD(_minRTD: BigNumberish, overrides?: CallOverrides): Promise<void>;
-
     setSwapPercent(
       _swapPercent: BigNumberish,
       overrides?: CallOverrides
@@ -457,11 +456,18 @@ export class ReservePool extends BaseContract {
 
     setSwapSink(_swapSink: string, overrides?: CallOverrides): Promise<void>;
 
+    setTargetRTD(
+      _targetRTD: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     stableCredit(overrides?: CallOverrides): Promise<string>;
 
     swapSink(overrides?: CallOverrides): Promise<string>;
 
     swapSinkPercent(overrides?: CallOverrides): Promise<BigNumber>;
+
+    targetRTD(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -563,8 +569,6 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    minRTD(overrides?: CallOverrides): Promise<BigNumber>;
-
     operatorBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     operatorPercent(overrides?: CallOverrides): Promise<BigNumber>;
@@ -587,11 +591,6 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setMinRTD(
-      _minRTD: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     setSwapPercent(
       _swapPercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -602,11 +601,18 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    setTargetRTD(
+      _targetRTD: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     stableCredit(overrides?: CallOverrides): Promise<BigNumber>;
 
     swapSink(overrides?: CallOverrides): Promise<BigNumber>;
 
     swapSinkPercent(overrides?: CallOverrides): Promise<BigNumber>;
+
+    targetRTD(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -644,8 +650,6 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    minRTD(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     operatorBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     operatorPercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -668,11 +672,6 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setMinRTD(
-      _minRTD: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     setSwapPercent(
       _swapPercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -683,11 +682,18 @@ export class ReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    setTargetRTD(
+      _targetRTD: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     stableCredit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     swapSink(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     swapSinkPercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    targetRTD(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,

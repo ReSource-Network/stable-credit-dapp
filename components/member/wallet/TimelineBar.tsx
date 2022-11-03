@@ -37,12 +37,12 @@ export const TimelineBar = ({ member }: { member?: Member }) => {
       (now.getTime()! - member?.issued?.getTime()!) / (1000 * 3600 * 24),
     ) || 0
 
-  const isPastDue = daysToPastDue <= 0
-  const inDefault = daysToDefault <= 0
-
-  const color = !!isPastDue ? "yellow" : !!inDefault ? "red" : "gray"
+  const isPastDue = member?.isPastDue
+  const inDefault = member?.inDefault
+  const color = !!inDefault ? "red" : !!isPastDue ? "yellow" : "gray"
 
   let pastDuePercent = Math.abs((daysToPastDue / daysInPeriod) * 100) || 0
+
   let nowPercent = Math.abs((daysPassed / daysInPeriod) * 100) || 0
 
   return (

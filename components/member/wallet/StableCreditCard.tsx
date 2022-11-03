@@ -17,9 +17,10 @@ import { StableCreditCardFront } from "./StableCreditCardFront"
 import { StableCreditCardBack } from "./StableCreditCardBack"
 import { CreditUsageBar } from "./CreditUsageBar"
 import { FlippableContainer } from "./FlippableContainer"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons"
+import { useStableCreditContract } from "../../../hooks/useStableCreditContract"
 
 interface Props {
   showCredit: boolean
@@ -51,6 +52,17 @@ export const StableCreditCard = ({
   } = useDisclosure()
   const [showMore, setShowMore] = useState(false)
 
+  const [symbol, setSymbol] = useState("")
+  const stableCredit = useStableCreditContract()
+
+  useEffect(() => {
+    const handler = async () => {
+      setSymbol(await stableCredit.symbol())
+    }
+
+    if (stableCredit) handler()
+  }, [stableCredit])
+
   const { member } = memberManage
 
   return (
@@ -59,15 +71,18 @@ export const StableCreditCard = ({
         <FlippableContainer
           front={
             <StableCreditCardFront
+              symbol={symbol}
               balance={member?.balance || 0}
               flip={flipCard}
             />
           }
           back={
             <StableCreditCardBack
+              symbol={symbol}
               availableCredit={member?.available || 0}
               creditLimit={member?.creditLimit || 0}
               balance={member?.balance || 0}
+              inDefault={member?.inDefault || false}
               flip={flipCard}
             />
           }
@@ -121,7 +136,7 @@ export const StableCreditCard = ({
           <CreditUsageBar
             mt="1em"
             w="100%"
-            availableCredit={member?.available || 0}
+            balance={member?.balance || 0}
             creditLimit={member?.creditLimit ?? 0}
           />
           <TimelineBar member={member} />

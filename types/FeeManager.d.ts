@@ -21,7 +21,6 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface FeeManagerInterface extends ethers.utils.Interface {
   functions: {
-    "averageFeeRate()": FunctionFragment;
     "calculateMemberFee(address,uint256)": FunctionFragment;
     "collectFees(address,address,uint256)": FunctionFragment;
     "collectedFees()": FunctionFragment;
@@ -35,17 +34,14 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     "recoverERC20(address,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "reservePool()": FunctionFragment;
-    "setAverageFeeRate(uint256)": FunctionFragment;
     "setMemberFeeRate(address,uint256)": FunctionFragment;
+    "setTargetFeeRate(uint256)": FunctionFragment;
     "stableCredit()": FunctionFragment;
+    "targetFeeRate()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unpauseFees()": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "averageFeeRate",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "calculateMemberFee",
     values: [string, BigNumberish]
@@ -90,15 +86,19 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setAverageFeeRate",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "setMemberFeeRate",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "setTargetFeeRate",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "stableCredit",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "targetFeeRate",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -110,10 +110,6 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "averageFeeRate",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "calculateMemberFee",
     data: BytesLike
@@ -155,15 +151,19 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setAverageFeeRate",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "setMemberFeeRate",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setTargetFeeRate",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "stableCredit",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "targetFeeRate",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -250,8 +250,6 @@ export class FeeManager extends BaseContract {
   interface: FeeManagerInterface;
 
   functions: {
-    averageFeeRate(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     calculateMemberFee(
       _member: string,
       _amount: BigNumberish,
@@ -279,7 +277,7 @@ export class FeeManager extends BaseContract {
     initialize(
       _stableCredit: string,
       _reservePool: string,
-      _averageFeeRate: BigNumberish,
+      targetFeeRate: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -308,18 +306,20 @@ export class FeeManager extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<[string]>;
 
-    setAverageFeeRate(
-      _feePercent: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     setMemberFeeRate(
       member: string,
       _feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setTargetFeeRate(
+      _feePercent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     stableCredit(overrides?: CallOverrides): Promise<[string]>;
+
+    targetFeeRate(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transferOwnership(
       newOwner: string,
@@ -330,8 +330,6 @@ export class FeeManager extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
-
-  averageFeeRate(overrides?: CallOverrides): Promise<BigNumber>;
 
   calculateMemberFee(
     _member: string,
@@ -360,7 +358,7 @@ export class FeeManager extends BaseContract {
   initialize(
     _stableCredit: string,
     _reservePool: string,
-    _averageFeeRate: BigNumberish,
+    targetFeeRate: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -386,18 +384,20 @@ export class FeeManager extends BaseContract {
 
   reservePool(overrides?: CallOverrides): Promise<string>;
 
-  setAverageFeeRate(
-    _feePercent: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   setMemberFeeRate(
     member: string,
     _feePercent: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setTargetFeeRate(
+    _feePercent: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   stableCredit(overrides?: CallOverrides): Promise<string>;
+
+  targetFeeRate(overrides?: CallOverrides): Promise<BigNumber>;
 
   transferOwnership(
     newOwner: string,
@@ -409,8 +409,6 @@ export class FeeManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    averageFeeRate(overrides?: CallOverrides): Promise<BigNumber>;
-
     calculateMemberFee(
       _member: string,
       _amount: BigNumberish,
@@ -436,7 +434,7 @@ export class FeeManager extends BaseContract {
     initialize(
       _stableCredit: string,
       _reservePool: string,
-      _averageFeeRate: BigNumberish,
+      targetFeeRate: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -458,18 +456,20 @@ export class FeeManager extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<string>;
 
-    setAverageFeeRate(
-      _feePercent: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     setMemberFeeRate(
       member: string,
       _feePercent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setTargetFeeRate(
+      _feePercent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     stableCredit(overrides?: CallOverrides): Promise<string>;
+
+    targetFeeRate(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -534,8 +534,6 @@ export class FeeManager extends BaseContract {
   };
 
   estimateGas: {
-    averageFeeRate(overrides?: CallOverrides): Promise<BigNumber>;
-
     calculateMemberFee(
       _member: string,
       _amount: BigNumberish,
@@ -563,7 +561,7 @@ export class FeeManager extends BaseContract {
     initialize(
       _stableCredit: string,
       _reservePool: string,
-      _averageFeeRate: BigNumberish,
+      targetFeeRate: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -589,18 +587,20 @@ export class FeeManager extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setAverageFeeRate(
-      _feePercent: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     setMemberFeeRate(
       member: string,
       _feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    setTargetFeeRate(
+      _feePercent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     stableCredit(overrides?: CallOverrides): Promise<BigNumber>;
+
+    targetFeeRate(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -613,8 +613,6 @@ export class FeeManager extends BaseContract {
   };
 
   populateTransaction: {
-    averageFeeRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     calculateMemberFee(
       _member: string,
       _amount: BigNumberish,
@@ -642,7 +640,7 @@ export class FeeManager extends BaseContract {
     initialize(
       _stableCredit: string,
       _reservePool: string,
-      _averageFeeRate: BigNumberish,
+      targetFeeRate: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -671,18 +669,20 @@ export class FeeManager extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    setAverageFeeRate(
-      _feePercent: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     setMemberFeeRate(
       member: string,
       _feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    setTargetFeeRate(
+      _feePercent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     stableCredit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    targetFeeRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,
