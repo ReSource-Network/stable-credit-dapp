@@ -11,7 +11,6 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
-  Overrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -19,43 +18,42 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface IReservePoolInterface extends ethers.utils.Interface {
+interface IMutualCreditInterface extends ethers.utils.Interface {
   functions: {
-    "depositFees(address,uint256)": FunctionFragment;
-    "depositReserve(address,uint256)": FunctionFragment;
-    "reimburseMember(address,address,uint256)": FunctionFragment;
+    "creditBalanceOf(address)": FunctionFragment;
+    "creditLimitOf(address)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "depositFees",
-    values: [string, BigNumberish]
+    functionFragment: "creditBalanceOf",
+    values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "depositReserve",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "reimburseMember",
-    values: [string, string, BigNumberish]
+    functionFragment: "creditLimitOf",
+    values: [string]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "depositFees",
+    functionFragment: "creditBalanceOf",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "depositReserve",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "reimburseMember",
+    functionFragment: "creditLimitOf",
     data: BytesLike
   ): Result;
 
-  events: {};
+  events: {
+    "CreditLimitUpdate(address,uint256)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "CreditLimitUpdate"): EventFragment;
 }
 
-export class IReservePool extends BaseContract {
+export type CreditLimitUpdateEvent = TypedEvent<
+  [string, BigNumber] & { member: string; limit: BigNumber }
+>;
+
+export class IMutualCredit extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -96,110 +94,78 @@ export class IReservePool extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: IReservePoolInterface;
+  interface: IMutualCreditInterface;
 
   functions: {
-    depositFees(
-      network: string,
-      credits: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    depositReserve(
-      network: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    reimburseMember(
-      network: string,
+    creditBalanceOf(
       member: string,
-      credits: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    creditLimitOf(
+      member: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
   };
 
-  depositFees(
-    network: string,
-    credits: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  depositReserve(
-    network: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  reimburseMember(
-    network: string,
+  creditBalanceOf(
     member: string,
-    credits: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  creditLimitOf(member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
-    depositFees(
-      network: string,
-      credits: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    depositReserve(
-      network: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    reimburseMember(
-      network: string,
+    creditBalanceOf(
       member: string,
-      credits: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
+
+    creditLimitOf(
+      member: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
-  filters: {};
+  filters: {
+    "CreditLimitUpdate(address,uint256)"(
+      member?: null,
+      limit?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { member: string; limit: BigNumber }
+    >;
+
+    CreditLimitUpdate(
+      member?: null,
+      limit?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { member: string; limit: BigNumber }
+    >;
+  };
 
   estimateGas: {
-    depositFees(
-      network: string,
-      credits: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    depositReserve(
-      network: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    reimburseMember(
-      network: string,
+    creditBalanceOf(
       member: string,
-      credits: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    creditLimitOf(
+      member: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    depositFees(
-      network: string,
-      credits: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    depositReserve(
-      network: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    reimburseMember(
-      network: string,
+    creditBalanceOf(
       member: string,
-      credits: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    creditLimitOf(
+      member: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

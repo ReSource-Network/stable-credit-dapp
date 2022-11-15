@@ -19,43 +19,44 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface IReservePoolInterface extends ethers.utils.Interface {
+interface IRiskManagerInterface extends ethers.utils.Interface {
   functions: {
-    "depositFees(address,uint256)": FunctionFragment;
-    "depositReserve(address,uint256)": FunctionFragment;
-    "reimburseMember(address,address,uint256)": FunctionFragment;
+    "reservePool()": FunctionFragment;
+    "validateCreditLine(address,address)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "depositFees",
-    values: [string, BigNumberish]
+    functionFragment: "reservePool",
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "depositReserve",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "reimburseMember",
-    values: [string, string, BigNumberish]
+    functionFragment: "validateCreditLine",
+    values: [string, string]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "depositFees",
+    functionFragment: "reservePool",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "depositReserve",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "reimburseMember",
+    functionFragment: "validateCreditLine",
     data: BytesLike
   ): Result;
 
-  events: {};
+  events: {
+    "CreditDefault(address)": EventFragment;
+    "PeriodEnded(address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "CreditDefault"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PeriodEnded"): EventFragment;
 }
 
-export class IReservePool extends BaseContract {
+export type CreditDefaultEvent = TypedEvent<[string] & { member: string }>;
+
+export type PeriodEndedEvent = TypedEvent<[string] & { member: string }>;
+
+export class IRiskManager extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -96,109 +97,76 @@ export class IReservePool extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: IReservePoolInterface;
+  interface: IRiskManagerInterface;
 
   functions: {
-    depositFees(
-      network: string,
-      credits: BigNumberish,
+    reservePool(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    depositReserve(
-      network: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    reimburseMember(
+    validateCreditLine(
       network: string,
       member: string,
-      credits: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  depositFees(
-    network: string,
-    credits: BigNumberish,
+  reservePool(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  depositReserve(
-    network: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  reimburseMember(
+  validateCreditLine(
     network: string,
     member: string,
-    credits: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    depositFees(
-      network: string,
-      credits: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    reservePool(overrides?: CallOverrides): Promise<string>;
 
-    depositReserve(
-      network: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    reimburseMember(
+    validateCreditLine(
       network: string,
       member: string,
-      credits: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<boolean>;
   };
 
-  filters: {};
+  filters: {
+    "CreditDefault(address)"(
+      member?: null
+    ): TypedEventFilter<[string], { member: string }>;
+
+    CreditDefault(
+      member?: null
+    ): TypedEventFilter<[string], { member: string }>;
+
+    "PeriodEnded(address)"(
+      member?: null
+    ): TypedEventFilter<[string], { member: string }>;
+
+    PeriodEnded(member?: null): TypedEventFilter<[string], { member: string }>;
+  };
 
   estimateGas: {
-    depositFees(
-      network: string,
-      credits: BigNumberish,
+    reservePool(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    depositReserve(
-      network: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    reimburseMember(
+    validateCreditLine(
       network: string,
       member: string,
-      credits: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    depositFees(
-      network: string,
-      credits: BigNumberish,
+    reservePool(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    depositReserve(
-      network: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    reimburseMember(
+    validateCreditLine(
       network: string,
       member: string,
-      credits: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

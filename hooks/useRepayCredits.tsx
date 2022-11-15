@@ -5,6 +5,7 @@ import { useCallback } from "react"
 import { nanoid } from "../functions/nanoid"
 import { parseStableCredits } from "../functions/bignumber"
 import { useToast } from "@chakra-ui/react"
+import { useAccount } from "wagmi"
 
 export type UseRepayCreditsResponse = {
   repay: (amount: number) => Promise<void>
@@ -14,17 +15,19 @@ export type UseRepayCreditsResponse = {
 export const useRepayCredits = (): UseRepayCreditsResponse => {
   const stableCredit = useStableCreditContract()
   const [repaying, setRepaying] = useMountedState(false)
-
+  const { address } = useAccount()
   const addTransaction = useAddTransaction()
   const toast = useToast()
 
   const repay = useCallback(
     async (amount: number) => {
+      if (!address) return
       setRepaying(true)
 
       try {
         const resp = await (stableCredit &&
           stableCredit.repayCreditBalance(
+            address,
             parseStableCredits(amount.toString()),
           ))
 

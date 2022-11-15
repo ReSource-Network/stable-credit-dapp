@@ -21,12 +21,12 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ISwapSinkInterface extends ethers.utils.Interface {
   functions: {
-    "depositFees(uint256)": FunctionFragment;
+    "depositFees(address,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "depositFees",
-    values: [BigNumberish]
+    values: [string, BigNumberish]
   ): string;
 
   decodeFunctionResult(
@@ -82,18 +82,21 @@ export class ISwapSink extends BaseContract {
 
   functions: {
     depositFees(
+      network: string,
       credits: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
   depositFees(
+    network: string,
     credits: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
     depositFees(
+      network: string,
       credits: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -103,6 +106,7 @@ export class ISwapSink extends BaseContract {
 
   estimateGas: {
     depositFees(
+      network: string,
       credits: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -110,6 +114,7 @@ export class ISwapSink extends BaseContract {
 
   populateTransaction: {
     depositFees(
+      network: string,
       credits: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

@@ -26,14 +26,12 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     "collectedFees()": FunctionFragment;
     "distributeFees()": FunctionFragment;
     "getMemberFeeRate(address)": FunctionFragment;
-    "initialize(address,address,uint256)": FunctionFragment;
+    "initialize(address)": FunctionFragment;
     "memberFeeRate(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "pauseFees()": FunctionFragment;
     "paused()": FunctionFragment;
-    "recoverERC20(address,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "reservePool()": FunctionFragment;
     "setMemberFeeRate(address,uint256)": FunctionFragment;
     "setTargetFeeRate(uint256)": FunctionFragment;
     "stableCredit()": FunctionFragment;
@@ -62,10 +60,7 @@ interface FeeManagerInterface extends ethers.utils.Interface {
     functionFragment: "getMemberFeeRate",
     values: [string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "initialize",
-    values: [string, string, BigNumberish]
-  ): string;
+  encodeFunctionData(functionFragment: "initialize", values: [string]): string;
   encodeFunctionData(
     functionFragment: "memberFeeRate",
     values: [string]
@@ -74,15 +69,7 @@ interface FeeManagerInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "pauseFees", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "recoverERC20",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "renounceOwnership",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "reservePool",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -139,15 +126,7 @@ interface FeeManagerInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "pauseFees", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "recoverERC20",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "reservePool",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -251,8 +230,8 @@ export class FeeManager extends BaseContract {
 
   functions: {
     calculateMemberFee(
-      _member: string,
-      _amount: BigNumberish,
+      member: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -270,14 +249,12 @@ export class FeeManager extends BaseContract {
     ): Promise<ContractTransaction>;
 
     getMemberFeeRate(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     initialize(
       _stableCredit: string,
-      _reservePool: string,
-      targetFeeRate: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -294,26 +271,18 @@ export class FeeManager extends BaseContract {
 
     paused(overrides?: CallOverrides): Promise<[boolean]>;
 
-    recoverERC20(
-      tokenAddress: string,
-      tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    reservePool(overrides?: CallOverrides): Promise<[string]>;
-
     setMemberFeeRate(
       member: string,
-      _feePercent: BigNumberish,
+      feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     setTargetFeeRate(
-      _feePercent: BigNumberish,
+      feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -332,8 +301,8 @@ export class FeeManager extends BaseContract {
   };
 
   calculateMemberFee(
-    _member: string,
-    _amount: BigNumberish,
+    member: string,
+    amount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -351,14 +320,12 @@ export class FeeManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   getMemberFeeRate(
-    _member: string,
+    member: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   initialize(
     _stableCredit: string,
-    _reservePool: string,
-    targetFeeRate: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -372,26 +339,18 @@ export class FeeManager extends BaseContract {
 
   paused(overrides?: CallOverrides): Promise<boolean>;
 
-  recoverERC20(
-    tokenAddress: string,
-    tokenAmount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  reservePool(overrides?: CallOverrides): Promise<string>;
-
   setMemberFeeRate(
     member: string,
-    _feePercent: BigNumberish,
+    feePercent: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   setTargetFeeRate(
-    _feePercent: BigNumberish,
+    feePercent: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -410,8 +369,8 @@ export class FeeManager extends BaseContract {
 
   callStatic: {
     calculateMemberFee(
-      _member: string,
-      _amount: BigNumberish,
+      member: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -427,16 +386,11 @@ export class FeeManager extends BaseContract {
     distributeFees(overrides?: CallOverrides): Promise<void>;
 
     getMemberFeeRate(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    initialize(
-      _stableCredit: string,
-      _reservePool: string,
-      targetFeeRate: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    initialize(_stableCredit: string, overrides?: CallOverrides): Promise<void>;
 
     memberFeeRate(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -446,24 +400,16 @@ export class FeeManager extends BaseContract {
 
     paused(overrides?: CallOverrides): Promise<boolean>;
 
-    recoverERC20(
-      tokenAddress: string,
-      tokenAmount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
-
-    reservePool(overrides?: CallOverrides): Promise<string>;
 
     setMemberFeeRate(
       member: string,
-      _feePercent: BigNumberish,
+      feePercent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setTargetFeeRate(
-      _feePercent: BigNumberish,
+      feePercent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -535,8 +481,8 @@ export class FeeManager extends BaseContract {
 
   estimateGas: {
     calculateMemberFee(
-      _member: string,
-      _amount: BigNumberish,
+      member: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -554,14 +500,12 @@ export class FeeManager extends BaseContract {
     ): Promise<BigNumber>;
 
     getMemberFeeRate(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     initialize(
       _stableCredit: string,
-      _reservePool: string,
-      targetFeeRate: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -575,26 +519,18 @@ export class FeeManager extends BaseContract {
 
     paused(overrides?: CallOverrides): Promise<BigNumber>;
 
-    recoverERC20(
-      tokenAddress: string,
-      tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    reservePool(overrides?: CallOverrides): Promise<BigNumber>;
-
     setMemberFeeRate(
       member: string,
-      _feePercent: BigNumberish,
+      feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     setTargetFeeRate(
-      _feePercent: BigNumberish,
+      feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -614,8 +550,8 @@ export class FeeManager extends BaseContract {
 
   populateTransaction: {
     calculateMemberFee(
-      _member: string,
-      _amount: BigNumberish,
+      member: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -633,14 +569,12 @@ export class FeeManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getMemberFeeRate(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     initialize(
       _stableCredit: string,
-      _reservePool: string,
-      targetFeeRate: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -657,26 +591,18 @@ export class FeeManager extends BaseContract {
 
     paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    recoverERC20(
-      tokenAddress: string,
-      tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    reservePool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     setMemberFeeRate(
       member: string,
-      _feePercent: BigNumberish,
+      feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     setTargetFeeRate(
-      _feePercent: BigNumberish,
+      feePercent: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

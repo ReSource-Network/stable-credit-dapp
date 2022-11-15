@@ -266,17 +266,17 @@ export class MutualCredit extends BaseContract {
     ): Promise<ContractTransaction>;
 
     creditBalanceOf(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     creditLimitLeftOf(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     creditLimitOf(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -357,16 +357,16 @@ export class MutualCredit extends BaseContract {
   ): Promise<ContractTransaction>;
 
   creditBalanceOf(
-    _member: string,
+    member: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   creditLimitLeftOf(
-    _member: string,
+    member: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  creditLimitOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
+  creditLimitOf(member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   decimals(overrides?: CallOverrides): Promise<number>;
 
@@ -442,17 +442,17 @@ export class MutualCredit extends BaseContract {
     ): Promise<void>;
 
     creditBalanceOf(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     creditLimitLeftOf(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     creditLimitOf(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -602,17 +602,17 @@ export class MutualCredit extends BaseContract {
     ): Promise<BigNumber>;
 
     creditBalanceOf(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     creditLimitLeftOf(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     creditLimitOf(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -697,17 +697,17 @@ export class MutualCredit extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     creditBalanceOf(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     creditLimitLeftOf(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     creditLimitOf(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

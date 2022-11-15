@@ -4,42 +4,45 @@
 
 import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type { IReservePool, IReservePoolInterface } from "../IReservePool";
+import type { IRiskManager, IRiskManagerInterface } from "../IRiskManager";
 
 const _abi = [
   {
+    anonymous: false,
     inputs: [
       {
+        indexed: false,
         internalType: "address",
-        name: "network",
+        name: "member",
         type: "address",
       },
-      {
-        internalType: "uint256",
-        name: "credits",
-        type: "uint256",
-      },
     ],
-    name: "depositFees",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    name: "CreditDefault",
+    type: "event",
   },
   {
+    anonymous: false,
     inputs: [
       {
+        indexed: false,
         internalType: "address",
-        name: "network",
+        name: "member",
         type: "address",
       },
+    ],
+    name: "PeriodEnded",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "reservePool",
+    outputs: [
       {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
+        internalType: "contract IReservePool",
+        name: "",
+        type: "address",
       },
     ],
-    name: "depositReserve",
-    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -55,28 +58,29 @@ const _abi = [
         name: "member",
         type: "address",
       },
+    ],
+    name: "validateCreditLine",
+    outputs: [
       {
-        internalType: "uint256",
-        name: "credits",
-        type: "uint256",
+        internalType: "bool",
+        name: "",
+        type: "bool",
       },
     ],
-    name: "reimburseMember",
-    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
 ];
 
-export class IReservePool__factory {
+export class IRiskManager__factory {
   static readonly abi = _abi;
-  static createInterface(): IReservePoolInterface {
-    return new utils.Interface(_abi) as IReservePoolInterface;
+  static createInterface(): IRiskManagerInterface {
+    return new utils.Interface(_abi) as IRiskManagerInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): IReservePool {
-    return new Contract(address, _abi, signerOrProvider) as IReservePool;
+  ): IRiskManager {
+    return new Contract(address, _abi, signerOrProvider) as IRiskManager;
   }
 }

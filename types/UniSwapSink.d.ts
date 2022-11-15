@@ -21,10 +21,11 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface UniSwapSinkInterface extends ethers.utils.Interface {
   functions: {
-    "__SwapSink_init(address,address)": FunctionFragment;
-    "convertFeesToSwapToken()": FunctionFragment;
-    "depositFees(uint256)": FunctionFragment;
-    "initialize(address,address,address)": FunctionFragment;
+    "__SwapSink_init(address)": FunctionFragment;
+    "convertFeesToSwapToken(address)": FunctionFragment;
+    "depositFees(address,uint256)": FunctionFragment;
+    "initialize(address,address)": FunctionFragment;
+    "networkSink(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "pauseSink()": FunctionFragment;
     "paused()": FunctionFragment;
@@ -32,7 +33,6 @@ interface UniSwapSinkInterface extends ethers.utils.Interface {
     "renounceOwnership()": FunctionFragment;
     "setPoolFee(uint24)": FunctionFragment;
     "setSource(address)": FunctionFragment;
-    "stableCredit()": FunctionFragment;
     "swapRouter()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unPauseSink()": FunctionFragment;
@@ -40,20 +40,21 @@ interface UniSwapSinkInterface extends ethers.utils.Interface {
 
   encodeFunctionData(
     functionFragment: "__SwapSink_init",
-    values: [string, string]
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "convertFeesToSwapToken",
-    values?: undefined
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "depositFees",
-    values: [BigNumberish]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string, string, string]
+    values: [string, string]
   ): string;
+  encodeFunctionData(functionFragment: "networkSink", values: [string]): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pauseSink", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
@@ -67,10 +68,6 @@ interface UniSwapSinkInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "setSource", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "stableCredit",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "swapRouter",
     values?: undefined
@@ -97,6 +94,10 @@ interface UniSwapSinkInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "networkSink",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pauseSink", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
@@ -107,10 +108,6 @@ interface UniSwapSinkInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "setPoolFee", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setSource", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "stableCredit",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "swapRouter", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
@@ -203,26 +200,28 @@ export class UniSwapSink extends BaseContract {
 
   functions: {
     __SwapSink_init(
-      _stableCredit: string,
-      _sourceAddress: string,
+      _source: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     convertFeesToSwapToken(
+      network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     depositFees(
+      network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     initialize(
-      _stableCredit: string,
       _sourceAddress: string,
       _swapRouter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    networkSink(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -244,11 +243,9 @@ export class UniSwapSink extends BaseContract {
     ): Promise<ContractTransaction>;
 
     setSource(
-      _sourceAddress: string,
+      _source: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    stableCredit(overrides?: CallOverrides): Promise<[string]>;
 
     swapRouter(overrides?: CallOverrides): Promise<[string]>;
 
@@ -263,26 +260,28 @@ export class UniSwapSink extends BaseContract {
   };
 
   __SwapSink_init(
-    _stableCredit: string,
-    _sourceAddress: string,
+    _source: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   convertFeesToSwapToken(
+    network: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   depositFees(
+    network: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   initialize(
-    _stableCredit: string,
     _sourceAddress: string,
     _swapRouter: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  networkSink(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -304,11 +303,9 @@ export class UniSwapSink extends BaseContract {
   ): Promise<ContractTransaction>;
 
   setSource(
-    _sourceAddress: string,
+    _source: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  stableCredit(overrides?: CallOverrides): Promise<string>;
 
   swapRouter(overrides?: CallOverrides): Promise<string>;
 
@@ -322,22 +319,26 @@ export class UniSwapSink extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    __SwapSink_init(
-      _stableCredit: string,
-      _sourceAddress: string,
+    __SwapSink_init(_source: string, overrides?: CallOverrides): Promise<void>;
+
+    convertFeesToSwapToken(
+      network: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    convertFeesToSwapToken(overrides?: CallOverrides): Promise<void>;
-
-    depositFees(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    depositFees(
+      network: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     initialize(
-      _stableCredit: string,
       _sourceAddress: string,
       _swapRouter: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    networkSink(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -354,9 +355,7 @@ export class UniSwapSink extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setSource(_sourceAddress: string, overrides?: CallOverrides): Promise<void>;
-
-    stableCredit(overrides?: CallOverrides): Promise<string>;
+    setSource(_source: string, overrides?: CallOverrides): Promise<void>;
 
     swapRouter(overrides?: CallOverrides): Promise<string>;
 
@@ -448,26 +447,28 @@ export class UniSwapSink extends BaseContract {
 
   estimateGas: {
     __SwapSink_init(
-      _stableCredit: string,
-      _sourceAddress: string,
+      _source: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     convertFeesToSwapToken(
+      network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     depositFees(
+      network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     initialize(
-      _stableCredit: string,
       _sourceAddress: string,
       _swapRouter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    networkSink(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -489,11 +490,9 @@ export class UniSwapSink extends BaseContract {
     ): Promise<BigNumber>;
 
     setSource(
-      _sourceAddress: string,
+      _source: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    stableCredit(overrides?: CallOverrides): Promise<BigNumber>;
 
     swapRouter(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -509,25 +508,30 @@ export class UniSwapSink extends BaseContract {
 
   populateTransaction: {
     __SwapSink_init(
-      _stableCredit: string,
-      _sourceAddress: string,
+      _source: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     convertFeesToSwapToken(
+      network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     depositFees(
+      network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     initialize(
-      _stableCredit: string,
       _sourceAddress: string,
       _swapRouter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    networkSink(
+      arg0: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -550,11 +554,9 @@ export class UniSwapSink extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setSource(
-      _sourceAddress: string,
+      _source: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
-
-    stableCredit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     swapRouter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

@@ -11,6 +11,7 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
+  Overrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -21,81 +22,93 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface IStableCreditInterface extends ethers.utils.Interface {
   functions: {
     "access()": FunctionFragment;
-    "balanceOf(address)": FunctionFragment;
     "convertCreditToFeeToken(uint256)": FunctionFragment;
+    "createCreditLine(address,uint256,uint256)": FunctionFragment;
+    "feeManager()": FunctionFragment;
     "feeToken()": FunctionFragment;
-    "networkDebt()": FunctionFragment;
-    "reservePool()": FunctionFragment;
+    "riskManager()": FunctionFragment;
+    "updateCreditLimit(address,uint256)": FunctionFragment;
+    "writeOffCreditLine(address)": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "access", values?: undefined): string;
-  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
     functionFragment: "convertCreditToFeeToken",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "createCreditLine",
+    values: [string, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "feeManager",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "feeToken", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "networkDebt",
+    functionFragment: "riskManager",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "reservePool",
-    values?: undefined
+    functionFragment: "updateCreditLimit",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "writeOffCreditLine",
+    values: [string]
   ): string;
 
   decodeFunctionResult(functionFragment: "access", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "convertCreditToFeeToken",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "createCreditLine",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "feeManager", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "feeToken", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "networkDebt",
+    functionFragment: "riskManager",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "reservePool",
+    functionFragment: "updateCreditLimit",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "writeOffCreditLine",
     data: BytesLike
   ): Result;
 
   events: {
     "CreditBalanceRepayed(address,uint128)": EventFragment;
-    "CreditDefault(address)": EventFragment;
     "CreditLimitExtended(address,uint256)": EventFragment;
-    "CreditLineCreated(address,uint256,uint256,uint256,uint256,uint256)": EventFragment;
+    "CreditLineCreated(address,uint256,uint256)": EventFragment;
     "MembersDemurraged(uint256)": EventFragment;
     "NetworkDebtBurned(address,uint256)": EventFragment;
-    "PeriodEnded(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "CreditBalanceRepayed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "CreditDefault"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLimitExtended"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLineCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MembersDemurraged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NetworkDebtBurned"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PeriodEnded"): EventFragment;
 }
 
 export type CreditBalanceRepayedEvent = TypedEvent<
   [string, BigNumber] & { member: string; amount: BigNumber }
 >;
 
-export type CreditDefaultEvent = TypedEvent<[string] & { member: string }>;
-
 export type CreditLimitExtendedEvent = TypedEvent<
   [string, BigNumber] & { member: string; creditLimit: BigNumber }
 >;
 
 export type CreditLineCreatedEvent = TypedEvent<
-  [string, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+  [string, BigNumber, BigNumber] & {
     member: string;
     creditLimit: BigNumber;
-    pastDueTime: BigNumber;
-    defaultTime: BigNumber;
-    feePercent: BigNumber;
     balance: BigNumber;
   }
 >;
@@ -107,8 +120,6 @@ export type MembersDemurragedEvent = TypedEvent<
 export type NetworkDebtBurnedEvent = TypedEvent<
   [string, BigNumber] & { member: string; amount: BigNumber }
 >;
-
-export type PeriodEndedEvent = TypedEvent<[string] & { member: string }>;
 
 export class IStableCredit extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -156,50 +167,98 @@ export class IStableCredit extends BaseContract {
   functions: {
     access(overrides?: CallOverrides): Promise<[string]>;
 
-    balanceOf(_member: string, overrides?: CallOverrides): Promise<[BigNumber]>;
-
     convertCreditToFeeToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    createCreditLine(
+      member: string,
+      _creditLimit: BigNumberish,
+      _balance: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    feeManager(overrides?: CallOverrides): Promise<[string]>;
+
     feeToken(overrides?: CallOverrides): Promise<[string]>;
 
-    networkDebt(overrides?: CallOverrides): Promise<[BigNumber]>;
+    riskManager(overrides?: CallOverrides): Promise<[string]>;
 
-    reservePool(overrides?: CallOverrides): Promise<[string]>;
+    updateCreditLimit(
+      member: string,
+      creditLimit: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    writeOffCreditLine(
+      member: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
   access(overrides?: CallOverrides): Promise<string>;
-
-  balanceOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   convertCreditToFeeToken(
     amount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  createCreditLine(
+    member: string,
+    _creditLimit: BigNumberish,
+    _balance: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  feeManager(overrides?: CallOverrides): Promise<string>;
+
   feeToken(overrides?: CallOverrides): Promise<string>;
 
-  networkDebt(overrides?: CallOverrides): Promise<BigNumber>;
+  riskManager(overrides?: CallOverrides): Promise<string>;
 
-  reservePool(overrides?: CallOverrides): Promise<string>;
+  updateCreditLimit(
+    member: string,
+    creditLimit: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  writeOffCreditLine(
+    member: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   callStatic: {
     access(overrides?: CallOverrides): Promise<string>;
-
-    balanceOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     convertCreditToFeeToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    createCreditLine(
+      member: string,
+      _creditLimit: BigNumberish,
+      _balance: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    feeManager(overrides?: CallOverrides): Promise<string>;
+
     feeToken(overrides?: CallOverrides): Promise<string>;
 
-    networkDebt(overrides?: CallOverrides): Promise<BigNumber>;
+    riskManager(overrides?: CallOverrides): Promise<string>;
 
-    reservePool(overrides?: CallOverrides): Promise<string>;
+    updateCreditLimit(
+      member: string,
+      creditLimit: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    writeOffCreditLine(
+      member: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
@@ -219,14 +278,6 @@ export class IStableCredit extends BaseContract {
       { member: string; amount: BigNumber }
     >;
 
-    "CreditDefault(address)"(
-      member?: null
-    ): TypedEventFilter<[string], { member: string }>;
-
-    CreditDefault(
-      member?: null
-    ): TypedEventFilter<[string], { member: string }>;
-
     "CreditLimitExtended(address,uint256)"(
       member?: null,
       creditLimit?: null
@@ -243,42 +294,22 @@ export class IStableCredit extends BaseContract {
       { member: string; creditLimit: BigNumber }
     >;
 
-    "CreditLineCreated(address,uint256,uint256,uint256,uint256,uint256)"(
+    "CreditLineCreated(address,uint256,uint256)"(
       member?: null,
       creditLimit?: null,
-      pastDueTime?: null,
-      defaultTime?: null,
-      feePercent?: null,
       balance?: null
     ): TypedEventFilter<
-      [string, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber],
-      {
-        member: string;
-        creditLimit: BigNumber;
-        pastDueTime: BigNumber;
-        defaultTime: BigNumber;
-        feePercent: BigNumber;
-        balance: BigNumber;
-      }
+      [string, BigNumber, BigNumber],
+      { member: string; creditLimit: BigNumber; balance: BigNumber }
     >;
 
     CreditLineCreated(
       member?: null,
       creditLimit?: null,
-      pastDueTime?: null,
-      defaultTime?: null,
-      feePercent?: null,
       balance?: null
     ): TypedEventFilter<
-      [string, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber],
-      {
-        member: string;
-        creditLimit: BigNumber;
-        pastDueTime: BigNumber;
-        defaultTime: BigNumber;
-        feePercent: BigNumber;
-        balance: BigNumber;
-      }
+      [string, BigNumber, BigNumber],
+      { member: string; creditLimit: BigNumber; balance: BigNumber }
     >;
 
     "MembersDemurraged(uint256)"(
@@ -304,48 +335,71 @@ export class IStableCredit extends BaseContract {
       [string, BigNumber],
       { member: string; amount: BigNumber }
     >;
-
-    "PeriodEnded(address)"(
-      member?: null
-    ): TypedEventFilter<[string], { member: string }>;
-
-    PeriodEnded(member?: null): TypedEventFilter<[string], { member: string }>;
   };
 
   estimateGas: {
     access(overrides?: CallOverrides): Promise<BigNumber>;
-
-    balanceOf(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     convertCreditToFeeToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    createCreditLine(
+      member: string,
+      _creditLimit: BigNumberish,
+      _balance: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    feeManager(overrides?: CallOverrides): Promise<BigNumber>;
+
     feeToken(overrides?: CallOverrides): Promise<BigNumber>;
 
-    networkDebt(overrides?: CallOverrides): Promise<BigNumber>;
+    riskManager(overrides?: CallOverrides): Promise<BigNumber>;
 
-    reservePool(overrides?: CallOverrides): Promise<BigNumber>;
+    updateCreditLimit(
+      member: string,
+      creditLimit: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    writeOffCreditLine(
+      member: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     access(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    balanceOf(
-      _member: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
 
     convertCreditToFeeToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    createCreditLine(
+      member: string,
+      _creditLimit: BigNumberish,
+      _balance: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    feeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     feeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    networkDebt(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    riskManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    reservePool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    updateCreditLimit(
+      member: string,
+      creditLimit: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    writeOffCreditLine(
+      member: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
   };
 }

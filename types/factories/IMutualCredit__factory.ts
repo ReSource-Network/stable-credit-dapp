@@ -4,79 +4,77 @@
 
 import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type { IReservePool, IReservePoolInterface } from "../IReservePool";
+import type { IMutualCredit, IMutualCreditInterface } from "../IMutualCredit";
 
 const _abi = [
   {
+    anonymous: false,
     inputs: [
       {
-        internalType: "address",
-        name: "network",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "credits",
-        type: "uint256",
-      },
-    ],
-    name: "depositFees",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "network",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "depositReserve",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "network",
-        type: "address",
-      },
-      {
+        indexed: false,
         internalType: "address",
         name: "member",
         type: "address",
       },
       {
+        indexed: false,
         internalType: "uint256",
-        name: "credits",
+        name: "limit",
         type: "uint256",
       },
     ],
-    name: "reimburseMember",
-    outputs: [],
-    stateMutability: "nonpayable",
+    name: "CreditLimitUpdate",
+    type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "member",
+        type: "address",
+      },
+    ],
+    name: "creditBalanceOf",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "member",
+        type: "address",
+      },
+    ],
+    name: "creditLimitOf",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
 ];
 
-export class IReservePool__factory {
+export class IMutualCredit__factory {
   static readonly abi = _abi;
-  static createInterface(): IReservePoolInterface {
-    return new utils.Interface(_abi) as IReservePoolInterface;
+  static createInterface(): IMutualCreditInterface {
+    return new utils.Interface(_abi) as IMutualCreditInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): IReservePool {
-    return new Contract(address, _abi, signerOrProvider) as IReservePool;
+  ): IMutualCredit {
+    return new Contract(address, _abi, signerOrProvider) as IMutualCredit;
   }
 }

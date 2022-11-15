@@ -63,32 +63,6 @@ const _abi = [
     type: "event",
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "_underwriter",
-        type: "address",
-      },
-    ],
-    name: "UnderwriterAdded",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "_underwriter",
-        type: "address",
-      },
-    ],
-    name: "UnderwriterRemoved",
-    type: "event",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -129,25 +103,6 @@ const _abi = [
       },
     ],
     name: "isOperator",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_underwriter",
-        type: "address",
-      },
-    ],
-    name: "isUnderwriter",
     outputs: [
       {
         internalType: "bool",

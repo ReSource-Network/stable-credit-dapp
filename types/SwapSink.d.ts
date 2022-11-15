@@ -21,30 +21,29 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface SwapSinkInterface extends ethers.utils.Interface {
   functions: {
-    "__SwapSink_init(address,address)": FunctionFragment;
-    "convertFeesToSwapToken()": FunctionFragment;
-    "depositFees(uint256)": FunctionFragment;
+    "__SwapSink_init(address)": FunctionFragment;
+    "convertFeesToSwapToken(address)": FunctionFragment;
+    "depositFees(address,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "pauseSink()": FunctionFragment;
     "paused()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setSource(address)": FunctionFragment;
-    "stableCredit()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unPauseSink()": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "__SwapSink_init",
-    values: [string, string]
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "convertFeesToSwapToken",
-    values?: undefined
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "depositFees",
-    values: [BigNumberish]
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pauseSink", values?: undefined): string;
@@ -54,10 +53,6 @@ interface SwapSinkInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "setSource", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "stableCredit",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
@@ -87,10 +82,6 @@ interface SwapSinkInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "setSource", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "stableCredit",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
@@ -182,16 +173,17 @@ export class SwapSink extends BaseContract {
 
   functions: {
     __SwapSink_init(
-      _stableCredit: string,
-      _sourceAddress: string,
+      _source: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     convertFeesToSwapToken(
+      network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     depositFees(
+      network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -209,11 +201,9 @@ export class SwapSink extends BaseContract {
     ): Promise<ContractTransaction>;
 
     setSource(
-      _sourceAddress: string,
+      _source: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    stableCredit(overrides?: CallOverrides): Promise<[string]>;
 
     transferOwnership(
       newOwner: string,
@@ -226,16 +216,17 @@ export class SwapSink extends BaseContract {
   };
 
   __SwapSink_init(
-    _stableCredit: string,
-    _sourceAddress: string,
+    _source: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   convertFeesToSwapToken(
+    network: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   depositFees(
+    network: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -253,11 +244,9 @@ export class SwapSink extends BaseContract {
   ): Promise<ContractTransaction>;
 
   setSource(
-    _sourceAddress: string,
+    _source: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  stableCredit(overrides?: CallOverrides): Promise<string>;
 
   transferOwnership(
     newOwner: string,
@@ -269,15 +258,18 @@ export class SwapSink extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    __SwapSink_init(
-      _stableCredit: string,
-      _sourceAddress: string,
+    __SwapSink_init(_source: string, overrides?: CallOverrides): Promise<void>;
+
+    convertFeesToSwapToken(
+      network: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    convertFeesToSwapToken(overrides?: CallOverrides): Promise<void>;
-
-    depositFees(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    depositFees(
+      network: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -287,9 +279,7 @@ export class SwapSink extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
-    setSource(_sourceAddress: string, overrides?: CallOverrides): Promise<void>;
-
-    stableCredit(overrides?: CallOverrides): Promise<string>;
+    setSource(_source: string, overrides?: CallOverrides): Promise<void>;
 
     transferOwnership(
       newOwner: string,
@@ -379,16 +369,17 @@ export class SwapSink extends BaseContract {
 
   estimateGas: {
     __SwapSink_init(
-      _stableCredit: string,
-      _sourceAddress: string,
+      _source: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     convertFeesToSwapToken(
+      network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     depositFees(
+      network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -406,11 +397,9 @@ export class SwapSink extends BaseContract {
     ): Promise<BigNumber>;
 
     setSource(
-      _sourceAddress: string,
+      _source: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    stableCredit(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -424,16 +413,17 @@ export class SwapSink extends BaseContract {
 
   populateTransaction: {
     __SwapSink_init(
-      _stableCredit: string,
-      _sourceAddress: string,
+      _source: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     convertFeesToSwapToken(
+      network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     depositFees(
+      network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -451,11 +441,9 @@ export class SwapSink extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setSource(
-      _sourceAddress: string,
+      _source: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
-
-    stableCredit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,

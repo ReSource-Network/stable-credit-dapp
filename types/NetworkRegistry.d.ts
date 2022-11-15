@@ -72,9 +72,9 @@ interface NetworkRegistryInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
 }
 
-export type NetworkAddedEvent = TypedEvent<[string] & { _network: string }>;
+export type NetworkAddedEvent = TypedEvent<[string] & { network: string }>;
 
-export type NetworkRemovedEvent = TypedEvent<[string] & { _network: string }>;
+export type NetworkRemovedEvent = TypedEvent<[string] & { network: string }>;
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
@@ -125,7 +125,7 @@ export class NetworkRegistry extends BaseContract {
 
   functions: {
     addNetwork(
-      _network: string,
+      network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -134,7 +134,7 @@ export class NetworkRegistry extends BaseContract {
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     removeNetwork(
-      _network: string,
+      network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -149,7 +149,7 @@ export class NetworkRegistry extends BaseContract {
   };
 
   addNetwork(
-    _network: string,
+    network: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -158,7 +158,7 @@ export class NetworkRegistry extends BaseContract {
   owner(overrides?: CallOverrides): Promise<string>;
 
   removeNetwork(
-    _network: string,
+    network: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -172,13 +172,13 @@ export class NetworkRegistry extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    addNetwork(_network: string, overrides?: CallOverrides): Promise<void>;
+    addNetwork(network: string, overrides?: CallOverrides): Promise<void>;
 
     networks(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
-    removeNetwork(_network: string, overrides?: CallOverrides): Promise<void>;
+    removeNetwork(network: string, overrides?: CallOverrides): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -190,20 +190,20 @@ export class NetworkRegistry extends BaseContract {
 
   filters: {
     "NetworkAdded(address)"(
-      _network?: null
-    ): TypedEventFilter<[string], { _network: string }>;
+      network?: null
+    ): TypedEventFilter<[string], { network: string }>;
 
     NetworkAdded(
-      _network?: null
-    ): TypedEventFilter<[string], { _network: string }>;
+      network?: null
+    ): TypedEventFilter<[string], { network: string }>;
 
     "NetworkRemoved(address)"(
-      _network?: null
-    ): TypedEventFilter<[string], { _network: string }>;
+      network?: null
+    ): TypedEventFilter<[string], { network: string }>;
 
     NetworkRemoved(
-      _network?: null
-    ): TypedEventFilter<[string], { _network: string }>;
+      network?: null
+    ): TypedEventFilter<[string], { network: string }>;
 
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
@@ -224,7 +224,7 @@ export class NetworkRegistry extends BaseContract {
 
   estimateGas: {
     addNetwork(
-      _network: string,
+      network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -233,7 +233,7 @@ export class NetworkRegistry extends BaseContract {
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     removeNetwork(
-      _network: string,
+      network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -249,7 +249,7 @@ export class NetworkRegistry extends BaseContract {
 
   populateTransaction: {
     addNetwork(
-      _network: string,
+      network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -261,7 +261,7 @@ export class NetworkRegistry extends BaseContract {
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     removeNetwork(
-      _network: string,
+      network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

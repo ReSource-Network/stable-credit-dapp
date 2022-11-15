@@ -26,19 +26,16 @@ interface AccessManagerInterface extends ethers.utils.Interface {
     "grantMember(address)": FunctionFragment;
     "grantOperator(address)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
-    "grantUnderwriter(address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "initialize(address[])": FunctionFragment;
     "isMember(address)": FunctionFragment;
     "isOperator(address)": FunctionFragment;
-    "isUnderwriter(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeMember(address)": FunctionFragment;
     "revokeOperator(address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
-    "revokeUnderwriter(address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
@@ -61,10 +58,6 @@ interface AccessManagerInterface extends ethers.utils.Interface {
     values: [BytesLike, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "grantUnderwriter",
-    values: [string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "hasRole",
     values: [BytesLike, string]
   ): string;
@@ -74,10 +67,6 @@ interface AccessManagerInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "isMember", values: [string]): string;
   encodeFunctionData(functionFragment: "isOperator", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "isUnderwriter",
-    values: [string]
-  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -98,10 +87,6 @@ interface AccessManagerInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "revokeRole",
     values: [BytesLike, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "revokeUnderwriter",
-    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
@@ -129,18 +114,10 @@ interface AccessManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "grantUnderwriter",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isMember", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isOperator", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "isUnderwriter",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
@@ -160,10 +137,6 @@ interface AccessManagerInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "revokeUnderwriter",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
@@ -181,8 +154,6 @@ interface AccessManagerInterface extends ethers.utils.Interface {
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
-    "UnderwriterAdded(address)": EventFragment;
-    "UnderwriterRemoved(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "MemberAdded"): EventFragment;
@@ -193,8 +164,6 @@ interface AccessManagerInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UnderwriterAdded"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UnderwriterRemoved"): EventFragment;
 }
 
 export type MemberAddedEvent = TypedEvent<[string] & { _member: string }>;
@@ -223,14 +192,6 @@ export type RoleGrantedEvent = TypedEvent<
 
 export type RoleRevokedEvent = TypedEvent<
   [string, string, string] & { role: string; account: string; sender: string }
->;
-
-export type UnderwriterAddedEvent = TypedEvent<
-  [string] & { _underwriter: string }
->;
-
-export type UnderwriterRemovedEvent = TypedEvent<
-  [string] & { _underwriter: string }
 >;
 
 export class AccessManager extends BaseContract {
@@ -282,23 +243,18 @@ export class AccessManager extends BaseContract {
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
 
     grantMember(
-      _member: string,
+      member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     grantOperator(
-      _operator: string,
+      operator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     grantRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    grantUnderwriter(
-      _underwriter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -309,21 +265,13 @@ export class AccessManager extends BaseContract {
     ): Promise<[boolean]>;
 
     initialize(
-      _operators: string[],
+      operators: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    isMember(_member: string, overrides?: CallOverrides): Promise<[boolean]>;
+    isMember(member: string, overrides?: CallOverrides): Promise<[boolean]>;
 
-    isOperator(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    isUnderwriter(
-      _underwriter: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    isOperator(operator: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -338,23 +286,18 @@ export class AccessManager extends BaseContract {
     ): Promise<ContractTransaction>;
 
     revokeMember(
-      _member: string,
+      member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     revokeOperator(
-      _operator: string,
+      operator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     revokeRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    revokeUnderwriter(
-      _underwriter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -374,23 +317,18 @@ export class AccessManager extends BaseContract {
   getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
   grantMember(
-    _member: string,
+    member: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   grantOperator(
-    _operator: string,
+    operator: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   grantRole(
     role: BytesLike,
     account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  grantUnderwriter(
-    _underwriter: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -401,18 +339,13 @@ export class AccessManager extends BaseContract {
   ): Promise<boolean>;
 
   initialize(
-    _operators: string[],
+    operators: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
+  isMember(member: string, overrides?: CallOverrides): Promise<boolean>;
 
-  isOperator(_operator: string, overrides?: CallOverrides): Promise<boolean>;
-
-  isUnderwriter(
-    _underwriter: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  isOperator(operator: string, overrides?: CallOverrides): Promise<boolean>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -427,23 +360,18 @@ export class AccessManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   revokeMember(
-    _member: string,
+    member: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   revokeOperator(
-    _operator: string,
+    operator: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   revokeRole(
     role: BytesLike,
     account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  revokeUnderwriter(
-    _underwriter: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -462,18 +390,13 @@ export class AccessManager extends BaseContract {
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
-    grantMember(_member: string, overrides?: CallOverrides): Promise<void>;
+    grantMember(member: string, overrides?: CallOverrides): Promise<void>;
 
-    grantOperator(_operator: string, overrides?: CallOverrides): Promise<void>;
+    grantOperator(operator: string, overrides?: CallOverrides): Promise<void>;
 
     grantRole(
       role: BytesLike,
       account: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    grantUnderwriter(
-      _underwriter: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -483,16 +406,11 @@ export class AccessManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    initialize(_operators: string[], overrides?: CallOverrides): Promise<void>;
+    initialize(operators: string[], overrides?: CallOverrides): Promise<void>;
 
-    isMember(_member: string, overrides?: CallOverrides): Promise<boolean>;
+    isMember(member: string, overrides?: CallOverrides): Promise<boolean>;
 
-    isOperator(_operator: string, overrides?: CallOverrides): Promise<boolean>;
-
-    isUnderwriter(
-      _underwriter: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    isOperator(operator: string, overrides?: CallOverrides): Promise<boolean>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -504,18 +422,13 @@ export class AccessManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    revokeMember(_member: string, overrides?: CallOverrides): Promise<void>;
+    revokeMember(member: string, overrides?: CallOverrides): Promise<void>;
 
-    revokeOperator(_operator: string, overrides?: CallOverrides): Promise<void>;
+    revokeOperator(operator: string, overrides?: CallOverrides): Promise<void>;
 
     revokeRole(
       role: BytesLike,
       account: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    revokeUnderwriter(
-      _underwriter: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -632,22 +545,6 @@ export class AccessManager extends BaseContract {
       [string, string, string],
       { role: string; account: string; sender: string }
     >;
-
-    "UnderwriterAdded(address)"(
-      _underwriter?: null
-    ): TypedEventFilter<[string], { _underwriter: string }>;
-
-    UnderwriterAdded(
-      _underwriter?: null
-    ): TypedEventFilter<[string], { _underwriter: string }>;
-
-    "UnderwriterRemoved(address)"(
-      _underwriter?: null
-    ): TypedEventFilter<[string], { _underwriter: string }>;
-
-    UnderwriterRemoved(
-      _underwriter?: null
-    ): TypedEventFilter<[string], { _underwriter: string }>;
   };
 
   estimateGas: {
@@ -659,23 +556,18 @@ export class AccessManager extends BaseContract {
     ): Promise<BigNumber>;
 
     grantMember(
-      _member: string,
+      member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     grantOperator(
-      _operator: string,
+      operator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     grantRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    grantUnderwriter(
-      _underwriter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -686,21 +578,13 @@ export class AccessManager extends BaseContract {
     ): Promise<BigNumber>;
 
     initialize(
-      _operators: string[],
+      operators: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    isMember(_member: string, overrides?: CallOverrides): Promise<BigNumber>;
+    isMember(member: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    isOperator(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    isUnderwriter(
-      _underwriter: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    isOperator(operator: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -715,23 +599,18 @@ export class AccessManager extends BaseContract {
     ): Promise<BigNumber>;
 
     revokeMember(
-      _member: string,
+      member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     revokeOperator(
-      _operator: string,
+      operator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     revokeRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    revokeUnderwriter(
-      _underwriter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -757,23 +636,18 @@ export class AccessManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     grantMember(
-      _member: string,
+      member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     grantOperator(
-      _operator: string,
+      operator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     grantRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    grantUnderwriter(
-      _underwriter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -784,22 +658,17 @@ export class AccessManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initialize(
-      _operators: string[],
+      operators: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     isMember(
-      _member: string,
+      member: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     isOperator(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    isUnderwriter(
-      _underwriter: string,
+      operator: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -816,23 +685,18 @@ export class AccessManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     revokeMember(
-      _member: string,
+      member: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     revokeOperator(
-      _operator: string,
+      operator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     revokeRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    revokeUnderwriter(
-      _underwriter: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

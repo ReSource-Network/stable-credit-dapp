@@ -35,19 +35,6 @@ const _abi = [
         name: "member",
         type: "address",
       },
-    ],
-    name: "CreditDefault",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "member",
-        type: "address",
-      },
       {
         indexed: false,
         internalType: "uint256",
@@ -71,24 +58,6 @@ const _abi = [
         indexed: false,
         internalType: "uint256",
         name: "creditLimit",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "pastDueTime",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "defaultTime",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "feePercent",
         type: "uint256",
       },
       {
@@ -134,45 +103,13 @@ const _abi = [
     type: "event",
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "member",
-        type: "address",
-      },
-    ],
-    name: "PeriodEnded",
-    type: "event",
-  },
-  {
     inputs: [],
     name: "access",
     outputs: [
       {
-        internalType: "address",
+        internalType: "contract IAccessManager",
         name: "",
         type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_member",
-        type: "address",
-      },
-    ],
-    name: "balanceOf",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -198,11 +135,47 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "member",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_creditLimit",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_balance",
+        type: "uint256",
+      },
+    ],
+    name: "createCreditLine",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "feeManager",
+    outputs: [
+      {
+        internalType: "contract IFeeManager",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "feeToken",
     outputs: [
       {
-        internalType: "address",
+        internalType: "contract IERC20Upgradeable",
         name: "",
         type: "address",
       },
@@ -212,28 +185,46 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "networkDebt",
+    name: "riskManager",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "contract IRiskManager",
         name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "member",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "creditLimit",
         type: "uint256",
       },
     ],
-    stateMutability: "view",
+    name: "updateCreditLimit",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [],
-    name: "reservePool",
-    outputs: [
+    inputs: [
       {
         internalType: "address",
-        name: "",
+        name: "member",
         type: "address",
       },
     ],
-    stateMutability: "view",
+    name: "writeOffCreditLine",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
 ];
