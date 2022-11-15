@@ -8,6 +8,7 @@ import { NetworkContractAddresses, useNetworkAddressesStore } from "./store"
 import { useAccount, useNetwork, useSigner, useProvider } from "wagmi"
 import { useRouter } from "next/router"
 import { StableCredit, StableCredit__factory } from "../../types"
+import { RiskManager__factory } from "../../types/factories/RiskManager__factory"
 
 export const useNetworkAddresses = () => {
   const { addresses } = useNetworkAddressesStore(
@@ -40,15 +41,16 @@ export const useFetchNetworkAddresses = () => {
     if (!signer) return
     const stableCredit = StableCredit__factory.connect(network, signer)
 
+    addresses.riskManager = await stableCredit.riskManager()
+    const riskManager = RiskManager__factory.connect(
+      addresses.riskManager,
+      signer,
+    )
     addresses.stableCredit = network
-    try {
-      addresses.accessManager = await stableCredit.access()
-      addresses.feeManager = await stableCredit.feeManager()
-      addresses.feeToken = await stableCredit.feeToken()
-      addresses.reservePool = await stableCredit.reservePool()
-    } catch (e) {
-      console.log(e)
-    }
+    addresses.accessManager = await stableCredit.access()
+    addresses.feeManager = await stableCredit.feeManager()
+    addresses.reservePool = await riskManager.reservePool()
+    addresses.feeToken = await stableCredit.feeToken()
 
     set(addresses)
   }, [set, validNetworkAddress, signer, network])

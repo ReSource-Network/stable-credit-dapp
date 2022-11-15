@@ -57,7 +57,9 @@ export const CashOutModal = ({
       setNetworkDebt(
         Number(formatStableCredits(await stableCredit.networkDebt())),
       )
-      setCollateral(Number(formatEther(await reservePool.collateral())))
+      setCollateral(
+        Number(formatEther(await reservePool.reserve(stableCredit.address))),
+      )
       setFeeTokenSymbol(await feeToken.symbol())
     }
     if (address && stableCredit && reservePool) handler()

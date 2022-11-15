@@ -5,6 +5,7 @@ import { FeeManager__factory } from "../types/factories/FeeManager__factory"
 import { StableCredit__factory } from "../types/factories/StableCredit__factory"
 import { ReservePool__factory } from "../types/factories/ReservePool__factory"
 import { AccessManager__factory } from "../types/factories/AccessManager__factory"
+import { RiskManager__factory } from "../types/factories/RiskManager__factory"
 enum Chains {
   MAINNET = "MAINNET",
   ALFAJORES = "ALFAJORES",
@@ -94,6 +95,7 @@ export enum Contracts {
   RESERVE_POOL = "RESERVE_POOL",
   FEE_MANAGER = "FEE_MANAGER",
   ACCESS_MANAGER = "ACCESS_MANAGER",
+  RISK_MANAGER = "RISK_MANAGER",
 }
 
 export const CONTRACTS: Contract = {
@@ -111,6 +113,9 @@ export const CONTRACTS: Contract = {
   },
   [Contracts.ACCESS_MANAGER]: {
     abi: AccessManager__factory.abi,
+  },
+  [Contracts.RISK_MANAGER]: {
+    abi: RiskManager__factory.abi,
   },
 }
 

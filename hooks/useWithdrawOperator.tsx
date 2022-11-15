@@ -3,6 +3,7 @@ import { useAddTransaction } from "../state/transactions"
 import { useCallback } from "react"
 import { useToast } from "@chakra-ui/react"
 import { useReservePoolContract } from "./useReservePoolContract"
+import { useStableCreditContract } from "./useStableCreditContract"
 
 export type useWithdrawOperatorResponse = {
   withdraw: () => Promise<void>
@@ -11,6 +12,7 @@ export type useWithdrawOperatorResponse = {
 
 export const useWithdrawOperator = (): useWithdrawOperatorResponse => {
   const reservePool = useReservePoolContract()
+  const stableCredit = useStableCreditContract()
   const [withdrawing, setWithdrawing] = useMountedState(false)
 
   const addTransaction = useAddTransaction()
@@ -20,11 +22,13 @@ export const useWithdrawOperator = (): useWithdrawOperatorResponse => {
     setWithdrawing(true)
 
     try {
-      const operatorBalance = await reservePool.operatorBalance()
+      const operatorBalance = await reservePool.operatorBalance(
+        stableCredit.address,
+      )
       if (operatorBalance.eq(0)) return
 
       const resp = await (reservePool &&
-        reservePool.withdrawOperator(operatorBalance))
+        reservePool.withdrawOperator(stableCredit.address, operatorBalance))
 
       await resp.wait()
 

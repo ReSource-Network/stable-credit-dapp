@@ -41,6 +41,7 @@ import { useStableCreditContract } from "../../hooks/useStableCreditContract"
 import { useRouter } from "next/router"
 import { MemberModalProps } from "./CashOutModal"
 import { useAccessManagerContract } from "../../hooks/useAccessManagerContract"
+import { useRiskManagerContract } from "../../hooks/useRiskManagerContract"
 
 export const TransferModal = ({
   getMember,
@@ -58,6 +59,7 @@ export const TransferModal = ({
   const feeToken = useFeeTokenContract()
   const feeManager = useFeeManagerContract()
   const stableCredit = useStableCreditContract()
+  const riskManager = useRiskManagerContract()
   const accessManager = useAccessManagerContract()
   const router = useRouter()
 
@@ -76,7 +78,9 @@ export const TransferModal = ({
       if (!signerAddress) return
       setFeeSymbol(await feeToken.symbol())
       setFeesPaused(await feeManager.paused())
-      setIsPastDue(await stableCredit.isPastDue(signerAddress))
+      setIsPastDue(
+        await riskManager.isPastDue(stableCredit.address, signerAddress),
+      )
     }
     if (signerAddress && feeToken && feeManager && stableCredit) handler()
   }, [feeToken, feeManager, signerAddress])

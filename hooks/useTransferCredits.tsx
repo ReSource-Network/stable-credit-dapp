@@ -6,6 +6,7 @@ import { nanoid } from "../functions/nanoid"
 import { parseStableCredits } from "../functions/bignumber"
 import { useToast } from "@chakra-ui/react"
 import { useAccount } from "wagmi"
+import { useRiskManagerContract } from "./useRiskManagerContract"
 
 export type UseTransferCreditsResponse = {
   transfer: (address: string, amount: number) => Promise<void>
@@ -14,6 +15,7 @@ export type UseTransferCreditsResponse = {
 
 export const useTransferCredits = (): UseTransferCreditsResponse => {
   const stableCredit = useStableCreditContract()
+  const riskManager = useRiskManagerContract()
   const [transfering, setTransfering] = useMountedState(false)
   const { address: signerAddress } = useAccount()
   const addTransaction = useAddTransaction()
@@ -25,7 +27,10 @@ export const useTransferCredits = (): UseTransferCreditsResponse => {
 
       try {
         if (address == signerAddress) throw Error("Recipient can't be Sender")
-        const inDefault = await stableCredit.inDefault(address)
+        const inDefault = await riskManager.inDefault(
+          stableCredit.address,
+          address,
+        )
         const resp = await (stableCredit &&
           stableCredit.transfer(address, parseStableCredits(amount.toString())))
 

@@ -28,6 +28,7 @@ import { useDistributeFees } from "../../hooks/useDistributeFees"
 import { useFeeManagerContract } from "../../hooks/useFeeManagerContract"
 import { useFeeTokenContract } from "../../hooks/useFeeTokenContract"
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons"
+import { useStableCreditContract } from "../../hooks/useStableCreditContract"
 
 export const ReserveStats = () => {
   const { colorMode } = useColorMode()
@@ -39,6 +40,7 @@ export const ReserveStats = () => {
   } = useDisclosure()
 
   const reservePool = useReservePoolContract()
+  const stableCredit = useStableCreditContract()
   const feeManager = useFeeManagerContract()
   const feeToken = useFeeTokenContract()
   const { withdraw, loading } = useWithdrawOperator()
@@ -52,10 +54,14 @@ export const ReserveStats = () => {
   useEffect(() => {
     const handler = async () => {
       setOperatorBalance(
-        Number(formatEther(await reservePool.operatorBalance())),
+        Number(
+          formatEther(await reservePool.operatorBalance(stableCredit.address)),
+        ),
       )
-      setRTD((await reservePool.RTD()).toNumber() / 10000)
-      setTargetRTD((await reservePool.targetRTD()).toNumber() / 10000)
+      setRTD((await reservePool.RTD(stableCredit.address)).toNumber() / 10000)
+      setTargetRTD(
+        (await reservePool.targetRTD(stableCredit.address)).toNumber() / 10000,
+      )
       setSwapSink(
         Number(
           formatEther(await feeToken.balanceOf(await reservePool.swapSink())),
@@ -68,8 +74,12 @@ export const ReserveStats = () => {
 
   const handleDistribute = async () => {
     await distribute()
-    setOperatorBalance(Number(formatEther(await reservePool.operatorBalance())))
-    setRTD((await reservePool.RTD()).toNumber() / 10000)
+    setOperatorBalance(
+      Number(
+        formatEther(await reservePool.operatorBalance(stableCredit.address)),
+      ),
+    )
+    setRTD((await reservePool.RTD(stableCredit.address)).toNumber() / 10000)
     setSwapSink(
       Number(
         formatEther(await feeToken.balanceOf(await reservePool.swapSink())),
@@ -80,7 +90,11 @@ export const ReserveStats = () => {
 
   const handleWithdraw = async () => {
     await withdraw()
-    setOperatorBalance(Number(formatEther(await reservePool.operatorBalance())))
+    setOperatorBalance(
+      Number(
+        formatEther(await reservePool.operatorBalance(stableCredit.address)),
+      ),
+    )
   }
 
   const rtdPercent = rtd === 0 ? 0 : (rtd / targetRTD) * 75

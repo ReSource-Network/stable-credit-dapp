@@ -10,6 +10,7 @@ import {
   getFeeManagerContract,
   getFeeTokenContract,
   getReservePoolContract,
+  getRiskManagerContract,
   getStableCreditContract,
 } from "../functions/contracts"
 import { NetworkContractAddresses } from "../state/networkAddresses/store"
@@ -21,8 +22,14 @@ export function getContract(
   signer?: Signer | Provider,
   key?: Contracts,
 ): Contract | null {
-  let { stableCredit, accessManager, feeManager, feeToken, reservePool } =
-    networkAddresses
+  let {
+    stableCredit,
+    accessManager,
+    feeManager,
+    feeToken,
+    reservePool,
+    riskManager,
+  } = networkAddresses
   if (
     !signer ||
     !key ||
@@ -30,7 +37,8 @@ export function getContract(
     !accessManager ||
     !feeManager ||
     !feeToken ||
-    !reservePool
+    !reservePool ||
+    !riskManager
   )
     return null
 
@@ -55,6 +63,10 @@ export function getContract(
     }
     case Contracts.ACCESS_MANAGER: {
       contract = getAccessManagerContract(accessManager, signer)
+      break
+    }
+    case Contracts.RISK_MANAGER: {
+      contract = getRiskManagerContract(riskManager, signer)
       break
     }
   }

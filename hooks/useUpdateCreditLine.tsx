@@ -25,7 +25,7 @@ export const useUpdateCreditLine = (): UseCreateResponse => {
       try {
         const limit = parseStableCredits(creditLimit.toString())
         const resp = await (stableCredit &&
-          stableCredit.extendCreditLine(address, limit))
+          stableCredit.updateCreditLimit(address, limit))
 
         await resp.wait()
 

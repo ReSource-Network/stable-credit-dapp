@@ -6,6 +6,7 @@ import { ReservePool__factory } from "../types/factories/ReservePool__factory"
 import { ERC20__factory } from "../types"
 import { FeeManager__factory } from "../types/factories/FeeManager__factory"
 import { AccessManager__factory } from "../types/factories/AccessManager__factory"
+import { RiskManager__factory } from "../types/factories/RiskManager__factory"
 
 export interface Factory<C extends BaseContract> {
   connect(address: string, signerOrProvider: Signer | Provider): C
@@ -45,6 +46,7 @@ export const getStableCreditContract = createContractGetter(
 export const getReservePoolContract = createContractGetter(ReservePool__factory)
 export const getFeeTokenContract = createContractGetter(ERC20__factory)
 export const getFeeManagerContract = createContractGetter(FeeManager__factory)
+export const getRiskManagerContract = createContractGetter(RiskManager__factory)
 export const getAccessManagerContract = createContractGetter(
   AccessManager__factory,
 )

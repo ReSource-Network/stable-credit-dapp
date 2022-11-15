@@ -7,6 +7,7 @@ export type NetworkContractAddresses = {
   feeManager: string
   feeToken: string
   reservePool: string
+  riskManager: string
 }
 
 export type NetworkAddressesStoreState = {

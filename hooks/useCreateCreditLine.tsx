@@ -4,6 +4,7 @@ import { useAddTransaction } from "../state/transactions"
 import { useCallback } from "react"
 import { parseStableCredits } from "../functions/bignumber"
 import { useToast } from "@chakra-ui/react"
+import { useRiskManagerContract } from "./useRiskManagerContract"
 
 export type UseCreateResponse = {
   createCreditLine: (
@@ -17,6 +18,7 @@ export type UseCreateResponse = {
 }
 
 export const useCreateCreditLine = (): UseCreateResponse => {
+  const riskManager = useRiskManagerContract()
   const stableCredit = useStableCreditContract()
   const [creating, setCreating] = useMountedState(false)
 
@@ -36,8 +38,9 @@ export const useCreateCreditLine = (): UseCreateResponse => {
         console.log(Math.ceil(pastDueDays * 60 * 60 * 24))
 
         const limit = parseStableCredits(creditLimit.toString())
-        const resp = await (stableCredit &&
-          stableCredit.createCreditLine(
+        const resp = await (riskManager &&
+          riskManager.createCreditLine(
+            stableCredit.address,
             address,
             limit,
             Math.ceil(pastDueDays * 60 * 60 * 24),

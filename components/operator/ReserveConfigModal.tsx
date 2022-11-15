@@ -28,11 +28,13 @@ import { Formik, Field } from "formik"
 import { useEffect, useState } from "react"
 import { useFeeManagerContract } from "../../hooks/useFeeManagerContract"
 import { useReservePoolContract } from "../../hooks/useReservePoolContract"
+import { useStableCreditContract } from "../../hooks/useStableCreditContract"
 
 export const ReserveConfigModal = ({ isOpen, onClose }: ModalProps) => {
   const [loading, setLoading] = useState(false)
   const feeManager = useFeeManagerContract()
   const reservePool = useReservePoolContract()
+  const stableCredit = useStableCreditContract()
   const [targetFeeRate, setTargetFeeRate] = useState<undefined | number>()
   const [targetRTD, setTargetRTD] = useState<undefined | number>()
 
@@ -50,7 +52,9 @@ export const ReserveConfigModal = ({ isOpen, onClose }: ModalProps) => {
   useEffect(() => {
     const handler = async () => {
       setTargetFeeRate((await feeManager.targetFeeRate()).toNumber() / 10000)
-      setTargetRTD((await reservePool.targetRTD()).toNumber() / 10000)
+      setTargetRTD(
+        (await reservePool.targetRTD(stableCredit.address)).toNumber() / 10000,
+      )
     }
     if (feeManager && reservePool) handler()
   }, [feeManager, reservePool])

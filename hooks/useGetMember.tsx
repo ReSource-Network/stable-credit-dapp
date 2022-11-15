@@ -6,6 +6,7 @@ import { useAccessManagerContract } from "./useAccessManagerContract"
 import { formatStableCredits } from "../functions/bignumber"
 import { useToast } from "@chakra-ui/react"
 import { useFeeManagerContract } from "./useFeeManagerContract"
+import { useRiskManagerContract } from "./useRiskManagerContract"
 
 export type ManageMember = {
   getMember: (address: string) => Promise<void>
@@ -29,6 +30,7 @@ export interface Member {
 
 export const useGetMember = (): ManageMember => {
   const stableCredit = useStableCreditContract()
+  const riskManager = useRiskManagerContract()
   const accessManager = useAccessManagerContract()
   const feeManager = useFeeManagerContract()
   const [searching, setSearching] = useMountedState(false)
@@ -77,7 +79,10 @@ export const useGetMember = (): ManageMember => {
           ),
         )
 
-        const terms = await stableCredit.creditTerms(address)
+        const terms = await riskManager.creditTerms(
+          stableCredit.address,
+          address,
+        )
 
         let balance = 0
 
@@ -97,8 +102,8 @@ export const useGetMember = (): ManageMember => {
           pastDue: new Date(terms.pastDueDate.toNumber() * 1000),
           issued: new Date(terms.issueDate.toNumber() * 1000),
           feeRate: feeRate.toNumber() / 10000,
-          inDefault: await stableCredit.inDefault(address),
-          isPastDue: await stableCredit.isPastDue(address),
+          inDefault: await riskManager.inDefault(stableCredit.address, address),
+          isPastDue: await riskManager.isPastDue(stableCredit.address, address),
         })
       } catch (e) {
         console.log(e)
