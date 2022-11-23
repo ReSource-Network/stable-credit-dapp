@@ -32,7 +32,7 @@ interface StableCreditDemurrageInterface extends ethers.utils.Interface {
     "burnFrom(address,uint256)": FunctionFragment;
     "burnNetworkDebt(uint256)": FunctionFragment;
     "conversionRate()": FunctionFragment;
-    "convertCreditToFeeToken(uint256)": FunctionFragment;
+    "convertCreditToReferenceToken(uint256)": FunctionFragment;
     "createCreditLine(address,uint256,uint256)": FunctionFragment;
     "creditBalanceOf(address)": FunctionFragment;
     "creditLimitLeftOf(address)": FunctionFragment;
@@ -44,12 +44,12 @@ interface StableCreditDemurrageInterface extends ethers.utils.Interface {
     "demurraged()": FunctionFragment;
     "demurragedBalanceOf(address)": FunctionFragment;
     "feeManager()": FunctionFragment;
-    "feeToken()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(address,address,string,string)": FunctionFragment;
     "name()": FunctionFragment;
     "networkDebt()": FunctionFragment;
     "owner()": FunctionFragment;
+    "referenceToken()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "repayCreditBalance(address,uint128)": FunctionFragment;
     "riskManager()": FunctionFragment;
@@ -100,7 +100,7 @@ interface StableCreditDemurrageInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "convertCreditToFeeToken",
+    functionFragment: "convertCreditToReferenceToken",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
@@ -144,7 +144,6 @@ interface StableCreditDemurrageInterface extends ethers.utils.Interface {
     functionFragment: "feeManager",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "feeToken", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
@@ -159,6 +158,10 @@ interface StableCreditDemurrageInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "referenceToken",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -232,7 +235,7 @@ interface StableCreditDemurrageInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "convertCreditToFeeToken",
+    functionFragment: "convertCreditToReferenceToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -270,7 +273,6 @@ interface StableCreditDemurrageInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "feeManager", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "feeToken", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
@@ -282,6 +284,10 @@ interface StableCreditDemurrageInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "referenceToken",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -328,8 +334,8 @@ interface StableCreditDemurrageInterface extends ethers.utils.Interface {
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "CreditBalanceRepayed(address,uint128)": EventFragment;
-    "CreditLimitExtended(address,uint256)": EventFragment;
     "CreditLimitUpdate(address,uint256)": EventFragment;
+    "CreditLimitUpdated(address,uint256)": EventFragment;
     "CreditLineCreated(address,uint256,uint256)": EventFragment;
     "MembersDemurraged(uint256)": EventFragment;
     "NetworkDebtBurned(address,uint256)": EventFragment;
@@ -339,8 +345,8 @@ interface StableCreditDemurrageInterface extends ethers.utils.Interface {
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditBalanceRepayed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "CreditLimitExtended"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLimitUpdate"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CreditLimitUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLineCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MembersDemurraged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NetworkDebtBurned"): EventFragment;
@@ -360,12 +366,12 @@ export type CreditBalanceRepayedEvent = TypedEvent<
   [string, BigNumber] & { member: string; amount: BigNumber }
 >;
 
-export type CreditLimitExtendedEvent = TypedEvent<
-  [string, BigNumber] & { member: string; creditLimit: BigNumber }
->;
-
 export type CreditLimitUpdateEvent = TypedEvent<
   [string, BigNumber] & { member: string; limit: BigNumber }
+>;
+
+export type CreditLimitUpdatedEvent = TypedEvent<
+  [string, BigNumber] & { member: string; creditLimit: BigNumber }
 >;
 
 export type CreditLineCreatedEvent = TypedEvent<
@@ -443,7 +449,7 @@ export class StableCreditDemurrage extends BaseContract {
     ): Promise<ContractTransaction>;
 
     __StableCredit_init(
-      _feeToken: string,
+      _referenceToken: string,
       _accessManager: string,
       name_: string,
       symbol_: string,
@@ -489,7 +495,7 @@ export class StableCreditDemurrage extends BaseContract {
 
     conversionRate(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    convertCreditToFeeToken(
+    convertCreditToReferenceToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
@@ -540,8 +546,6 @@ export class StableCreditDemurrage extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<[string]>;
 
-    feeToken(overrides?: CallOverrides): Promise<[string]>;
-
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -549,7 +553,7 @@ export class StableCreditDemurrage extends BaseContract {
     ): Promise<ContractTransaction>;
 
     initialize(
-      _feeToken: string,
+      _referenceToken: string,
       _accessManager: string,
       name_: string,
       symbol_: string,
@@ -561,6 +565,8 @@ export class StableCreditDemurrage extends BaseContract {
     networkDebt(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
+
+    referenceToken(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -625,7 +631,7 @@ export class StableCreditDemurrage extends BaseContract {
   ): Promise<ContractTransaction>;
 
   __StableCredit_init(
-    _feeToken: string,
+    _referenceToken: string,
     _accessManager: string,
     name_: string,
     symbol_: string,
@@ -671,7 +677,7 @@ export class StableCreditDemurrage extends BaseContract {
 
   conversionRate(overrides?: CallOverrides): Promise<BigNumber>;
 
-  convertCreditToFeeToken(
+  convertCreditToReferenceToken(
     amount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
@@ -719,8 +725,6 @@ export class StableCreditDemurrage extends BaseContract {
 
   feeManager(overrides?: CallOverrides): Promise<string>;
 
-  feeToken(overrides?: CallOverrides): Promise<string>;
-
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
@@ -728,7 +732,7 @@ export class StableCreditDemurrage extends BaseContract {
   ): Promise<ContractTransaction>;
 
   initialize(
-    _feeToken: string,
+    _referenceToken: string,
     _accessManager: string,
     name_: string,
     symbol_: string,
@@ -740,6 +744,8 @@ export class StableCreditDemurrage extends BaseContract {
   networkDebt(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
+
+  referenceToken(overrides?: CallOverrides): Promise<string>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -804,7 +810,7 @@ export class StableCreditDemurrage extends BaseContract {
     ): Promise<void>;
 
     __StableCredit_init(
-      _feeToken: string,
+      _referenceToken: string,
       _accessManager: string,
       name_: string,
       symbol_: string,
@@ -844,7 +850,7 @@ export class StableCreditDemurrage extends BaseContract {
 
     conversionRate(overrides?: CallOverrides): Promise<BigNumber>;
 
-    convertCreditToFeeToken(
+    convertCreditToReferenceToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -895,8 +901,6 @@ export class StableCreditDemurrage extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<string>;
 
-    feeToken(overrides?: CallOverrides): Promise<string>;
-
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -904,7 +908,7 @@ export class StableCreditDemurrage extends BaseContract {
     ): Promise<boolean>;
 
     initialize(
-      _feeToken: string,
+      _referenceToken: string,
       _accessManager: string,
       name_: string,
       symbol_: string,
@@ -916,6 +920,8 @@ export class StableCreditDemurrage extends BaseContract {
     networkDebt(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
+
+    referenceToken(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -1006,22 +1012,6 @@ export class StableCreditDemurrage extends BaseContract {
       { member: string; amount: BigNumber }
     >;
 
-    "CreditLimitExtended(address,uint256)"(
-      member?: null,
-      creditLimit?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { member: string; creditLimit: BigNumber }
-    >;
-
-    CreditLimitExtended(
-      member?: null,
-      creditLimit?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { member: string; creditLimit: BigNumber }
-    >;
-
     "CreditLimitUpdate(address,uint256)"(
       member?: null,
       limit?: null
@@ -1036,6 +1026,22 @@ export class StableCreditDemurrage extends BaseContract {
     ): TypedEventFilter<
       [string, BigNumber],
       { member: string; limit: BigNumber }
+    >;
+
+    "CreditLimitUpdated(address,uint256)"(
+      member?: null,
+      creditLimit?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { member: string; creditLimit: BigNumber }
+    >;
+
+    CreditLimitUpdated(
+      member?: null,
+      creditLimit?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { member: string; creditLimit: BigNumber }
     >;
 
     "CreditLineCreated(address,uint256,uint256)"(
@@ -1123,7 +1129,7 @@ export class StableCreditDemurrage extends BaseContract {
     ): Promise<BigNumber>;
 
     __StableCredit_init(
-      _feeToken: string,
+      _referenceToken: string,
       _accessManager: string,
       name_: string,
       symbol_: string,
@@ -1169,7 +1175,7 @@ export class StableCreditDemurrage extends BaseContract {
 
     conversionRate(overrides?: CallOverrides): Promise<BigNumber>;
 
-    convertCreditToFeeToken(
+    convertCreditToReferenceToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1220,8 +1226,6 @@ export class StableCreditDemurrage extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<BigNumber>;
 
-    feeToken(overrides?: CallOverrides): Promise<BigNumber>;
-
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -1229,7 +1233,7 @@ export class StableCreditDemurrage extends BaseContract {
     ): Promise<BigNumber>;
 
     initialize(
-      _feeToken: string,
+      _referenceToken: string,
       _accessManager: string,
       name_: string,
       symbol_: string,
@@ -1241,6 +1245,8 @@ export class StableCreditDemurrage extends BaseContract {
     networkDebt(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    referenceToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1306,7 +1312,7 @@ export class StableCreditDemurrage extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     __StableCredit_init(
-      _feeToken: string,
+      _referenceToken: string,
       _accessManager: string,
       name_: string,
       symbol_: string,
@@ -1355,7 +1361,7 @@ export class StableCreditDemurrage extends BaseContract {
 
     conversionRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    convertCreditToFeeToken(
+    convertCreditToReferenceToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1406,8 +1412,6 @@ export class StableCreditDemurrage extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    feeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -1415,7 +1419,7 @@ export class StableCreditDemurrage extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initialize(
-      _feeToken: string,
+      _referenceToken: string,
       _accessManager: string,
       name_: string,
       symbol_: string,
@@ -1427,6 +1431,8 @@ export class StableCreditDemurrage extends BaseContract {
     networkDebt(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    referenceToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }

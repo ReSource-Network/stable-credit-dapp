@@ -44,17 +44,32 @@ interface IRiskManagerInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
-    "CreditDefault(address)": EventFragment;
-    "PeriodEnded(address)": EventFragment;
+    "CreditDefault(address,address)": EventFragment;
+    "CreditTermsCreated(address,address,uint256,uint256)": EventFragment;
+    "PeriodEnded(address,address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "CreditDefault"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CreditTermsCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PeriodEnded"): EventFragment;
 }
 
-export type CreditDefaultEvent = TypedEvent<[string] & { member: string }>;
+export type CreditDefaultEvent = TypedEvent<
+  [string, string] & { network: string; member: string }
+>;
 
-export type PeriodEndedEvent = TypedEvent<[string] & { member: string }>;
+export type CreditTermsCreatedEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber] & {
+    network: string;
+    member: string;
+    pastDueTime: BigNumber;
+    defaultTime: BigNumber;
+  }
+>;
+
+export type PeriodEndedEvent = TypedEvent<
+  [string, string] & { network: string; member: string }
+>;
 
 export class IRiskManager extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -132,19 +147,55 @@ export class IRiskManager extends BaseContract {
   };
 
   filters: {
-    "CreditDefault(address)"(
+    "CreditDefault(address,address)"(
+      network?: null,
       member?: null
-    ): TypedEventFilter<[string], { member: string }>;
+    ): TypedEventFilter<[string, string], { network: string; member: string }>;
 
     CreditDefault(
+      network?: null,
       member?: null
-    ): TypedEventFilter<[string], { member: string }>;
+    ): TypedEventFilter<[string, string], { network: string; member: string }>;
 
-    "PeriodEnded(address)"(
+    "CreditTermsCreated(address,address,uint256,uint256)"(
+      network?: null,
+      member?: null,
+      pastDueTime?: null,
+      defaultTime?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber],
+      {
+        network: string;
+        member: string;
+        pastDueTime: BigNumber;
+        defaultTime: BigNumber;
+      }
+    >;
+
+    CreditTermsCreated(
+      network?: null,
+      member?: null,
+      pastDueTime?: null,
+      defaultTime?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber],
+      {
+        network: string;
+        member: string;
+        pastDueTime: BigNumber;
+        defaultTime: BigNumber;
+      }
+    >;
+
+    "PeriodEnded(address,address)"(
+      network?: null,
       member?: null
-    ): TypedEventFilter<[string], { member: string }>;
+    ): TypedEventFilter<[string, string], { network: string; member: string }>;
 
-    PeriodEnded(member?: null): TypedEventFilter<[string], { member: string }>;
+    PeriodEnded(
+      network?: null,
+      member?: null
+    ): TypedEventFilter<[string, string], { network: string; member: string }>;
   };
 
   estimateGas: {

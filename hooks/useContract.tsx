@@ -8,7 +8,7 @@ import { Contracts } from "../config"
 import {
   getAccessManagerContract,
   getFeeManagerContract,
-  getFeeTokenContract,
+  getReferenceTokenContract,
   getReservePoolContract,
   getRiskManagerContract,
   getStableCreditContract,
@@ -26,7 +26,7 @@ export function getContract(
     stableCredit,
     accessManager,
     feeManager,
-    feeToken,
+    referenceToken,
     reservePool,
     riskManager,
   } = networkAddresses
@@ -36,7 +36,7 @@ export function getContract(
     !stableCredit ||
     !accessManager ||
     !feeManager ||
-    !feeToken ||
+    !referenceToken ||
     !reservePool ||
     !riskManager
   )
@@ -54,7 +54,7 @@ export function getContract(
       break
     }
     case Contracts.FEE_TOKEN: {
-      contract = getFeeTokenContract(feeToken, signer)
+      contract = getReferenceTokenContract(referenceToken, signer)
       break
     }
     case Contracts.FEE_MANAGER: {

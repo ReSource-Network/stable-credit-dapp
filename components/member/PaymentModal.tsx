@@ -18,17 +18,17 @@ import {
 } from "@chakra-ui/react"
 import { Formik, Field } from "formik"
 import { Stack, Text } from "@chakra-ui/react"
-import { FeeTokenBalance } from "./FeeTokenBalance"
+import { ReferenceTokenBalance } from "./ReferenceTokenBalance"
 import { ManageMember } from "../../hooks/useGetMember"
 import { useAccount } from "wagmi"
 import { useRepayCredits } from "../../hooks/useRepayCredits"
 import {
   ApprovalState,
-  useApproveFeeToken,
-} from "../../hooks/useApproveFeeToken"
+  useApproveReferenceToken,
+} from "../../hooks/useApproveReferenceToken"
 import { constants } from "ethers/lib/ethers"
 import { useStableCreditContract } from "../../hooks/useStableCreditContract"
-import { useFeeTokenContract } from "../../hooks/useFeeTokenContract"
+import { useReferenceTokenContract } from "../../hooks/useReferenceTokenContract"
 import { useEffect, useState } from "react"
 import { formatEther } from "ethers/lib/utils"
 import { MemberModalProps } from "./CashOutModal"
@@ -41,26 +41,26 @@ export const PaymentModal = ({
 }: MemberModalProps) => {
   const { repay, loading } = useRepayCredits()
   const stableCredit = useStableCreditContract()
-  const { approve, approving, approvalState } = useApproveFeeToken(
+  const { approve, approving, approvalState } = useApproveReferenceToken(
     constants.MaxUint256,
     stableCredit?.address,
   )
   const { address } = useAccount()
-  const feeToken = useFeeTokenContract()
-  const [feeTokenSymbol, setFeeSymbol] = useState("")
-  const [feeTokenBalance, setFeeTokenBalance] = useState(0)
+  const referenceToken = useReferenceTokenContract()
+  const [referenceTokenSymbol, setFeeSymbol] = useState("")
+  const [referenceTokenBalance, setReferenceTokenBalance] = useState(0)
 
   useEffect(() => {
     const handler = async () => {
       if (!address) return
-      setFeeSymbol(await feeToken.symbol())
-      const _feeTokenBalance = Number(
-        formatEther(await feeToken.balanceOf(address)),
+      setFeeSymbol(await referenceToken.symbol())
+      const _referenceTokenBalance = Number(
+        formatEther(await referenceToken.balanceOf(address)),
       )
-      setFeeTokenBalance(_feeTokenBalance)
+      setReferenceTokenBalance(_referenceTokenBalance)
     }
-    if (address && feeToken) handler()
-  }, [feeToken, address])
+    if (address && referenceToken) handler()
+  }, [referenceToken, address])
 
   return (
     <Modal isCentered size="md" isOpen={isOpen} onClose={onClose}>
@@ -123,7 +123,7 @@ export const PaymentModal = ({
                             })}
                           </Text>
                         </HStack>
-                        <FeeTokenBalance />
+                        <ReferenceTokenBalance />
                       </Stack>
                       <HStack>
                         <FormControl
@@ -140,7 +140,7 @@ export const PaymentModal = ({
                               placeholder="0"
                               validate={(value) => {
                                 let error
-                                if (value > feeTokenBalance) {
+                                if (value > referenceTokenBalance) {
                                   error = "Insufficient Funds"
                                 }
                                 return error
@@ -153,9 +153,11 @@ export const PaymentModal = ({
                           onClick={() => {
                             if (!member) return
                             if (member.balance >= 0) return
-                            if (Math.abs(member.balance) <= feeTokenBalance)
+                            if (
+                              Math.abs(member.balance) <= referenceTokenBalance
+                            )
                               setValues({ amount: Math.abs(member.balance) })
-                            else setValues({ amount: feeTokenBalance })
+                            else setValues({ amount: referenceTokenBalance })
                           }}
                           alignSelf={"flex-end"}
                         >
@@ -176,7 +178,7 @@ export const PaymentModal = ({
                     isLoading={approving}
                     loadingText="Approving"
                   >
-                    Approve {feeTokenSymbol}
+                    Approve {referenceTokenSymbol}
                   </Button>
                 ) : (
                   <HStack w="100%" mt="1em">

@@ -42,7 +42,7 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "CreditLimitExtended",
+    name: "CreditLimitUpdated",
     type: "event",
   },
   {
@@ -123,7 +123,7 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "convertCreditToFeeToken",
+    name: "convertCreditToReferenceToken",
     outputs: [
       {
         internalType: "uint256",
@@ -172,7 +172,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "feeToken",
+    name: "referenceToken",
     outputs: [
       {
         internalType: "contract IERC20Upgradeable",

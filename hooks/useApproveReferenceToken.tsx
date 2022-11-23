@@ -5,11 +5,11 @@ import { config } from "../config"
 import { nanoid } from "../functions"
 import { formatBN } from "../functions/bignumber"
 import { useAddTransaction } from "../state/transactions"
-import { useAllowanceFeetoken } from "./useAllowanceFeeToken"
+import { useAllowanceFeetoken } from "./useAllowanceReferenceToken"
 
 import { useMountedState } from "./useMountedState"
 import { useAccount } from "wagmi"
-import { useFeeTokenContract } from "./useFeeTokenContract"
+import { useReferenceTokenContract } from "./useReferenceTokenContract"
 
 export type UseApproveResponse = {
   approve: () => Promise<void>
@@ -28,12 +28,12 @@ export enum ApprovalState {
   APPROVED = "APPROVED",
 }
 
-export const useApproveFeeToken = (
+export const useApproveReferenceToken = (
   amount: BigNumber,
   spender: string,
 ): UseApproveResponse => {
   const { address } = useAccount()
-  const feeToken = useFeeTokenContract()
+  const referenceToken = useReferenceTokenContract()
 
   const [approving, setApproving] = useMountedState(false)
   const {
@@ -62,15 +62,16 @@ export const useApproveFeeToken = (
     setApproving(true)
 
     try {
-      const resp = await (feeToken && feeToken.approve(spender, amount))
+      const resp = await (referenceToken &&
+        referenceToken.approve(spender, amount))
 
-      const symbol = await feeToken.symbol()
+      const symbol = await referenceToken.symbol()
 
       await resp.wait()
 
       addTransaction(resp, {
         summary: `Approved ${symbol}`,
-        approval: { tokenAddress: feeToken.address, spender },
+        approval: { tokenAddress: referenceToken.address, spender },
       })
 
       await updateAllowance()
@@ -101,7 +102,14 @@ export const useApproveFeeToken = (
     } finally {
       setApproving(false)
     }
-  }, [spender, amount, setApproving, addTransaction, updateAllowance, feeToken])
+  }, [
+    spender,
+    amount,
+    setApproving,
+    addTransaction,
+    updateAllowance,
+    referenceToken,
+  ])
 
   return {
     approve,

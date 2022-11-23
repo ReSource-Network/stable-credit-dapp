@@ -12,7 +12,7 @@ import { faCircle } from "@fortawesome/free-solid-svg-icons"
 import { useEffect, useState } from "react"
 import { useAccount } from "wagmi"
 import { useFeeManagerContract } from "../../hooks/useFeeManagerContract"
-import { useFeeTokenContract } from "../../hooks/useFeeTokenContract"
+import { useReferenceTokenContract } from "../../hooks/useReferenceTokenContract"
 import { parseStableCredits } from "../../functions/bignumber"
 import { formatEther } from "ethers/lib/utils"
 import { debounce } from "lodash"
@@ -27,17 +27,17 @@ export const TransactionFee = ({
   setSufficient: (val: boolean) => void
 }) => {
   const feeManager = useFeeManagerContract()
-  const feeToken = useFeeTokenContract()
+  const referenceToken = useReferenceTokenContract()
   const { address } = useAccount()
   const [fee, setFee] = useState(0)
   const [loading, setLoading] = useState(false)
-  const [feeTokenSymbol, setFeeSymbol] = useState("")
+  const [referenceTokenSymbol, setFeeSymbol] = useState("")
 
   const handler = debounce(async () => {
     if (!creditAmount || creditAmount === 0) {
       setLoading(false)
       setSufficient(true)
-      if (!feeTokenSymbol) setFeeSymbol(await feeToken.symbol())
+      if (!referenceTokenSymbol) setFeeSymbol(await referenceToken.symbol())
       return setFee(0)
     }
     if (!address) return setLoading(false)
@@ -46,27 +46,27 @@ export const TransactionFee = ({
       parseStableCredits(creditAmount.toString()),
     )
     setFee(Number(formatEther(memberFee)))
-    if (!feeTokenSymbol) setFeeSymbol(await feeToken.symbol())
-    const feeTokenBalance = Number(
-      formatEther(await feeToken.balanceOf(address)),
+    if (!referenceTokenSymbol) setFeeSymbol(await referenceToken.symbol())
+    const referenceTokenBalance = Number(
+      formatEther(await referenceToken.balanceOf(address)),
     )
-    setSufficient(feeTokenBalance >= Number(formatEther(memberFee)))
+    setSufficient(referenceTokenBalance >= Number(formatEther(memberFee)))
     setLoading(false)
   }, 500)
 
   useEffect(() => {
-    if (address && feeManager && feeToken) {
+    if (address && feeManager && referenceToken) {
       setLoading(true)
       handler()
     }
-  }, [feeManager, feeToken, address, creditAmount])
+  }, [feeManager, referenceToken, address, creditAmount])
 
   return (
     <VStack w="100%">
       <HStack justifyContent="space-between" w="100%">
         <Text>Transaction Fee:</Text>
         <HStack>
-          <Text> {feeTokenSymbol}</Text>
+          <Text> {referenceTokenSymbol}</Text>
           <FontAwesomeIcon color="#38a5fd" icon={faCircle} />
           {loading ? (
             <Spinner />

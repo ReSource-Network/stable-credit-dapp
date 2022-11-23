@@ -38,7 +38,7 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "depositReserve",
+    name: "depositPayment",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

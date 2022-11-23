@@ -16,7 +16,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"
 import { useRouter } from "next/router"
 import { StableCreditCard } from "../components/member/wallet/StableCreditCard"
-import { FeeTokenCard } from "../components/member/wallet/FeeTokenCard"
+import { ReferenceTokenCard } from "../components/member/wallet/ReferenceTokenCard"
 import { useAccount } from "wagmi"
 import { useInterval } from "react-use"
 
@@ -24,7 +24,7 @@ export const Member: NextPage = () => {
   const { colorMode } = useColorMode()
   const router = useRouter()
   const [showStableCredit, setShowStableCredit] = useState(false)
-  const [showFeeToken, setShowFeeToken] = useState(false)
+  const [showReferenceToken, setShowReferenceToken] = useState(false)
   const { address } = useAccount()
   const { show } = router.query
   const memberManage = useGetMember()
@@ -83,8 +83,8 @@ export const Member: NextPage = () => {
             />
           )}
           <Center>
-            <VStack w="100%" spacing={!showFeeToken ? "2em" : "0em"}>
-              <Collapse style={{ width: "100%" }} in={!showFeeToken}>
+            <VStack w="100%" spacing={!showReferenceToken ? "2em" : "0em"}>
+              <Collapse style={{ width: "100%" }} in={!showReferenceToken}>
                 <StableCreditCard
                   memberManage={memberManage}
                   showCredit={showStableCredit}
@@ -93,9 +93,9 @@ export const Member: NextPage = () => {
               </Collapse>
 
               <Collapse style={{ width: "100%" }} in={!showStableCredit}>
-                <FeeTokenCard
-                  showFeeToken={showFeeToken}
-                  setShowFeeToken={setShowFeeToken}
+                <ReferenceTokenCard
+                  showReferenceToken={showReferenceToken}
+                  setShowReferenceToken={setShowReferenceToken}
                 />
               </Collapse>
             </VStack>

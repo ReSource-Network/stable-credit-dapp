@@ -31,11 +31,11 @@ import { useTransferCredits } from "../../hooks/useTransferCredits"
 import { TransactionFee } from "./TransactionFee"
 import {
   ApprovalState,
-  useApproveFeeToken,
-} from "../../hooks/useApproveFeeToken"
+  useApproveReferenceToken,
+} from "../../hooks/useApproveReferenceToken"
 import { useNetworkAddresses } from "../../state/networkAddresses"
 import { useEffect, useState } from "react"
-import { useFeeTokenContract } from "../../hooks/useFeeTokenContract"
+import { useReferenceTokenContract } from "../../hooks/useReferenceTokenContract"
 import { useFeeManagerContract } from "../../hooks/useFeeManagerContract"
 import { useStableCreditContract } from "../../hooks/useStableCreditContract"
 import { useRouter } from "next/router"
@@ -52,18 +52,18 @@ export const TransferModal = ({
   const { transfer, loading } = useTransferCredits()
   const { address: signerAddress } = useAccount()
   const { feeManager: feeManagerAddress } = useNetworkAddresses()
-  const [feeTokenSymbol, setFeeSymbol] = useState("")
+  const [referenceTokenSymbol, setFeeSymbol] = useState("")
   const [feesPaused, setFeesPaused] = useState(false)
   const [sufficient, setSufficient] = useState(false)
   const [isPastDue, setIsPastDue] = useState(false)
-  const feeToken = useFeeTokenContract()
+  const referenceToken = useReferenceTokenContract()
   const feeManager = useFeeManagerContract()
   const stableCredit = useStableCreditContract()
   const riskManager = useRiskManagerContract()
   const accessManager = useAccessManagerContract()
   const router = useRouter()
 
-  const { approve, approving, approvalState } = useApproveFeeToken(
+  const { approve, approving, approvalState } = useApproveReferenceToken(
     constants.MaxUint256,
     feeManagerAddress,
   )
@@ -76,14 +76,14 @@ export const TransferModal = ({
   useEffect(() => {
     const handler = async () => {
       if (!signerAddress) return
-      setFeeSymbol(await feeToken.symbol())
+      setFeeSymbol(await referenceToken.symbol())
       setFeesPaused(await feeManager.paused())
       setIsPastDue(
         await riskManager.isPastDue(stableCredit.address, signerAddress),
       )
     }
-    if (signerAddress && feeToken && feeManager && stableCredit) handler()
-  }, [feeToken, feeManager, signerAddress])
+    if (signerAddress && referenceToken && feeManager && stableCredit) handler()
+  }, [referenceToken, feeManager, signerAddress])
 
   return (
     <Modal isCentered size="md" isOpen={isOpen} onClose={onClose}>
@@ -229,7 +229,7 @@ export const TransferModal = ({
                     isLoading={approving}
                     loadingText="Approving"
                   >
-                    Approve {feeTokenSymbol}
+                    Approve {referenceTokenSymbol}
                   </Button>
                 ) : (
                   <HStack w="100%" mt="1em">

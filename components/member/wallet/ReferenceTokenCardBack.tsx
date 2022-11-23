@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react"
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { FeeTokenBalance } from "../FeeTokenBalance"
+import { ReferenceTokenBalance } from "../ReferenceTokenBalance"
 
 const defaultStyles: BoxProps = {
   h: "full",
@@ -18,13 +18,13 @@ const defaultStyles: BoxProps = {
 
 interface Props extends BoxProps {
   flip: () => void
-  feeTokenBalance: number
+  referenceTokenBalance: number
   symbol: string
 }
 
-export const FeeTokenCardBack = ({
+export const ReferenceTokenCardBack = ({
   flip,
-  feeTokenBalance,
+  referenceTokenBalance,
   symbol,
   ...rest
 }: Props) => {
@@ -77,7 +77,7 @@ export const FeeTokenCardBack = ({
           </Text>
 
           <Text color={colorMode === "light" ? "white" : "black"}>
-            {feeTokenBalance.toLocaleString("en", {
+            {referenceTokenBalance.toLocaleString("en", {
               style: "currency",
               currency: "USD",
             })}

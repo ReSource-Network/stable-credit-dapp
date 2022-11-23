@@ -2,31 +2,31 @@ import { Box, BoxProps, HStack, Text, VStack } from "@chakra-ui/layout"
 import { Button, Collapse, Link, useColorMode } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react"
 import { FlippableContainer } from "./FlippableContainer"
-import { FeeTokenCardBack } from "./FeeTokenCardBack"
-import { FeeTokenCardFront } from "./FeeTokenCardFront"
+import { ReferenceTokenCardBack } from "./ReferenceTokenCardBack"
+import { ReferenceTokenCardFront } from "./ReferenceTokenCardFront"
 import { useAccount } from "wagmi"
-import { useFeeTokenContract } from "../../../hooks/useFeeTokenContract"
+import { useReferenceTokenContract } from "../../../hooks/useReferenceTokenContract"
 import { useStableCreditContract } from "../../../hooks/useStableCreditContract"
 import { formatEther } from "ethers/lib/utils"
 import { useInterval } from "../../../hooks/useInterval"
 import { useGetTransactions } from "../../../state"
 
 interface Props extends BoxProps {
-  showFeeToken: boolean
-  setShowFeeToken: (val: boolean) => void
+  showReferenceToken: boolean
+  setShowReferenceToken: (val: boolean) => void
 }
 
-export const FeeTokenCard = ({
-  showFeeToken,
-  setShowFeeToken,
+export const ReferenceTokenCard = ({
+  showReferenceToken,
+  setShowReferenceToken,
   ...rest
 }: Props) => {
-  const flipCard = () => setShowFeeToken(!showFeeToken)
+  const flipCard = () => setShowReferenceToken(!showReferenceToken)
 
-  const [feeTokenSymbol, setFeeTokenSymbol] = useState("")
-  const [feeTokenBalance, setFeeTokenBalance] = useState(0)
+  const [referenceTokenSymbol, setReferenceTokenSymbol] = useState("")
+  const [referenceTokenBalance, setReferenceTokenBalance] = useState(0)
   const [stableCreditSymbol, setStableCreditSymbol] = useState("")
-  const feeToken = useFeeTokenContract()
+  const referenceToken = useReferenceTokenContract()
   const stableCredit = useStableCreditContract()
   const { address } = useAccount()
   const { colorMode } = useColorMode()
@@ -35,21 +35,25 @@ export const FeeTokenCard = ({
   useEffect(() => {
     const handler = async () => {
       if (!address) return
-      setFeeTokenSymbol(await feeToken.symbol())
-      setFeeTokenBalance(Number(formatEther(await feeToken.balanceOf(address))))
+      setReferenceTokenSymbol(await referenceToken.symbol())
+      setReferenceTokenBalance(
+        Number(formatEther(await referenceToken.balanceOf(address))),
+      )
       setStableCreditSymbol(await stableCredit.symbol())
     }
-    if (address && feeToken && stableCredit) handler()
-  }, [address, feeToken, stableCredit, transactions])
+    if (address && referenceToken && stableCredit) handler()
+  }, [address, referenceToken, stableCredit, transactions])
 
   useInterval(() => {
     const handler = async () => {
       if (!address) return
-      setFeeTokenSymbol(await feeToken.symbol())
-      setFeeTokenBalance(Number(formatEther(await feeToken.balanceOf(address))))
+      setReferenceTokenSymbol(await referenceToken.symbol())
+      setReferenceTokenBalance(
+        Number(formatEther(await referenceToken.balanceOf(address))),
+      )
       setStableCreditSymbol(await stableCredit.symbol())
     }
-    if (address && feeToken && stableCredit) handler()
+    if (address && referenceToken && stableCredit) handler()
   }, 5000)
 
   return (
@@ -57,18 +61,23 @@ export const FeeTokenCard = ({
       <Box {...rest} minW={{ base: "none", md: "350px" }}>
         <FlippableContainer
           back={
-            <FeeTokenCardBack
-              feeTokenBalance={feeTokenBalance}
-              symbol={feeTokenSymbol}
+            <ReferenceTokenCardBack
+              referenceTokenBalance={referenceTokenBalance}
+              symbol={referenceTokenSymbol}
               flip={flipCard}
             />
           }
-          front={<FeeTokenCardFront symbol={feeTokenSymbol} flip={flipCard} />}
-          showFront={!showFeeToken}
+          front={
+            <ReferenceTokenCardFront
+              symbol={referenceTokenSymbol}
+              flip={flipCard}
+            />
+          }
+          showFront={!showReferenceToken}
           setShowFront={flipCard}
         />
       </Box>
-      <Collapse style={{ width: "100%" }} in={showFeeToken}>
+      <Collapse style={{ width: "100%" }} in={showReferenceToken}>
         <VStack w="100%" mt="1em">
           <VStack
             border="2px solid"
@@ -77,7 +86,8 @@ export const FeeTokenCard = ({
             padding="1em"
           >
             <Text>
-              Use <span style={{ fontWeight: "bold" }}>{feeTokenSymbol}</span>{" "}
+              Use{" "}
+              <span style={{ fontWeight: "bold" }}>{referenceTokenSymbol}</span>{" "}
               to pay for transaction fees or repay your credit balance in the{" "}
               <span style={{ fontWeight: "bold" }}>{stableCreditSymbol}</span>{" "}
               network. Fees are pooled together in a network reserve to

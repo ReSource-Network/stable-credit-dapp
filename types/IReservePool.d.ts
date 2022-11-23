@@ -22,7 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface IReservePoolInterface extends ethers.utils.Interface {
   functions: {
     "depositFees(address,uint256)": FunctionFragment;
-    "depositReserve(address,uint256)": FunctionFragment;
+    "depositPayment(address,uint256)": FunctionFragment;
     "reimburseMember(address,address,uint256)": FunctionFragment;
   };
 
@@ -31,7 +31,7 @@ interface IReservePoolInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "depositReserve",
+    functionFragment: "depositPayment",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
@@ -44,7 +44,7 @@ interface IReservePoolInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "depositReserve",
+    functionFragment: "depositPayment",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -105,7 +105,7 @@ export class IReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    depositReserve(
+    depositPayment(
       network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -125,7 +125,7 @@ export class IReservePool extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  depositReserve(
+  depositPayment(
     network: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -145,7 +145,7 @@ export class IReservePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    depositReserve(
+    depositPayment(
       network: string,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -168,7 +168,7 @@ export class IReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    depositReserve(
+    depositPayment(
       network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -189,7 +189,7 @@ export class IReservePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    depositReserve(
+    depositPayment(
       network: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }

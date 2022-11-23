@@ -22,10 +22,10 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface IStableCreditInterface extends ethers.utils.Interface {
   functions: {
     "access()": FunctionFragment;
-    "convertCreditToFeeToken(uint256)": FunctionFragment;
+    "convertCreditToReferenceToken(uint256)": FunctionFragment;
     "createCreditLine(address,uint256,uint256)": FunctionFragment;
     "feeManager()": FunctionFragment;
-    "feeToken()": FunctionFragment;
+    "referenceToken()": FunctionFragment;
     "riskManager()": FunctionFragment;
     "updateCreditLimit(address,uint256)": FunctionFragment;
     "writeOffCreditLine(address)": FunctionFragment;
@@ -33,7 +33,7 @@ interface IStableCreditInterface extends ethers.utils.Interface {
 
   encodeFunctionData(functionFragment: "access", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "convertCreditToFeeToken",
+    functionFragment: "convertCreditToReferenceToken",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
@@ -44,7 +44,10 @@ interface IStableCreditInterface extends ethers.utils.Interface {
     functionFragment: "feeManager",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "feeToken", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "referenceToken",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "riskManager",
     values?: undefined
@@ -60,7 +63,7 @@ interface IStableCreditInterface extends ethers.utils.Interface {
 
   decodeFunctionResult(functionFragment: "access", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "convertCreditToFeeToken",
+    functionFragment: "convertCreditToReferenceToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -68,7 +71,10 @@ interface IStableCreditInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "feeManager", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "feeToken", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "referenceToken",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "riskManager",
     data: BytesLike
@@ -84,14 +90,14 @@ interface IStableCreditInterface extends ethers.utils.Interface {
 
   events: {
     "CreditBalanceRepayed(address,uint128)": EventFragment;
-    "CreditLimitExtended(address,uint256)": EventFragment;
+    "CreditLimitUpdated(address,uint256)": EventFragment;
     "CreditLineCreated(address,uint256,uint256)": EventFragment;
     "MembersDemurraged(uint256)": EventFragment;
     "NetworkDebtBurned(address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "CreditBalanceRepayed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "CreditLimitExtended"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CreditLimitUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreditLineCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MembersDemurraged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NetworkDebtBurned"): EventFragment;
@@ -101,7 +107,7 @@ export type CreditBalanceRepayedEvent = TypedEvent<
   [string, BigNumber] & { member: string; amount: BigNumber }
 >;
 
-export type CreditLimitExtendedEvent = TypedEvent<
+export type CreditLimitUpdatedEvent = TypedEvent<
   [string, BigNumber] & { member: string; creditLimit: BigNumber }
 >;
 
@@ -167,7 +173,7 @@ export class IStableCredit extends BaseContract {
   functions: {
     access(overrides?: CallOverrides): Promise<[string]>;
 
-    convertCreditToFeeToken(
+    convertCreditToReferenceToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
@@ -181,7 +187,7 @@ export class IStableCredit extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<[string]>;
 
-    feeToken(overrides?: CallOverrides): Promise<[string]>;
+    referenceToken(overrides?: CallOverrides): Promise<[string]>;
 
     riskManager(overrides?: CallOverrides): Promise<[string]>;
 
@@ -199,7 +205,7 @@ export class IStableCredit extends BaseContract {
 
   access(overrides?: CallOverrides): Promise<string>;
 
-  convertCreditToFeeToken(
+  convertCreditToReferenceToken(
     amount: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
@@ -213,7 +219,7 @@ export class IStableCredit extends BaseContract {
 
   feeManager(overrides?: CallOverrides): Promise<string>;
 
-  feeToken(overrides?: CallOverrides): Promise<string>;
+  referenceToken(overrides?: CallOverrides): Promise<string>;
 
   riskManager(overrides?: CallOverrides): Promise<string>;
 
@@ -231,7 +237,7 @@ export class IStableCredit extends BaseContract {
   callStatic: {
     access(overrides?: CallOverrides): Promise<string>;
 
-    convertCreditToFeeToken(
+    convertCreditToReferenceToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -245,7 +251,7 @@ export class IStableCredit extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<string>;
 
-    feeToken(overrides?: CallOverrides): Promise<string>;
+    referenceToken(overrides?: CallOverrides): Promise<string>;
 
     riskManager(overrides?: CallOverrides): Promise<string>;
 
@@ -278,7 +284,7 @@ export class IStableCredit extends BaseContract {
       { member: string; amount: BigNumber }
     >;
 
-    "CreditLimitExtended(address,uint256)"(
+    "CreditLimitUpdated(address,uint256)"(
       member?: null,
       creditLimit?: null
     ): TypedEventFilter<
@@ -286,7 +292,7 @@ export class IStableCredit extends BaseContract {
       { member: string; creditLimit: BigNumber }
     >;
 
-    CreditLimitExtended(
+    CreditLimitUpdated(
       member?: null,
       creditLimit?: null
     ): TypedEventFilter<
@@ -340,7 +346,7 @@ export class IStableCredit extends BaseContract {
   estimateGas: {
     access(overrides?: CallOverrides): Promise<BigNumber>;
 
-    convertCreditToFeeToken(
+    convertCreditToReferenceToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -354,7 +360,7 @@ export class IStableCredit extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<BigNumber>;
 
-    feeToken(overrides?: CallOverrides): Promise<BigNumber>;
+    referenceToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     riskManager(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -373,7 +379,7 @@ export class IStableCredit extends BaseContract {
   populateTransaction: {
     access(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    convertCreditToFeeToken(
+    convertCreditToReferenceToken(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -387,7 +393,7 @@ export class IStableCredit extends BaseContract {
 
     feeManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    feeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    referenceToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     riskManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

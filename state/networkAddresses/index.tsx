@@ -50,7 +50,7 @@ export const useFetchNetworkAddresses = () => {
     addresses.accessManager = await stableCredit.access()
     addresses.feeManager = await stableCredit.feeManager()
     addresses.reservePool = await riskManager.reservePool()
-    addresses.feeToken = await stableCredit.feeToken()
+    addresses.referenceToken = await stableCredit.referenceToken()
 
     set(addresses)
   }, [set, validNetworkAddress, signer, network])

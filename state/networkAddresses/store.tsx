@@ -5,7 +5,7 @@ export type NetworkContractAddresses = {
   stableCredit: string
   accessManager: string
   feeManager: string
-  feeToken: string
+  referenceToken: string
   reservePool: string
   riskManager: string
 }

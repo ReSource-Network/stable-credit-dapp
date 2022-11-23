@@ -80,6 +80,19 @@ const _abi = [
     stateMutability: "nonpayable",
     type: "function",
   },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "feePercent",
+        type: "uint256",
+      },
+    ],
+    name: "setTargetFeeRate",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
 ];
 
 export class IFeeManager__factory {

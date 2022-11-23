@@ -30,7 +30,9 @@ interface RiskManagerInterface extends ethers.utils.Interface {
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "reservePool()": FunctionFragment;
+    "setMemberFeeRate(address,address,uint256)": FunctionFragment;
     "setReservePool(address)": FunctionFragment;
+    "setTargetFeeRate(address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "updateCreditLimit(address,address,uint256)": FunctionFragment;
     "validateCreditLine(address,address)": FunctionFragment;
@@ -78,8 +80,16 @@ interface RiskManagerInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "setMemberFeeRate",
+    values: [string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setReservePool",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setTargetFeeRate",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
@@ -119,7 +129,15 @@ interface RiskManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setMemberFeeRate",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setReservePool",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setTargetFeeRate",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -136,23 +154,38 @@ interface RiskManagerInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
-    "CreditDefault(address)": EventFragment;
+    "CreditDefault(address,address)": EventFragment;
+    "CreditTermsCreated(address,address,uint256,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "PeriodEnded(address)": EventFragment;
+    "PeriodEnded(address,address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "CreditDefault"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CreditTermsCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PeriodEnded"): EventFragment;
 }
 
-export type CreditDefaultEvent = TypedEvent<[string] & { member: string }>;
+export type CreditDefaultEvent = TypedEvent<
+  [string, string] & { network: string; member: string }
+>;
+
+export type CreditTermsCreatedEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber] & {
+    network: string;
+    member: string;
+    pastDueTime: BigNumber;
+    defaultTime: BigNumber;
+  }
+>;
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
 
-export type PeriodEndedEvent = TypedEvent<[string] & { member: string }>;
+export type PeriodEndedEvent = TypedEvent<
+  [string, string] & { network: string; member: string }
+>;
 
 export class RiskManager extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -253,8 +286,21 @@ export class RiskManager extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<[string]>;
 
+    setMemberFeeRate(
+      network: string,
+      member: string,
+      _memberFeeRate: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     setReservePool(
       _reservePool: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setTargetFeeRate(
+      network: string,
+      _targetFeeRate: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -332,8 +378,21 @@ export class RiskManager extends BaseContract {
 
   reservePool(overrides?: CallOverrides): Promise<string>;
 
+  setMemberFeeRate(
+    network: string,
+    member: string,
+    _memberFeeRate: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   setReservePool(
     _reservePool: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setTargetFeeRate(
+    network: string,
+    _targetFeeRate: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -407,8 +466,21 @@ export class RiskManager extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<string>;
 
+    setMemberFeeRate(
+      network: string,
+      member: string,
+      _memberFeeRate: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setReservePool(
       _reservePool: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setTargetFeeRate(
+      network: string,
+      _targetFeeRate: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -432,13 +504,45 @@ export class RiskManager extends BaseContract {
   };
 
   filters: {
-    "CreditDefault(address)"(
+    "CreditDefault(address,address)"(
+      network?: null,
       member?: null
-    ): TypedEventFilter<[string], { member: string }>;
+    ): TypedEventFilter<[string, string], { network: string; member: string }>;
 
     CreditDefault(
+      network?: null,
       member?: null
-    ): TypedEventFilter<[string], { member: string }>;
+    ): TypedEventFilter<[string, string], { network: string; member: string }>;
+
+    "CreditTermsCreated(address,address,uint256,uint256)"(
+      network?: null,
+      member?: null,
+      pastDueTime?: null,
+      defaultTime?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber],
+      {
+        network: string;
+        member: string;
+        pastDueTime: BigNumber;
+        defaultTime: BigNumber;
+      }
+    >;
+
+    CreditTermsCreated(
+      network?: null,
+      member?: null,
+      pastDueTime?: null,
+      defaultTime?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber],
+      {
+        network: string;
+        member: string;
+        pastDueTime: BigNumber;
+        defaultTime: BigNumber;
+      }
+    >;
 
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
@@ -456,11 +560,15 @@ export class RiskManager extends BaseContract {
       { previousOwner: string; newOwner: string }
     >;
 
-    "PeriodEnded(address)"(
+    "PeriodEnded(address,address)"(
+      network?: null,
       member?: null
-    ): TypedEventFilter<[string], { member: string }>;
+    ): TypedEventFilter<[string, string], { network: string; member: string }>;
 
-    PeriodEnded(member?: null): TypedEventFilter<[string], { member: string }>;
+    PeriodEnded(
+      network?: null,
+      member?: null
+    ): TypedEventFilter<[string, string], { network: string; member: string }>;
   };
 
   estimateGas: {
@@ -513,8 +621,21 @@ export class RiskManager extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<BigNumber>;
 
+    setMemberFeeRate(
+      network: string,
+      member: string,
+      _memberFeeRate: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     setReservePool(
       _reservePool: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setTargetFeeRate(
+      network: string,
+      _targetFeeRate: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -587,8 +708,21 @@ export class RiskManager extends BaseContract {
 
     reservePool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    setMemberFeeRate(
+      network: string,
+      member: string,
+      _memberFeeRate: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     setReservePool(
       _reservePool: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setTargetFeeRate(
+      network: string,
+      _targetFeeRate: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

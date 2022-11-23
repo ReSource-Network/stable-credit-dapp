@@ -44,7 +44,7 @@ export const getStableCreditContract = createContractGetter(
   StableCredit__factory,
 )
 export const getReservePoolContract = createContractGetter(ReservePool__factory)
-export const getFeeTokenContract = createContractGetter(ERC20__factory)
+export const getReferenceTokenContract = createContractGetter(ERC20__factory)
 export const getFeeManagerContract = createContractGetter(FeeManager__factory)
 export const getRiskManagerContract = createContractGetter(RiskManager__factory)
 export const getAccessManagerContract = createContractGetter(

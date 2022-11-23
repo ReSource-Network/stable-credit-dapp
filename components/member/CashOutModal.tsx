@@ -22,12 +22,12 @@ import { Stack, Text } from "@chakra-ui/react"
 import { useStableCreditContract } from "../../hooks/useStableCreditContract"
 import { useAccount } from "wagmi"
 import { formatStableCredits } from "../../functions/bignumber"
-import { FeeTokenBalance } from "./FeeTokenBalance"
+import { ReferenceTokenBalance } from "./ReferenceTokenBalance"
 import { useCashOut } from "../../hooks/useCashOut"
 import { ManageMember } from "../../hooks/useGetMember"
 import { useReservePoolContract } from "../../hooks/useReservePoolContract"
 import { formatEther } from "ethers/lib/utils"
-import { useFeeTokenContract } from "../../hooks/useFeeTokenContract"
+import { useReferenceTokenContract } from "../../hooks/useReferenceTokenContract"
 import { useGetTransactions } from "../../state"
 
 export interface MemberModalProps extends ManageMember {
@@ -44,11 +44,11 @@ export const CashOutModal = ({
   const stableCredit = useStableCreditContract()
   const [networkDebt, setNetworkDebt] = useState(0)
   const [collateral, setCollateral] = useState(0)
-  const [feeTokenSymbol, setFeeTokenSymbol] = useState("")
+  const [referenceTokenSymbol, setReferenceTokenSymbol] = useState("")
   const { address } = useAccount()
   const { cashOut, loading } = useCashOut()
   const reservePool = useReservePoolContract()
-  const feeToken = useFeeTokenContract()
+  const referenceToken = useReferenceTokenContract()
   const transactions = useGetTransactions()
 
   useEffect(() => {
@@ -60,10 +60,10 @@ export const CashOutModal = ({
       setCollateral(
         Number(formatEther(await reservePool.reserve(stableCredit.address))),
       )
-      setFeeTokenSymbol(await feeToken.symbol())
+      setReferenceTokenSymbol(await referenceToken.symbol())
     }
     if (address && stableCredit && reservePool) handler()
-  }, [stableCredit, address, reservePool, feeToken, transactions])
+  }, [stableCredit, address, reservePool, referenceToken, transactions])
 
   return (
     <Modal isCentered size="md" isOpen={isOpen} onClose={onClose}>
@@ -105,7 +105,7 @@ export const CashOutModal = ({
                               return error
                             }
                             if (value.amount > collateral) {
-                              error = `Reserve pool is low. Only ${collateral} ${feeTokenSymbol} available`
+                              error = `Reserve pool is low. Only ${collateral} ${referenceTokenSymbol} available`
                             }
                           }}
                         />
@@ -141,7 +141,7 @@ export const CashOutModal = ({
                         })}
                       </Text>
                     </HStack>
-                    <FeeTokenBalance />
+                    <ReferenceTokenBalance />
                   </Stack>
                 </Stack>
               </ModalBody>

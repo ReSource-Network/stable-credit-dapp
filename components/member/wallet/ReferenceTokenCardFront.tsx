@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import PillPity from "pill-pity"
 import { useEffect, useState } from "react"
 import { useAccount } from "wagmi"
-import { useFeeTokenContract } from "../../../hooks/useFeeTokenContract"
+import { useReferenceTokenContract } from "../../../hooks/useReferenceTokenContract"
 
 const defaultStyles: BoxProps = {
   p: "2px",
@@ -28,7 +28,7 @@ interface Props extends BoxProps {
   symbol: string
 }
 
-export const FeeTokenCardFront = ({ flip, symbol, ...rest }: Props) => {
+export const ReferenceTokenCardFront = ({ flip, symbol, ...rest }: Props) => {
   const { colorMode } = useColorMode()
 
   const innerStyles: BoxProps = {

@@ -13,6 +13,12 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
+        name: "network",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
         name: "member",
         type: "address",
       },
@@ -23,6 +29,43 @@ const _abi = [
   {
     anonymous: false,
     inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "network",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "member",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "pastDueTime",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "defaultTime",
+        type: "uint256",
+      },
+    ],
+    name: "CreditTermsCreated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "network",
+        type: "address",
+      },
       {
         indexed: false,
         internalType: "address",
