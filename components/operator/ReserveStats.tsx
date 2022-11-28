@@ -47,24 +47,22 @@ export const ReserveStats = () => {
   const { distribute, loading: distributeLoading } = useDistributeFees()
   const [operatorBalance, setOperatorBalance] = useState(0)
   const [rtd, setRTD] = useState(0)
+  const [reserve, setReserve] = useState(0)
   const [targetRTD, setTargetRTD] = useState(0)
   const [fees, setFees] = useState(0)
-  const [swapSink, setSwapSink] = useState(0)
 
   const updateState = async () => {
     setOperatorBalance(
-      Number(
-        formatEther(await reservePool.operatorReserve(stableCredit.address)),
-      ),
+      Number(formatEther(await reservePool.operatorPool(stableCredit.address))),
     )
     setRTD((await reservePool.RTD(stableCredit.address)).toNumber() / 10000)
     setTargetRTD(
       (await reservePool.targetRTD(stableCredit.address)).toNumber() / 10000,
     )
-    setSwapSink(
-      Number(formatEther(await reservePool.swapReserve(stableCredit.address))),
-    )
     setFees(Number(formatEther(await feeManager.collectedFees())))
+    setReserve(
+      Number(formatEther(await reservePool.reserve(stableCredit.address))),
+    )
   }
 
   useEffect(() => {
@@ -79,9 +77,7 @@ export const ReserveStats = () => {
   const handleWithdraw = async () => {
     await withdraw()
     setOperatorBalance(
-      Number(
-        formatEther(await reservePool.operatorReserve(stableCredit.address)),
-      ),
+      Number(formatEther(await reservePool.operatorPool(stableCredit.address))),
     )
   }
 
@@ -121,7 +117,6 @@ export const ReserveStats = () => {
               >
                 <Text>RTD</Text>
                 <Text>Revenue</Text>
-                <Text>Swap</Text>
               </VStack>
               <VStack w="100%" alignItems={"flex-start"}>
                 <Tooltip
@@ -207,41 +202,20 @@ export const ReserveStats = () => {
                       backgroundColor="transparent"
                       w="100%"
                       borderRadius={"lg"}
+                      // value={
+                      //   operatorBalance > reserve
+                      //     ? 100
+                      //     : operatorBalance / reserve
+                      // }
                       value={
                         operatorBalance === 0
                           ? 5
-                          : operatorBalance >= swapSink
+                          : operatorBalance >= reserve
                           ? 100
-                          : 50
+                          : operatorBalance / reserve
                       }
                       height="40px"
                       colorScheme={"green"}
-                    />
-                  </span>
-                </Tooltip>
-                <Tooltip
-                  hasArrow
-                  placement="bottom"
-                  label={swapSink.toLocaleString("en", {
-                    style: "currency",
-                    currency: "USD",
-                  })}
-                  aria-label="RTD"
-                >
-                  <span style={{ width: "50%" }}>
-                    <Progress
-                      w="100%"
-                      backgroundColor="transparent"
-                      borderRadius={"lg"}
-                      value={
-                        swapSink === 0
-                          ? 5
-                          : swapSink >= operatorBalance
-                          ? 100
-                          : 12
-                      }
-                      height="40px"
-                      colorScheme={"pink"}
                     />
                   </span>
                 </Tooltip>

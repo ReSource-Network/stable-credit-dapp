@@ -22,7 +22,7 @@ export const useWithdrawOperator = (): useWithdrawOperatorResponse => {
     setWithdrawing(true)
 
     try {
-      const operatorBalance = await reservePool.operatorReserve(
+      const operatorBalance = await reservePool.operatorPool(
         stableCredit.address,
       )
       if (operatorBalance.eq(0)) return
